@@ -5,7 +5,11 @@ var express 				= require("express"),
 	passport 				= require("passport"),
 	passportLocalMongoose 	= require("passport-local-mongoose"),
 	LocalStrategy 			= require("passport-local"),
-	socket					= require("socket.io");
+	socket					= require("socket.io"),
+	util = require("util"),
+    fs = require('fs'),
+    os = require('os'),
+    url = require('url');
 
 // Models For User
 var User = require("./models/user");
@@ -35,20 +39,29 @@ passport.deserializeUser(User.deserializeUser());
 var server = app.listen(3000, function(){
 	console.log("The Musics Already Started!");
 });
-
-var users = [];
-
 var io = socket(server);
-
-io.on("connection", function(socket){
-	socket.on("connect", function(data){
-		users.push[socket.id];
-		console.log(users);
-	});
-	socket.on("chat", function(data){
-		io.users[opponentSelection.to].emit("opponentSelection", data);
-	});
-});
+var clients =[];
+    io.sockets.on('connection', function (socket) {
+        socket.on('storeClientInfo', function (data) {
+            var clientInfo = new Object();
+            clientInfo.customId     = data.customId;
+            clientInfo.clientId     = socket.id;
+			clients.push(clientInfo);
+			console.log(clients);
+		});
+		socket.on("selection", function(data){
+			socket.broadcast.emit("opponentSelection", data);
+		});
+        socket.on('disconnect', function (data) {
+            for( var i=0, len=clients.length; i<len; ++i ){
+                var c = clients[i];
+                if(c.clientId == socket.id){
+                    clients.splice(i,1);
+                    break;
+                }
+            }
+        });
+    });
 
 // ==================
 // ROUTES FOR LEVELS
@@ -66,12 +79,10 @@ app.get("/level", isLoggedIn, function(req, res){
 	var user = req.user;
 	var level = user.currentLevel;
 	// find the level in which the user is present
-	if(level == 1){
+	if(level == 1) {
 		res.sendFile(__dirname + "/public/light.html");
 	} else if(level == 2) {
 		res.sendFile(__dirname + "/public/invisible.html");
-	// } else if(level == 3) {
-		// res.sendFile(__dirname + "/public/logic34.html");
 	} else if(level == 3) {
 		res.sendFile(__dirname + "/public/alphabet.html");
 	} else if(level == 4) {
@@ -80,10 +91,17 @@ app.get("/level", isLoggedIn, function(req, res){
 		res.sendFile(__dirname + "/public/people.html");
 	} else if(level == 6){
 		res.sendFile(__dirname + "/public/digits.html");
+	} else if(level == 7) {
+		res.sendFile(__dirname + "/public/logic34.html");
 	} else {
 		console.log(user);
 		res.send("GAME Over");
 	}
+});
+
+app.get("/building", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("25floor.ejs", {user: user});
 });
 
 // ============
