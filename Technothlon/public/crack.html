@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>crack the code</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="crack.css">
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+		<h1><strong>WILL YOU CRACK THE CODE???</strong></h1>
+	    </div>
+	  <h1>1)One number is correct and well placed.</h1>
+	  <div class="row">
+	  	<div class="col-lg-4"><img src="/images/c6.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c8.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c2.JPEG" class="img-thumbnail"></div>
+	  	
+	  </div>
+	  <h1>2)One number is correct but wrong placed.</h1>
+	   <div class="row">
+	  	<div class="col-lg-4"><img src="/images/c6.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c1.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c4.JPEG" class="img-thumbnail"></div>
+	  	
+	  </div>
+	  <h1>3)Two numbers are correct but wrong placed.</h1>
+	   <div class="row">
+	  	<div class="col-lg-4"><img src="/images/c2.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c0.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c6.JPEG" class="img-thumbnail"></div>
+	  	
+	  </div>
+	  <h1>4)Nothing is correct.</h1>
+	   <div class="row">
+	  	<div class="col-lg-4"><img src="/images/c7.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c3.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c8.JPEG" class="img-thumbnail"></div>
+	  	
+	  </div>
+	  <h1>5)One number is correct but wrong placed.</h1>
+	   <div class="row">
+	  	<div class="col-lg-4"><img src="/images/c7.JPEG" class="img-thumbnail"></div>
+    	<div class="col-lg-4"><img src="/images/c8.JPEG" class="img-thumbnail"></div>
+	  	<div class="col-lg-4"><img src="/images/c0.JPEG" class="img-thumbnail"></div>
+	  	
+	  </div>
+	  <h1>Type your answer below:</h1>
+	  <div class="row">
+	  	<div class="col-lg-4"> <input type="number" style="font-size:150pt"  id="one" name="one"></div>
+	  	<div class="col-lg-4"> <input type="number" style="font-size:150pt" id="two" name="two"></div>
+	  	<div class="col-lg-4"> <input type="number" style="font-size:150pt" id="three" name="three"></div>
+	  </div>
+	  <button class="btn btn-success btn-lg c">Submit</button>
+	</div>
+	
+<script type="text/javascript">
+	var button=document.querySelector(".btn")
+	button.addEventListener("click",correct);
+	function correct()
+	{
+		var x,y,z;
+		x=document.getElementById("one").value;
+		y=document.getElementById("two").value;
+        z=document.getElementById("three").value;
+        if(x>=0 && x<10 && y>=0 && y<10 && z>=0 && z<10)
+            {
+                document.body.innerHTML += '<form id="dynForm" action="/crack" method="post">' + 
+                    '<input type="hidden" name="x" value="' + x + '">' + 
+                    '<input type="hidden" name="y" value="' + y + '">' +
+                    '<input type="hidden" name="z" value="' + z + '">' +
+                    '</form>';
+		        document.getElementById("dynForm").submit();
+            } else {
+			alert("You haven't entered a number between 0-9");
+		}
+	}
+</script>
+
+
+</body>
+</html>

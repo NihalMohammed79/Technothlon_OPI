@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Technothlon</title>
+		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<style>
+			#div1 {
+			  float: left;
+			  width: 50px;
+			  height: 50px;
+			  border: 1px solid #aaaaaa;
+			}
+			#div2 {
+			  width: 50px;
+			  height: 50px;
+			  border: 1px solid #aaaaaa;
+			  margin-left: 292px;
+			}
+			#div3 {
+			  width: 50px;
+			  height: 50px;
+			  border: 1px solid #aaaaaa;
+			  margin-top: 117px;
+			  margin-left: 292px;
+			}
+
+			#rectangle {
+				height: 220px;
+				width: 344px;
+				border: 2px solid red;
+			}
+			p {
+				font-size: 1.2em;
+			}
+		</style>
+		<script>
+			function allowDrop(ev) {
+			  ev.preventDefault();
+			}
+
+			function drag(ev) {
+			  ev.dataTransfer.setData("text", ev.target.id);
+			}
+
+			function drop(ev) {
+				ev.preventDefault();
+				var data = ev.dataTransfer.getData("text");
+				ev.target.appendChild(document.getElementById(data));
+				document.body.innerHTML += '<form id="dynForm" action="/light" method="post"><input type="hidden" name="divId" value="' + ev.target.id + '"></form>';
+				document.getElementById("dynForm").submit();
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<h1>The Puzzle Of The Light Portal</h1>
+			<p>Assume That You Are in a Rectangular Room With perfectly reflecting sides(86m by 55m).</p>
+			<p>And a Light Ray Enters The Room at an Angle of 45° from the bottom left corner.</p>
+			<p>The Light Must be diverted to a portal. At which corner must the portal be dragged so that light can fall on the portal.</p>
+
+			<div id = rectangle>
+				<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+				<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+				<div id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+			</div>
+			<br>
+			<img id="drag1" src="https://www.channelweb.co.uk/w-images/849ce4ec-0846-4fbd-9709-82b46b1afeb2/1/portal-580x358.png" draggable="true" ondragstart="drag(event)" width="50" height="50">
+		</div>
+
+	</body>
+</html>
