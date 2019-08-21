@@ -1,0 +1,4 @@
+{"message":"You have successfully started working with winston and morgan","level":"info"}
+{"message":"::ffff:127.0.0.1 - - [21/Aug/2019:17:12:59 +0000] \"GET /register HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0\"\n","level":"info"}
+{"message":"::ffff:127.0.0.1 - - [21/Aug/2019:17:13:07 +0000] \"POST /register HTTP/1.1\" 302 46 \"http://localhost:3000/register\" \"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0\"\n","level":"info"}
+{"message":"::ffff:127.0.0.1 - - [21/Aug/2019:17:13:07 +0000] \"GET / HTTP/1.1\" 200 1854 \"http://localhost:3000/register\" \"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0\"\n","level":"info"}

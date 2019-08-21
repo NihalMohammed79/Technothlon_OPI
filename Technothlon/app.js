@@ -2,7 +2,7 @@ var express 				= require("express"),
 	app 					= express(),
 	bodyParser 				= require("body-parser"),
 	mongoose				= require("mongoose"),
-	passport 				= require("passport"),
+	passport 				= require("passport"), // Middleware
 	passportLocalMongoose 	= require("passport-local-mongoose"),
 	LocalStrategy 			= require("passport-local"),
 	socket					= require("socket.io"),
@@ -13,6 +13,13 @@ var express 				= require("express"),
 
 // Models For User
 var User = require("./models/user");
+var appRoot = require('app-root-path');
+
+const morgan = require('morgan');
+const winston = require('./winston/config');
+app.use(morgan('combined', { stream: winston.stream }));
+
+winston.info('You have successfully started working with winston and morgan');
 
 
 mongoose.connect("mongodb://localhost:27017/techno", {useNewUrlParser : true});
@@ -255,6 +262,7 @@ app.post("/digits", function(req, res){
 // ROUTES FOR AUTH
 // ==================
 app.get("/register", function(req, res){
+	console.log('Hello World')
 	res.sendFile(__dirname + "/public/register.html");
 });
 
