@@ -220,8 +220,8 @@ app.post("/people", function(req, res){
 
 app.post("/digits", function(req, res){
 	var user = req.user;
-	var s = req.body.s;
-	if(s == 9) {
+	var form = req.body.form;
+	if(form == "correct") {
 		user.currentLevel += 1;
 		user.score += 5;
 		user.save();
