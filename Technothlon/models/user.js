@@ -7,7 +7,8 @@ var UserSchema = new mongoose.Schema({
 	currentLevel: Number,
 	score: Number,
 	hint1: Boolean,
-	hint2: Boolean
+	hint2: Boolean,
+	attempts: Number,
 }, {timestamps: true});
 
 UserSchema.plugin(passportLocalMongoose);

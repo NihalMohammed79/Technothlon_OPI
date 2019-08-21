@@ -14,7 +14,6 @@ var express 				= require("express"),
 // Models For User
 var User = require("./models/user");
 var appRoot = require('app-root-path');
-
 const morgan = require('morgan');
 const winston = require('./winston/config');
 app.use(morgan('combined', { stream: winston.stream }));
@@ -70,6 +69,8 @@ var clients =[];
         });
     });
 
+var levelNames = ['light','invisible','alphabet','crack','people','digits','logic34'];
+
 // ==================
 // ROUTES FOR LEVELS
 // ==================
@@ -85,30 +86,26 @@ app.get("/level", isLoggedIn, function(req, res){
 	// get id of user who made the request
 	var user = req.user;
 	var level = user.currentLevel;
-	// find the level in which the user is present
-	if(level == 1) {
-		res.sendFile(__dirname + "/public/light.html");
-	} else if(level == 2) {
-		res.sendFile(__dirname + "/public/invisible.html");
-	} else if(level == 3) {
-		res.sendFile(__dirname + "/public/alphabet.html");
-	} else if(level == 4) {
-		res.sendFile(__dirname + "/public/crack.html");
-	} else if(level == 5){
-		res.sendFile(__dirname + "/public/people.html");
-	} else if(level == 6){
-		res.sendFile(__dirname + "/public/digits.html");
-	} else if(level == 7) {
-		res.sendFile(__dirname + "/public/logic34.html");
-	} else {
+	if(level <= levelNames.length)
+		res.sendFile(__dirname + "/public/" + levelNames[level - 1] +".html");
+	else {
 		console.log(user);
-		res.send("GAME Over");
+		res.send("GAME OVER");
 	}
+
 });
 
 app.get("/building", isLoggedIn, function(req, res){
 	var user = req.user;
 	res.render("25floor.ejs", {user: user});
+});
+
+app.get('/getPass',function(req,res) {
+
+	User.find({}).exec(function(err,users) {
+		if(err) throw err;
+		res.render('getpass.ejs',{"users" : users});
+	});
 });
 
 // ============
@@ -267,7 +264,7 @@ app.get("/register", function(req, res){
 });
 
 app.post("/register", function(req, res){
-	var newUser = new User({username: req.body.username, hint1: false, hint2: false, currentLevel: 1, score: 0});
+	var newUser = new User({username: req.body.username, hint1: false, hint2: false, currentLevel: 1, score: 0,attempts: 0});
 	User.register(newUser, req.body.password, function(err, user){
 		if(err){
 			console.log(err);
