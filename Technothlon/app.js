@@ -68,7 +68,7 @@ var clients =[];
         });
     });
 
-var levelNames = ['light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
+var levelNames = ['poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
 
 // ==================
 // ROUTES FOR LEVELS
@@ -78,7 +78,6 @@ app.get("/", function(req, res){
 });
 
 app.get("/level", isLoggedIn, function(req, res){
-	// get id of user who made the request
 	var user = req.user;
 	var level = user.currentLevel;
 	if(level <= levelNames.length)
@@ -114,7 +113,6 @@ app.post("/invisible", function(req, res){
 		user.save();
  		res.redirect("/level");
 	} else {
-		// find user id deduct his score and reload the page
 		user.score -= 5;
 		user.save();
 		res.redirect("/level");
@@ -123,14 +121,13 @@ app.post("/invisible", function(req, res){
 
 app.post("/light", function(req, res){
 	var divId = req.body.divId;
-	var currentUser = req.user;
+	var user = req.user;
 	if(divId == "div3"){
 		user.currentLevel += 1;
 		user.score += 5;
 		user.save();
  		res.redirect("/level");
 	} else {
-		// find user id deduct his score and reload the page
 		user.score -= 5;
 		user.save();
 		res.redirect("/level");
@@ -139,14 +136,11 @@ app.post("/light", function(req, res){
 
 app.post("/logic34", function(req, res){
 	var clickCount = req.body.counter;
-	// calculate and update the score
 	var user = req.user;
 	var newScore = (1/(clickCount-23))*5;
-	// increase the level of user by 1
 	user.currentLevel += 1;
 	user.score += newScore;
 	user.save();
-	// redirect to /level
 	res.redirect("/level");
 });
 
@@ -154,13 +148,11 @@ app.post("/alphabet", function(req, res){
 	var answer = req.body.answer;
 	var user = req.user;
 	if(answer.toLowerCase() == "ha"){
-		// find user id and update score, level and redirect to / level
 		user.currentLevel += 1;
 		user.score += 5;
 		user.save();
  		res.redirect("/level");
 	} else {
-		// find user id deduct his score and reload the page
 		user.score -= 5;
 		user.save();
 		res.redirect("/level");
@@ -218,6 +210,36 @@ app.post("/pi", function(req, res){
 	var user = req.user;
 	var answer = req.body.answer;
 	if(answer.toLowerCase() == "pi") {
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+		res.redirect("/level");
+	} else {
+		user.score -= 5;
+		user.save();
+		res.redirect("/level");
+	}
+});
+
+app.post("/nonogram1", function(req, res){
+	var user = req.user;
+	var answer = req.body.answer;
+	if(answer == "1111011110110000001100001") {
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+		res.redirect("/level");
+	} else {
+		user.score -= 5;
+		user.save();
+		res.redirect("/level");
+	}
+});
+
+app.post("/poll", function(req, res){
+	var user = req.user;
+	var answer = req.body.answer;
+	if(answer == "122233123334122534111544555544") {
 		user.currentLevel += 1;
 		user.score += 5;
 		user.save();
