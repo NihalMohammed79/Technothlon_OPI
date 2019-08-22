@@ -17,7 +17,6 @@ var appRoot = require('app-root-path');
 const morgan = require('morgan');
 const winston = require('./winston/config');
 app.use(morgan('combined', { stream: winston.stream }));
-
 winston.info('You have successfully started working with winston and morgan');
 
 
@@ -69,7 +68,7 @@ var clients =[];
         });
     });
 
-var levelNames = ['light','invisible','alphabet','crack','people','digits','logic34'];
+var levelNames = ['light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
 
 // ==================
 // ROUTES FOR LEVELS
@@ -77,10 +76,6 @@ var levelNames = ['light','invisible','alphabet','crack','people','digits','logi
 app.get("/", function(req, res){
 	res.sendFile(__dirname + "/public/home.html");
 });
-
-// app.get("/building", isLoggedIn, function(req, res){
-// 	res.sendFile(__dirname + "/public/building.html");
-// });
 
 app.get("/level", isLoggedIn, function(req, res){
 	// get id of user who made the request
@@ -101,7 +96,6 @@ app.get("/building", isLoggedIn, function(req, res){
 });
 
 app.get('/getPass',function(req,res) {
-
 	User.find({}).exec(function(err,users) {
 		if(err) throw err;
 		res.render('getpass.ejs',{"users" : users});
@@ -113,35 +107,17 @@ app.get('/getPass',function(req,res) {
 // ============
 app.post("/invisible", function(req, res){
 	var answer = req.body.answer;
-	var currentUser = req.user;
+	var user = req.user;
 	if(answer.toLowerCase() == "german"){
-		// find user with his id
-		// increase level of user by 1 update his score
-		newLevel = currentUser.currentLevel + 1;
-		newScore = currentUser.score + 5;
-		// redirect to /level
-		User.findById(currentUser.id, function(err, user){
-			if(err){
-				console.log(err);
-			} else {
-				user.currentLevel = newLevel;
-				user.score = newScore;
-				user.save();
-				res.redirect("/level");
-			}
-		});
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+ 		res.redirect("/level");
 	} else {
-		// deduct his score and redirect to the same page
-		newScore = currentUser.score - 5;
-		User.findById(currentUser.id, function(err, user){
-			if(err){
-				console.log(err);
-			} else {
-				user.score = newScore;
-				user.save();
-				res.redirect("/level");
-			}
-		});
+		// find user id deduct his score and reload the page
+		user.score -= 5;
+		user.save();
+		res.redirect("/level");
 	}
 });
 
@@ -149,32 +125,15 @@ app.post("/light", function(req, res){
 	var divId = req.body.divId;
 	var currentUser = req.user;
 	if(divId == "div3"){
-		// find user with his id
-		// increase level of user by 1 update his score
-		newLevel = currentUser.currentLevel + 1;
-		newScore = currentUser.score + 5;
-		User.findById(currentUser.id, function(err, user){
-			if(err){
-				console.log(err);
-			} else {
-				user.currentLevel = newLevel;
-				user.score = newScore;
-				user.save();
-				res.redirect("/level");
-			}
-		});
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+ 		res.redirect("/level");
 	} else {
-		// deduct his score and redirect to the same page
-		newScore = currentUser.score - 5;
-		User.findById(currentUser.id, function(err, user){
-			if(err){
-				console.log(err);
-			} else {
-				user.score = newScore;
-				user.save();
-				res.redirect("/level");
-			}
-		});
+		// find user id deduct his score and reload the page
+		user.score -= 5;
+		user.save();
+		res.redirect("/level");
 	}
 });
 
@@ -244,6 +203,21 @@ app.post("/digits", function(req, res){
 	var user = req.user;
 	var form = req.body.form;
 	if(form == "correct") {
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+		res.redirect("/level");
+	} else {
+		user.score -= 5;
+		user.save();
+		res.redirect("/level");
+	}
+});
+
+app.post("/pi", function(req, res){
+	var user = req.user;
+	var answer = req.body.answer;
+	if(answer.toLowerCase() == "pi") {
 		user.currentLevel += 1;
 		user.score += 5;
 		user.save();

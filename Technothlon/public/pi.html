@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Find out?</title>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<style type="text/css">
+		img {
+         display: block;
+         margin-left: auto;
+         margin-right: auto;
+         width: 50%;
+          }
+
+        .btn{
+            margin-left: auto;
+            margin-right: auto;
+            width: 10%;
+        }
+
+		h1,h4{
+			margin-top: 20px;
+			margin-bottom: 20px;
+			text-align: center;
+			color: white;
+		}
+		body{
+			background-color: rgb(9, 48, 115);
+            padding-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+	  <h1>What does the image below represent?</h1>
+      <img src="https://i.stack.imgur.com/O9a9n.jpg">
+    	<h4>Type your answer:</h4>
+      <form style="text-align: center;" action="/pi" method="POST">
+        <div>
+          <input type="text" name="answer" style="font-size:20pt; margin-bottom: 10px;">
+        </div>
+        <button class="btn btn-success lg">Submit</button>
+      </form>
+    </div>
+</body>
+</html>
