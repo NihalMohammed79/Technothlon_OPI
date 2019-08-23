@@ -68,7 +68,7 @@ var clients =[];
         });
     });
 
-var levelNames = ['nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
+var levelNames = ['square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
 
 // ==================
 // ROUTES FOR LEVELS
@@ -257,6 +257,26 @@ app.post("/poll", function(req, res){
 	if(answer == "122233123334122534111544555544") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.save();
+		res.redirect("/level");
+	} else {
+		user.score -= 5;
+		user.save();
+		res.redirect("/level");
+	}
+});
+
+app.post("/square", function(req, res){
+	var user = req.user;
+	var c = req.body.c;
+	if(c == 15) {
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+		res.redirect("/level");
+	} else if(c == 14) {
+		user.currentLevel += 1;
+		user.score += 2.5;
 		user.save();
 		res.redirect("/level");
 	} else {
