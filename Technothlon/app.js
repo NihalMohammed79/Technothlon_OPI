@@ -68,7 +68,7 @@ var clients =[];
         });
     });
 
-var levelNames = ['poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
+var levelNames = ['nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
 
 // ==================
 // ROUTES FOR LEVELS
@@ -225,6 +225,21 @@ app.post("/nonogram1", function(req, res){
 	var user = req.user;
 	var answer = req.body.answer;
 	if(answer == "1111011110110000001100001") {
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+		res.redirect("/level");
+	} else {
+		user.score -= 5;
+		user.save();
+		res.redirect("/level");
+	}
+});
+
+app.post("/nonogram2", function(req, res){
+	var user = req.user;
+	var answer = req.body.answer;
+	if(answer == "1111101111111100011111001000100100011100010100100111101011011111100111101100101110000001111001110111") {
 		user.currentLevel += 1;
 		user.score += 5;
 		user.save();
