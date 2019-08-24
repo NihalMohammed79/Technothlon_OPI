@@ -84,7 +84,7 @@
             }
         }
         function myFunction(clicked_id){
-            socket.emit("selection", {
+            socket.emit("selection1", {
                 selection: clicked_id
             });
             if(clicked_id == 0) {
@@ -95,7 +95,7 @@
                 document.getElementById(i).disabled = true;
             }
         }
-        socket.on("opponentSelection", function(data){
+        socket.on("opponentSelection1", function(data){
             var clicked_id = data.selection;
             for(var i = 0; i <= 25; i++){
                 document.getElementById(i).disabled = false;

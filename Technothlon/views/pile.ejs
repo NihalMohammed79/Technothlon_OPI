@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <script src="https://kit.fontawesome.com/5bd832650a.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>The Game Of The Box Pile</h1>
+            <p>There are 452 boxes present in front of you.</p>
+            <p>On each play, any number ofboxes, which is a power of 2 (including 1), can be removed from the pile.</p>
+            <p>Obviously the number of chips to be removed cannot be higher than the number of chips on the current pile.</p>
+            <p> The person, who removes the last chip is the winner. There are 452 chips on the pile.</p>
+            <div id="boxes"></div>
+            <div id="myboxes"></div>
+            <input type="text" id="myinput" name="opponentsinput">
+            <div id="opponentboxes"></div>
+            <input type="text" id="opponentsinput" name="opponentsinput">
+        </div>
+        <script>
+            var boxdiv = document.getElementById("boxes");
+            for(var i = 0; i < 452/2; i++) {
+                boxdiv.innerHTML += ' <i class="fas fa-box"></i>';
+            }
+        </script>
+    </body>
+</html>

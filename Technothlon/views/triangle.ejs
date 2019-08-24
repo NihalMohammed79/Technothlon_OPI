@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <style>
+            body {
+                text-align: center;
+            }
+            .btn-circle.btn-xl {
+                width: 70px;
+                height: 70px;
+                padding: 10px 16px;
+                border-radius: 35px;
+                font-size: 24px;
+                line-height: 1.33;
+            }
+
+            .btn-circle {
+                width: 60px;
+                height: 60px;
+                padding: 6px 0px;
+                border: 1px solid red;
+                border-radius: 30px;
+                text-align: center;
+                line-height: 1.42857;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Hey Look! Those Buttons are circular!!
+                </div>
+                <div class="panel-body">
+                    <h4>Normal Circle Buttons</h4>
+                    <div id="one">
+                        <button id="11" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="two">
+                        <button id="21" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="22" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="three">
+                        <button id="31" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="32" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="33" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="four">
+                        <button id="41" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="42" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="43" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="44" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button> 
+                    </div>
+                    <div id="five">
+                        <button id="51" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="52" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="53" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="54" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="55" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="six">
+                        <button id="61" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="62" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="63" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="64" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="65" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="66" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <script>
+            var socket = io.connect("http://localhost:3000");
+
+            socket.on('connect', function (data) {
+                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
+            });
+            var id = "<%= user.socketid %>";
+            var myNumber = 1;
+            var clicks = 0;
+            function myfunction(clicked_id) {
+                var clickedButton = document.getElementById(clicked_id);
+                if(clickedButton.classList.contains("btn-success")||clickedButton.classList.contains("btn-danger")) {
+
+                } else {
+                    clickedButton.innerHTML = myNumber;
+                    if(id%2 == 1) {
+                        clickedButton.classList.remove("btn-default");
+                        clickedButton.classList.add("btn-success");
+                    } else {
+                        clickedButton.classList.remove("btn-default");
+                        clickedButton.classList.add("btn-danger");
+                    }
+                    socket.emit("selection2", {
+                        selection: clicked_id,
+                        opponentNumber : myNumber
+                    });
+                    myNumber++;
+                    clicks++;
+                    if(clicks == 10) {
+                        var leftOver = document.getElementsByClassName("btn-default")[0];
+                        var leftOverLeft = document.getElementById(leftOver.id - 1);
+                        var leftOverLRight = document.getElementById(leftOver.id + 1);
+                        var leftOverTopRight = document.getElementById(leftOver.id - 10);
+                        var leftOverTopLeft = document.getElementById(leftOver.id - 11);
+                        var leftOverBottomRight = document.getElementById(leftOver.id + 11);
+                        var leftOverBottomLeft = document.getElementById(leftOver.id + 10);
+                        var pl1Score = 0;
+                        var pl2Score = 0;
+                        if(leftOverLeft.classList.contains("btn-success")) {
+                            console.log(leftOverLeft.innerHTML);
+                        }
+                    }
+                }    
+            }
+            socket.on("opponentSelection2", function(data){
+                var clicked_id = data.selection;
+                var clickedButton = document.getElementById(clicked_id);
+                console.log(clicked_id);
+                if(id%2 == 0){
+                    clickedButton.classList.remove("btn-default");
+                    clickedButton.classList.add("btn-success");
+                    clickedButton.innerHTML = data.opponentNumber;
+                } else {
+                    clickedButton.classList.remove("btn-default");
+                    clickedButton.classList.add("btn-danger");
+                    clickedButton.innerHTML = data.opponentNumber;
+                }
+            });
+        </script>
+    </body>
+</html>
