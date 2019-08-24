@@ -9,6 +9,7 @@ var UserSchema = new mongoose.Schema({
 	hint1: Boolean,
 	hint2: Boolean,
 	attempts: Number,
+	socketid: Number
 }, {timestamps: true});
 
 UserSchema.plugin(passportLocalMongoose);

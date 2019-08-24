@@ -63,9 +63,10 @@
         var socket = io.connect("http://localhost:3000");
 
         socket.on('connect', function (data) {
-            socket.emit('storeClientInfo', { customId:"<%= user.username %>" });
+            socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
         });
-        if("<%= user.username %>" == "Nihal") {
+        var id = "<%= user.socketid %>";
+        if((Number(id)%2) == 1) {
             document.getElementById("25").classList.add("btn-danger");
             document.getElementById("24").classList.add("btn-success");
             document.getElementById("22").classList.add("btn-success");
@@ -86,6 +87,10 @@
             socket.emit("selection", {
                 selection: clicked_id
             });
+            if(clicked_id == 0) {
+                alert("Congratulations! You win");
+                return;
+            }
             for(var i = 0; i <= 25; i++){
                 document.getElementById(i).disabled = true;
             }
@@ -94,22 +99,13 @@
             var clicked_id = data.selection;
             for(var i = 0; i <= 25; i++){
                 document.getElementById(i).disabled = false;
+                document.getElementById(i).classList.remove("btn-danger");
+                document.getElementById(i).classList.remove("btn-success");
             }
             if(clicked_id > 3){
                 var btnDanger = document.getElementById(clicked_id);
                 var btnDangerId = btnDanger.id;
-                document.getElementById(btnDangerId).classList.remove("btn-danger");
-                document.getElementById(btnDangerId - 1).classList.remove("btn-success");
-                document.getElementById(btnDangerId - 3).classList.remove("btn-success");
-                document.getElementById(btnDangerId - 4).classList.remove("btn-success");
 
-                for(var i = 0; i <= 25; i++){
-                    if(i > clicked_id){
-                        document.getElementById(i).disabled = true;
-                    }
-                }
-
-                document.getElementById(clicked_id).classList.remove("btn-success");
                 document.getElementById(clicked_id).classList.add("btn-danger");
                 document.getElementById(Number(clicked_id)-1).disabled = false;
                 document.getElementById(Number(clicked_id)-3).disabled = false;
@@ -125,20 +121,7 @@
                         document.getElementById(i).disabled = true;
                     }
                 }
-            } else if(clicked_id == 3){
-                var btnDanger = document.getElementsByClassName("btn-danger")[0];
-                var btnDangerId = btnDanger.id;
-                document.getElementById(btnDangerId).classList.remove("btn-danger");
-                document.getElementById(btnDangerId - 1).classList.remove("btn-success");
-                document.getElementById(btnDangerId - 3).classList.remove("btn-success");
-
-                for(var i = 0; i <= 25; i++){
-                    if(i > clicked_id){
-                        document.getElementById(i).disabled = true;
-                    }
-                }
-
-                document.getElementById(clicked_id).classList.remove("btn-success");
+            } else if(clicked_id == 3) {
                 document.getElementById(clicked_id).classList.add("btn-danger");
                 document.getElementById(Number(clicked_id)-1).disabled = false;
                 document.getElementById(Number(clicked_id)-3).disabled = false;
@@ -153,16 +136,20 @@
                     }
                 }
             } else if(clicked_id == 2 || clicked_id == 1) {
-                var btnDanger = document.getElementsByClassName("btn-danger")[0];
-                var btnDangerId = btnDanger.id;
-                document.getElementById(btnDangerId).classList.remove("btn-danger");
-                document.getElementById(btnDangerId - 1).classList.remove("btn-success");
-
+                if(clicked_id == 2) {
+                    document.getElementById(clicked_id).classList.add("btn-danger");
+                    document.getElementById(clicked_id-1).classList.add("btn-success");
+                } else {
+                    document.getElementById(clicked_id).classList.add("btn-danger");
+                    document.getElementById(clicked_id-1).classList.add("btn-success");
+                }
                 for(var i = 0; i <= 25; i++){
                     if(i > clicked_id){
                         document.getElementById(i).disabled = true;
                     }
                 }
+            } else {
+                alert("You Lose");
             }
         });
     </script>
