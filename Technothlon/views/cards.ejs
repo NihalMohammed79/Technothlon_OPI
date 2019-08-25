@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <style>
+            .row {
+                max-width: 900px;
+            }
+            .col-md-1 {
+                height: 90px;
+                border: 2px solid red;
+                font-size: 40px;
+                padding-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Ann and Bob's Card Game</h1>
+            <p>On a table there are 10 cards which are labeled with number from 0 to 9 each.</p>
+            <p> Bob is allowed to change the position of the cards with a sequence of his preference.</p>
+            <p> When he is done, Ann takes the left card or the right card of this sequence. From the remaining cards, Bob takes the left card or the right card of the sequence.</p>
+            <div style="text-align: center;">
+                <div id="row" class="row">
+                    <div id="0" class="col-md-1">0</div>
+                    <div id="1" class="col-md-1">1</div>
+                    <div id="2" class="col-md-1">2</div>
+                    <div id="3" class="col-md-1">3</div>
+                    <div id="4" class="col-md-1">4</div>
+                    <div id="5" class="col-md-1">5</div>
+                    <div id="6" class="col-md-1">6</div>
+                    <div id="7" class="col-md-1">7</div>
+                    <div id="8" class="col-md-1">8</div>
+                    <div id="9" class="col-md-1">9</div>
+                </div>
+            </div>
+            <input style="width: 300px;" id="input" type="text" name="order" placeholder="Enter The Order Of The Cards">
+            <button id="button">Submit</button>
+            <div style="text-align: center;">
+                <button id="left" class="btn btn-primary">Left</button>
+                <button id="right" class="btn btn-secondary">Right</button>
+            </div>
+            <p>Your Cards: </p>
+            <div class="row" id="mycards"></div>
+            <p>Opponents Cards:</p>
+            <div class="row" id="opponentcards"></div>
+        </div>
+        <script>
+            var socket = io.connect("http://localhost:3000");
+
+            socket.on('connect', function (data) {
+                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
+            });
+            var id = "<%= user.socketid %>";
+            var input = document.getElementById("input");
+            var button = document.getElementById("button");
+            var btnLeft = document.getElementById("left");
+            var btnRight = document.getElementById("right");
+            var left = 0;
+            var right = 9;
+            var mycards = document.getElementById("mycards");
+            var opponentcards = document.getElementById("opponentcards");
+            if(id%2 == 1) {
+                var chance = "Your Chance";
+                input.hidden = true;
+                button.hidden = true;
+            } else {
+                var chance = "Opponent Chance";
+            }
+            button.addEventListener("click", function(){
+                var inp = input.value;
+                if(inp.length == 10) {
+                    if(inp.includes(0)&&inp.includes(1)&&inp.includes(2)&&inp.includes(3)&&inp.includes(4)&&inp.includes(5)&&inp.includes(6)&&inp.includes(7)&&inp.includes(8)&&inp.includes(9)) {
+                        socket.emit("order", {
+                            order: inp
+                        });
+                        input.hidden = true;
+                        button.hidden = true;
+                    }
+                } else {
+                    alert("Fill in all the numbers!");
+                }
+            });
+
+            socket.on("order", function(data){
+                console.log(data.order);
+                row.innerHTML = "";
+                row.innerHTML += '<div id="0" class="col-md-1">' + data.order.charAt(0) + '</div>';
+                row.innerHTML += '<div id="1" class="col-md-1">' + data.order.charAt(1) + '</div>';
+                row.innerHTML += '<div id="2" class="col-md-1">' + data.order.charAt(2) + '</div>';
+                row.innerHTML += '<div id="3" class="col-md-1">' + data.order.charAt(3) + '</div>';
+                row.innerHTML += '<div id="4" class="col-md-1">' + data.order.charAt(4) + '</div>';
+                row.innerHTML += '<div id="5" class="col-md-1">' + data.order.charAt(5) + '</div>';
+                row.innerHTML += '<div id="6" class="col-md-1">' + data.order.charAt(6) + '</div>';
+                row.innerHTML += '<div id="7" class="col-md-1">' + data.order.charAt(7) + '</div>';
+                row.innerHTML += '<div id="8" class="col-md-1">' + data.order.charAt(8) + '</div>';
+                row.innerHTML += '<div id="9" class="col-md-1">' + data.order.charAt(9) + '</div>';
+            });
+                btnLeft.addEventListener("click", function(){
+                    if(chance == "Your Chance") {
+                        var leftCard = document.getElementById(left);
+                        mycards.innerHTML += '<div class="col-md-1 green">' + leftCard.textContent + '</div>';
+                        leftCard.hidden = true;
+                        socket.emit("selection3", {
+                            selection: leftCard.textContent,
+                            place: "Left"
+                        });
+                        left++;
+                        chance = "Opponent Chance";
+                    }
+                    check();
+                });
+                btnRight.addEventListener("click", function(){
+                    if(chance == "Your Chance") {
+                        var rightCard = document.getElementById(right);
+                        mycards.innerHTML += '<div class="col-md-1 green">' + rightCard.textContent + '</div>';
+                        socket.emit("selection3", {
+                            selection: rightCard.textContent,
+                            place: "Right"
+                        });
+                        right--;
+                        rightCard.hidden = true;
+                        chance = "Opponent Chance";
+                    }
+                    check();
+                });
+            socket.on("selection3", function(data){
+                opponentcards.innerHTML += '<div class="col-md-1 red">' + data.selection + '</div>';
+                if(data.place == "Right") {
+                    document.getElementById(right).hidden = true;
+                    right--;
+                } else {
+                    document.getElementById(left).hidden = true;
+                    left++;
+                }
+                chance = "Your Chance";
+                check();
+            });
+            function check() {
+                if((left == right-1) || (right == left-1)) {
+                    var myCardArray = document.getElementsByClassName("green");
+                    var opponentCardArray = document.getElementsByClassName("red");
+                    if(myCardArray.length == 5 && opponentCardArray.length == 5) {
+                        var mysum = 0, opponentsum = 0;
+                        for(var i = 0; i < myCardArray.length; i++) {
+                            mysum += Number(myCardArray[i].textContent);
+                        }
+                        for(var i = 0; i < opponentCardArray.length; i++) {
+                            opponentsum += Number(opponentCardArray[i].textContent);
+                        }
+                        if(mysum > opponentsum) {
+                            alert("You Win!");
+                        } else {
+                            alert("Opponent Wins!");
+                        }
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
