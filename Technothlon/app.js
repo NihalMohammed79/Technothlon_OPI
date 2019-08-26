@@ -54,8 +54,20 @@ var clients =[];
 			clients.push(clientInfo);
 			console.log(clients);
 		});
-		socket.on("selection", function(data){
-			socket.broadcast.emit("opponentSelection", data);
+		socket.on("selection1", function(data){
+			socket.broadcast.emit("opponentSelection1", data);
+		});
+		socket.on("selection2", function(data){
+			socket.broadcast.emit("opponentSelection2", data);
+		});
+		socket.on("order", function(data){
+			io.sockets.emit("order", data);
+		});
+		socket.on("selection3", function(data){
+			socket.broadcast.emit("selection3", data);
+		});
+		socket.on("pilenumber", function(data){
+			socket.broadcast.emit("pilenumber", data);
 		});
         socket.on('disconnect', function (data) {
             for( var i=0, len=clients.length; i<len; ++i ){
@@ -64,11 +76,12 @@ var clients =[];
                     clients.splice(i,1);
                     break;
                 }
-            }
+			}
+			console.log(clients);
         });
     });
 
-var levelNames = ['square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
+var levelNames = ['pattern', 'heyawake', 'doors', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
 
 // ==================
 // ROUTES FOR LEVELS
@@ -86,12 +99,31 @@ app.get("/level", isLoggedIn, function(req, res){
 		console.log(user);
 		res.send("GAME OVER");
 	}
-
 });
 
 app.get("/building", isLoggedIn, function(req, res){
 	var user = req.user;
 	res.render("25floor.ejs", {user: user});
+});
+
+app.get("/triangle", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("triangle.ejs", {user: user});
+});
+
+app.get("/pile", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("pile.ejs", {user: user});
+});
+
+app.get("/cards", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("cards.ejs", {user: user});
+});
+
+app.get("/fight21", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("fight21.ejs", {user: user});
 });
 
 app.get('/getPass',function(req,res) {
@@ -110,13 +142,11 @@ app.post("/invisible", function(req, res){
 	if(answer.toLowerCase() == "german"){
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
- 		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/light", function(req, res){
@@ -125,13 +155,11 @@ app.post("/light", function(req, res){
 	if(divId == "div3"){
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
- 		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/logic34", function(req, res){
@@ -150,13 +178,11 @@ app.post("/alphabet", function(req, res){
 	if(answer.toLowerCase() == "ha"){
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
- 		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/crack", function(req, res){
@@ -167,13 +193,11 @@ app.post("/crack", function(req, res){
 	if(x == 0 && y== 4 && z == 2) {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/people", function(req, res){
@@ -182,13 +206,11 @@ app.post("/people", function(req, res){
 	if(chosenPerson == "person13") {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/digits", function(req, res){
@@ -197,13 +219,11 @@ app.post("/digits", function(req, res){
 	if(form == "correct") {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/pi", function(req, res){
@@ -212,13 +232,11 @@ app.post("/pi", function(req, res){
 	if(answer.toLowerCase() == "pi") {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/nonogram1", function(req, res){
@@ -227,13 +245,11 @@ app.post("/nonogram1", function(req, res){
 	if(answer == "1111011110110000001100001") {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/nonogram2", function(req, res){
@@ -242,13 +258,11 @@ app.post("/nonogram2", function(req, res){
 	if(answer == "1111101111111100011111001000100100011100010100100111101011011111100111101100101110000001111001110111") {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/poll", function(req, res){
@@ -257,13 +271,11 @@ app.post("/poll", function(req, res){
 	if(answer == "122233123334122534111544555544") {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
-		user.save();
-		res.redirect("/level");
 	}
+	user.save();
+ 	res.redirect("/level");
 });
 
 app.post("/square", function(req, res){
@@ -272,15 +284,22 @@ app.post("/square", function(req, res){
 	if(c == 15) {
 		user.currentLevel += 1;
 		user.score += 5;
-		user.save();
-		res.redirect("/level");
 	} else if(c == 14) {
 		user.currentLevel += 1;
 		user.score += 2.5;
-		user.save();
-		res.redirect("/level");
 	} else {
 		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/pattern", function(req, res){
+	var user = req.user;
+	var answer = req.body.pattern;
+	if(answer == "right") {
+		user.currentLevel += 1;
+		user.score += 5;
 		user.save();
 		res.redirect("/level");
 	}
