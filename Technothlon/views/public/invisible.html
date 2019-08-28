@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Technothlon</title>
+		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		<style type="text/css">
+			label {
+				text-align: center;
+			}
+			p,ol,ul {
+				color: black;
+				font-size: 1.4em;
+			}
+			h1{
+				color: white;
+			}
+			body{
+				background-color:black;
+				background-image:
+				radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+				radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+				radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+				radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+				background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+				background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Technothlon</a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+						<ul style="text-align: center; width: 250px;" class="dropdown-menu">
+							<li>Level Name: The 25 Floor Building</li>
+							<li role="separator" class="divider"></li>
+							<li>Deduction On Hint 1: 5 marks</li>
+							<li role="separator" class="divider"></li>
+							<li>Deduction On Hint 2: 5 marks</li>
+							<li role="separator" class="divider"></li>
+							<li>Deduction On Skip: 15 marks</li>
+							<li role="separator" class="divider"></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+				<li><a href="/profile">View Profile</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+					<ul class="dropdown-menu" style="width: 200px;">
+					<form style="text-align: center;" action="/hint" method="POST">
+						<label for="hint">Type 'hint' in the box below to get a hint</label>
+						<input style="width: 150px;" type="text" name="hint" id="hint">
+						<button style="margin-top: 5px;" type="submit">Submit</button>
+					</form>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+					<ul class="dropdown-menu" style="width: 200px;">
+						<form style="text-align: center;" action="/skip" method="POST">
+							<label for="hint">Type 'skip' in the box below to skip this level</label>
+							<input style="width: 150px;" type="text" name="skip" id="skip">
+							<button style="margin-top: 5px;" type="submit">Submit</button>
+						</form>
+					</ul>
+				</li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+		<div class="container">
+			<h1>Solve The Question IN The Night Sky</h1>
+			<form action="/invisible" method="POST">
+				<input type="text" placeholder="Enter Your Answer" name="answer">
+				<input type="submit">
+			</form>
+		<p>Q) Let us assume that there are five houses of different colors next to each other on the same road.</p>
+		<ul>
+			<li>In each house lives a man of a different nationality.</li>
+			<li>Every man has his favorite drink, his favorite brand of cigarettes, and keeps pets of a particular kind.</li>
+		</ul>
+		<p>"Who owns the fish?"</p>
+		<p>Clues:</p>
+		<ul>
+			<li>The Englishman lives in the red house.</li>
+			<li>The Swede keeps dogs.</li>
+			<li>The Dane drinks tea.</li>
+			<li>The green house is just to the left of the white one.</li>
+			<li>The owner of the green house drinks coffee.</li>
+			<li>The Pall Mall smoker keeps birds.</li>
+			<li>The owner of the yellow house smokes Dunhills.</li>
+			<li>The man in the center house drinks milk.</li>
+			<li>The Norwegian lives in the first house.</li>
+			<li>The Blend smoker has a neighbor who keeps cats.</li>
+			<li>The man who smokes Blue Masters drinks beer.</li>
+			<li>The man who keeps horses lives next to the Dunhill smoker.</li>
+			<li>The German smokes Prince.</li>
+			<li>The Norwegian lives next to the blue house.</li>
+			<li>The Blend smoker has a neighbor who drinks water.</li>
+		</ul>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	</body>
+</html>

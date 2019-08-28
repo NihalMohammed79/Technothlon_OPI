@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Technothlon</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+                        <ul style="text-align: center; width: 250px;" class="dropdown-menu">
+                            <li>Level Name: The 25 Floor Building</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Hint 1: 5 marks</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Hint 2: 5 marks</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Skip: 15 marks</li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                <li><a href="/profile">View Profile</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="width: 200px;">
+                    <form style="text-align: center;" action="/hint" method="POST">
+                        <label for="hint">Type 'hint' in the box below to get a hint</label>
+                        <input style="width: 150px;" type="text" name="hint" id="hint">
+                        <button style="margin-top: 5px;" type="submit">Submit</button>
+                    </form>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="width: 200px;">
+                        <form style="text-align: center;" action="/skip" method="POST">
+                            <label for="hint">Type 'skip' in the box below to skip this level</label>
+                            <input style="width: 150px;" type="text" name="skip" id="skip">
+                            <button style="margin-top: 5px;" type="submit">Submit</button>
+                        </form>
+                    </ul>
+                </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+        <div class="container">
+            <h1>The Puzzle Of The Prison Doors</h1>
+            <p>You have been incarcerated in a high-security prison for several nefarious crimes which we need not go into here. The warden, being a kindly logician, offers you a single chance to escape. You are blindfolded and given a choice of five doors, one of which leads to freedom and the other four to prison cells. You know that the doors are red, blue, green, yellow, and white; they are evenly spaced, each 2 paces from the next; and you are standing in front of the middle one.</p>
+            <p>There is a guard standing by each door, and all five guards tell the truth (weren't expecting that, were you?). They make the following statements:</p>
+            <ul>
+                <li>The red door is somewhere to the left of the door leading to freedom.</li>
+                <li>The blue door is not at either end.</li>
+                <li>The green door is 3 doors away from the door leading to freedom (2 doors between them).</li>
+                <li>The yellow door is adjacent to the door leading to freedom.</li>
+                <li>The white door is the middle one.</li>
+            </ul>
+            <p>To find out how many paces you need to take to which side in order to be standing in front of the door to freedom, you need to answer the following two questions:</p>
+            <ul>
+                <li><strong>What is the order of the coloured doors, left to right?</strong></li>
+                <li><strong>Which colour of door leads to freedom?</strong></li>
+            </ul>
+            <p>You may assume that all statements made about "left" and "right" refer to your left and right.</p>
+            <form style="text-align: center" action="/doors" method="POST">
+                <input type="text" name="first" placeholder="First">
+                <input type="text" name="second" placeholder="Second">
+                <input type="text" name="third" placeholder="Third">
+                <input type="text" name="fourth" placeholder="Fourth">
+                <input type="text" name="fifth" placeholder="Fifth">
+                <input type="text" name="door" placeholder=" Color Of Door Which Leads To Freedom">
+                <button style="margin: 10px;" type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container" style="margin-top: 20px;">
+            <div class="jumbotron">
+                <h1 class="display-4">Your Profile</h1>
+                <p class="lead"><h3>Name Of Team: <%= user.username %></h3></p>
+                <hr class="my-4">
+                <p>It's Going Good.</p>
+                <h3>Score: <%= user.score %></h3>
+            </div>
+        </div>
+        <script>
+            document.body.innerHTML += '<form id="dynForm" action="/light" method="post"><input type="hidden" name="divId" value="Hello"></form>';
+        </script>
+    </body>
+</html>

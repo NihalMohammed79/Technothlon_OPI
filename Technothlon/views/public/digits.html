@@ -1,0 +1,151 @@
+<html>
+<head>
+    <title>Technothlon</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script>
+function validateForm(){
+var ar=new Array(9); 
+ar[0] = ""+document.forms["myForm"]["1"].value;
+ar[1] = ""+document.forms["myForm"]["2"].value;
+ar[2] = ""+document.forms["myForm"]["3"].value;
+ar[3] = ""+document.forms["myForm"]["4"].value;
+ar[4] = ""+document.forms["myForm"]["5"].value;
+ar[5] = ""+document.forms["myForm"]["6"].value;
+ar[6] = ""+document.forms["myForm"]["7"].value;
+ar[7] = ""+document.forms["myForm"]["8"].value;
+ar[8] = ""+document.forms["myForm"]["9"].value;
+var arr=[1,1,1,1,1,1,1,1,1];
+for(var i=0;i<9;i++){
+    for(var j=0;j<ar[i].length;j++){
+        arr[ar[i][j]-'1']++;
+        }
+    }
+var p=0;
+for(var i=0;i<9;i++){
+    p=p+arr[i];
+}
+for(var i=0;i<9;i++){
+    arr[i]=p-arr[i];
+}
+var ax=new Array(9);
+var s=0;
+for(var i=0;i<9;i++){
+    ax[i]=parseInt(ar[i],10);
+    if(ax[i]==arr[i]){
+        s++;
+    }
+}
+if(s==9){
+    document.body.innerHTML += '<form id="dynForm" action="/digits" method="post"><input type="hidden" name="form" value="correct"></form>';
+	document.getElementById("dynForm").submit();
+}else{
+    document.body.innerHTML += '<form id="dynForm" action="/digits" method="post"><input type="hidden" name="form" value="worng"></form>';
+	document.getElementById("dynForm").submit();
+}
+}
+</script>
+</head>
+<body bgcolor="#33DDFF">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Technothlon</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+                    <ul style="text-align: center; width: 250px;" class="dropdown-menu">
+                        <li>Level Name: The 25 Floor Building</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 1: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 2: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Skip: 15 marks</li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="/profile">View Profile</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                <form style="text-align: center;" action="/hint" method="POST">
+                    <label for="hint">Type 'hint' in the box below to get a hint</label>
+                    <input style="width: 150px;" type="text" name="hint" id="hint">
+                    <button style="margin-top: 5px;" type="submit">Submit</button>
+                </form>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                    <form style="text-align: center;" action="/skip" method="POST">
+                        <label for="hint">Type 'skip' in the box below to skip this level</label>
+                        <input style="width: 150px;" type="text" name="skip" id="skip">
+                        <button style="margin-top: 5px;" type="submit">Submit</button>
+                    </form>
+                </ul>
+            </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<h1 align="center" color="blue"><b>It's Brain Time<b></h1>
+<form align="center"  name="myForm" onsubmit="return validateForm()" method="post">
+<fieldset>
+<p align="center">
+<label>The number of digits in this box that are not 1 is</label>
+<input type="text" name="1" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 2 is</label>
+<input type="text" name="2" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 3 is</label>
+<input type="text" name="3" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 4 is</label>
+<input type="text" name="4" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 5 is</label>
+<input type="text" name="5" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 6 is</label>
+<input type="text" name="6" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 7 is</label>
+<input type="text" name="7" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 8 is</label>
+<input type="text" name="8" required>
+</p>
+<p align="center">
+<label>The number of digits in this box that are not 9 is</label>
+<input type="text" name="9" required>
+</p>
+<p align="center">
+<input type="submit">
+</p>
+</fieldset>
+</form>
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

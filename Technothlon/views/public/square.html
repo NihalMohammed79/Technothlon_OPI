@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Squares</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> 
+ 	 <style>
+          .grid-container {
+            display: inline-grid;
+            grid-template-columns: 100px 100px 100px 100px  100px;
+            grid-template-rows: 100px 100px 100px  100px 100px;
+            background-color: #ffffff;
+            grid-gap: 1px;
+            padding: 1px;
+            }
+
+            .grid-item {
+            background-color: #ffffff;
+            border: none;
+            padding: 40px;
+            font-size: 30px;
+            text-align: center;
+            }
+
+            .button {
+            border: none;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 6px;
+            margin: 4px 2px;
+            border-radius: 100%;
+            }
+            .removed {
+                background-color: red;
+            }
+            .not_removed {
+                background-color: black;
+            }
+      </style>
+ 	 </head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Technothlon</a>
+        </div>
+    
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+                        <ul style="text-align: center; width: 250px;" class="dropdown-menu">
+                            <li>Level Name: The 25 Floor Building</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Hint 1: 5 marks</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Hint 2: 5 marks</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Skip: 15 marks</li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="/profile">View Profile</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                <form style="text-align: center;" action="/hint" method="POST">
+                    <label for="hint">Type 'hint' in the box below to get a hint</label>
+                    <input style="width: 150px;" type="text" name="hint" id="hint">
+                    <button style="margin-top: 5px;" type="submit">Submit</button>
+                </form>
+                </ul>
+            </li>
+            <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="width: 200px;">
+                        <form style="text-align: center;" action="/skip" method="POST">
+                            <label for="hint">Type 'skip' in the box below to skip this level</label>
+                            <input style="width: 150px;" type="text" name="skip" id="skip">
+                            <button style="margin-top: 5px;" type="submit">Submit</button>
+                        </form>
+                    </ul>
+            </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+	<div class="container" align="center">
+
+		<div class="question">
+			<h3>Remove the least possible number of dots from the figure so that it will be impossible to form a square with any remaining dots as vertices.
+			</h3>
+			<h5>[On removing only 10 dots you will complete this level. However, if you remove 11 dots, such that no squares form, and submit, you will get partial points and will procees to the next level.]
+			</h5>
+		</div>
+		<div class="grid-container" id="dots" align="center">			
+		</div>
+		<div style="width:350px;" align=center>
+			<button onclick="check()" class="sub">Submit</button>
+		</div>
+	<script type="text/javascript" src="square.js"></script>
+	</div>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
