@@ -6,10 +6,10 @@ var express 				= require("express"),
 	passportLocalMongoose 	= require("passport-local-mongoose"),
 	LocalStrategy 			= require("passport-local"),
 	socket					= require("socket.io"),
-	util = require("util"),
-    fs = require('fs'),
-    os = require('os'),
-    url = require('url');
+	util 					= require("util"),
+    fs 						= require('fs'),
+    os						= require('os'),
+    url 					= require('url');
 
 // Models For User
 var User = require("./models/user");
@@ -41,7 +41,7 @@ passport.deserializeUser(User.deserializeUser());
 // =================
 // SETUP FOR SOCKET
 // =================
-var server = app.listen(3000, function(){
+var server = app.listen(4000, function(){
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
@@ -69,6 +69,21 @@ var clients =[];
 		socket.on("pilenumber", function(data){
 			socket.broadcast.emit("pilenumber", data);
 		});
+		socket.on("chat", function(data){
+			io.sockets.emit("chat", data);
+		});   
+		socket.on("typing", function(data){
+			socket.broadcast.emit("typing", data);
+		});
+		socket.on("chat1", function(data){
+			io.sockets.emit("chat1", data);
+		});   
+		socket.on("typing1", function(data){
+			socket.broadcast.emit("typing1", data);
+		});
+		socket.on("number", function(data){
+			socket.broadcast.emit("number", data);
+		});
         socket.on('disconnect', function (data) {
             for( var i=0, len=clients.length; i<len; ++i ){
                 var c = clients[i];
@@ -77,12 +92,10 @@ var clients =[];
                     break;
                 }
 			}
-			console.log(clients);
         });
     });
 
-var levelNames = ['pattern', 'heyawake', 'doors', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
-
+var levelNames = ['layout','doors', 'pattern', 'flash', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
 // ==================
 // ROUTES FOR LEVELS
 // ==================
@@ -99,6 +112,17 @@ app.get("/level", isLoggedIn, function(req, res){
 		console.log(user);
 		res.send("GAME OVER");
 	}
+});
+
+app.get("/skip", function(req, res){
+	var user = req.user;
+	var skip = req.body.skip;
+	if(skip == "skip"){ 
+		user.score -=5;
+		user.currentLevel += 1;
+	}
+	user.save();
+	res.redirect("/level");
 });
 
 app.get("/building", isLoggedIn, function(req, res){
@@ -121,9 +145,28 @@ app.get("/cards", isLoggedIn, function(req, res){
 	res.render("cards.ejs", {user: user});
 });
 
-app.get("/fight21", isLoggedIn, function(req, res){
+app.get("/detective", isLoggedIn, function(req, res){
 	var user = req.user;
-	res.render("fight21.ejs", {user: user});
+	res.render("detective.ejs", {user: user});
+});
+
+app.get("/chatroom", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("chat.ejs", {user: user});
+});
+
+app.get("/chatroom1", function(req, res){
+	res.render("chat1.ejs");
+});
+
+app.get("/oddgame", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("odd.ejs");
+});
+
+app.get("/half", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("half.ejs", {user: user});
 });
 
 app.get('/getPass',function(req,res) {
@@ -142,6 +185,8 @@ app.post("/invisible", function(req, res){
 	if(answer.toLowerCase() == "german"){
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -155,6 +200,8 @@ app.post("/light", function(req, res){
 	if(divId == "div3"){
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -168,6 +215,8 @@ app.post("/logic34", function(req, res){
 	var newScore = (1/(clickCount-23))*5;
 	user.currentLevel += 1;
 	user.score += newScore;
+	user.hint1 = false;
+	user.hint2 = false;
 	user.save();
 	res.redirect("/level");
 });
@@ -178,6 +227,8 @@ app.post("/alphabet", function(req, res){
 	if(answer.toLowerCase() == "ha"){
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -193,6 +244,8 @@ app.post("/crack", function(req, res){
 	if(x == 0 && y== 4 && z == 2) {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -206,6 +259,8 @@ app.post("/people", function(req, res){
 	if(chosenPerson == "person13") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -219,6 +274,8 @@ app.post("/digits", function(req, res){
 	if(form == "correct") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -232,6 +289,8 @@ app.post("/pi", function(req, res){
 	if(answer.toLowerCase() == "pi") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -245,6 +304,8 @@ app.post("/nonogram1", function(req, res){
 	if(answer == "1111011110110000001100001") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -258,6 +319,8 @@ app.post("/nonogram2", function(req, res){
 	if(answer == "1111101111111100011111001000100100011100010100100111101011011111100111101100101110000001111001110111") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -271,6 +334,8 @@ app.post("/poll", function(req, res){
 	if(answer == "122233123334122534111544555544") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -284,9 +349,13 @@ app.post("/square", function(req, res){
 	if(c == 15) {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else if(c == 14) {
 		user.currentLevel += 1;
 		user.score += 2.5;
+		user.hint1 = false;
+		user.hint2 = false;
 	} else {
 		user.score -= 5;
 	}
@@ -297,19 +366,121 @@ app.post("/square", function(req, res){
 app.post("/pattern", function(req, res){
 	var user = req.user;
 	var answer = req.body.pattern;
-	if(answer == "right") {
+	if(answer.toLowerCase() == "right") {
 		user.currentLevel += 1;
 		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
 		user.save();
 		res.redirect("/level");
 	}
+});
+
+app.post("/flash", function(req, res){
+	var user = req.user;
+	var answer = req.body.answer;
+	if(answer.toLowerCase() == "hard") {
+		user.currentLevel += 1;
+		user.score += 5;
+		user.hint1 = false;
+		user.hint2 = false;
+	} else {
+		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/doors", function(req, res){
+	var user = req.user;
+	var first = req.body.first;
+	var second = req.body.second;
+	var third = req.body.third;
+	var fourth = req.body.fourth;
+	var fifth = req.body.fifth;
+	var door = req.body.door;
+	if(first.toLowerCase() == "green" && second.toLowerCase() == "red" && third.toLowerCase() == "white" && fourth.toLowerCase() == "blue" && fifth.toLowerCase() == "yellow") {
+		if(door.toLowerCase() == "blue") {
+			user.currentLevel += 1;
+			user.score += 5;
+			user.hint1 = false;
+			user.hint2 = false;
+		} else {
+			user.currentLevel += 1;
+			user.score += 2.5;
+			user.hint1 = false;
+			user.hint2 = false;
+		}
+	} else {
+		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+// ============================
+// POST ROUTES FOR MULTIPLAYER
+// ============================
+app.post("/building", function(req, res){
+	var user = req.user;
+	var result = req.body.result;
+	if(result == "I won") {
+		user.score += 5;
+	} else {
+		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/cards", function(req, res){
+	var user = req.user;
+	var result = req.body.result;
+	if(result == "I won") {
+		user.score += 5;
+	} else {
+		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/pile", function(req, res){
+	var user = req.user;
+	var result = req.body.result;
+	if(result == "I won") {
+		user.score += 5;
+	} else {
+		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/detective", function(req, res){
+	var user = req.user;
+	var answer = req.body.answer;
+	user.detectiveAnswer = answer;
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/half", function(req, res){
+	var user = req.user;
+	var result = req.body.result;
+	if(result == "I won") {
+		user.score += 5;
+	} else {
+		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
 });
 
 // ==================
 // ROUTES FOR AUTH
 // ==================
 app.get("/register", function(req, res){
-	console.log('Hello World')
 	res.sendFile(__dirname + "/public/register.html");
 });
 

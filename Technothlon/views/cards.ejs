@@ -48,7 +48,7 @@
             <div class="row" id="opponentcards"></div>
         </div>
         <script>
-            var socket = io.connect("http://localhost:3000");
+            var socket = io.connect("http://localhost:4000");
 
             socket.on('connect', function (data) {
                 socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
@@ -152,8 +152,12 @@
                         }
                         if(mysum > opponentsum) {
                             alert("You Win!");
+                            document.body.innerHTML += '<form id="dynForm" action="/cards" method="POST"><input type="hidden" name="result" value="I won"></form>';
+				            document.getElementById("dynForm").submit();
                         } else {
                             alert("Opponent Wins!");
+                            document.body.innerHTML += '<form id="dynForm" action="/cards" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+				            document.getElementById("dynForm").submit();
                         }
                     }
                 }

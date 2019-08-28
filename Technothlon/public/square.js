@@ -158,12 +158,12 @@ function check(){
     }
 		}
 		if(fail==1){
-			document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="' + Wrong + '"></form>';
+			document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="Wrong"></form>';
 		    document.getElementById("dynForm").submit();
 		}
 	}	
 	else{
-		document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="' + Wrong + '"></form>';
+		document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="Wrong"></form>';
 		document.getElementById("dynForm").submit();
 	}
 }

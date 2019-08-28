@@ -97,7 +97,7 @@ var lock = new PatternLock("#lock", {
             document.body.innerHTML += '<form id="dynForm" action="/pattern" method="post"><input type="hidden" name="pattern" value="right"></form>';
             document.getElementById("dynForm").submit();
         } else {
-            alert("You Lose. Try again!");
+            lock.clear();
         }
      }
   });  

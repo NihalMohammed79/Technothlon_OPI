@@ -60,7 +60,7 @@
       <p><button onclick="myFunction(this.id)" type="button" id="0" class="btn btn-outline-secondary">Floor 0</button></p>
     </div>
     <script>
-        var socket = io.connect("http://localhost:3000");
+        var socket = io.connect("http://localhost:4000");
 
         socket.on('connect', function (data) {
             socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
@@ -89,6 +89,8 @@
             });
             if(clicked_id == 0) {
                 alert("Congratulations! You win");
+                document.body.innerHTML += '<form id="dynForm" action="/building" method="POST"><input type="hidden" name="result" value="I won"></form>';
+				document.getElementById("dynForm").submit();
                 return;
             }
             for(var i = 0; i <= 25; i++){
@@ -150,6 +152,8 @@
                 }
             } else {
                 alert("You Lose");
+                document.body.innerHTML += '<form id="dynForm" action="/building" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+				document.getElementById("dynForm").submit();
             }
         });
     </script>

@@ -75,7 +75,7 @@
             </div>
         </div>
         <script>
-            var socket = io.connect("http://localhost:3000");
+            var socket = io.connect("http://localhost:4000");
 
             socket.on('connect', function (data) {
                 socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
@@ -84,6 +84,8 @@
             var myNumber = 1;
             var clicks = 0;
             var chance = "Your Chance";
+            var pl1Score = 0;
+            var pl2Score = 0;
             function myfunction(clicked_id) {
                 if(chance == "Your Chance") {
                     var clickedButton = document.getElementById(clicked_id);
@@ -112,8 +114,6 @@
                             var leftOverTopLeft = document.getElementById(leftOver.id - 11);
                             var leftOverBottomRight = document.getElementById(leftOver.id + 11);
                             var leftOverBottomLeft = document.getElementById(leftOver.id + 10);
-                            var pl1Score = 0;
-                            var pl2Score = 0;
                             if(leftOverLeft) {
                                 if(leftOverLeft.classList.contains("btn-success")) {
                                     pl1Score += leftOverLeft.innerHTML;
@@ -156,11 +156,7 @@
                                     pl2Score += leftOverLeft.innerHTML;
                                 }
                             }
-                            if(pl1Score > pl2Score) {
-                                alert("Player 2 Wins");
-                            } else {
-                                alert("Player 1 Wins");
-                            }
+                            check();
                         }
                     }
                     chance = "Opponents Chance"; 
@@ -181,6 +177,29 @@
                     clickedButton.innerHTML = data.opponentNumber;
                 }
             });
+            function check() {
+                if(id == "1") {
+                    if(pl1Score > pl2Score) {
+                        alert("You Win!");
+                        document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I won"></form>';
+				        document.getElementById("dynForm").submit();
+                    } else {
+                        alert("Opponent Wins");
+                        document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+				        document.getElementById("dynForm").submit();
+                    }
+                } else {
+                    if(pl1Score > pl2Score) {
+                        alert("Opponent Wins");
+                        document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+				        document.getElementById("dynForm").submit();
+                    } else {
+                        alert("You Win!");
+                        document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I won"></form>';
+				        document.getElementById("dynForm").submit();
+                    }
+                }
+            }
         </script>
     </body>
 </html>

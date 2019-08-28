@@ -5,7 +5,6 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
         <script src="https://kit.fontawesome.com/5bd832650a.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     </head>
     <body>
         <div class="container">
@@ -29,7 +28,7 @@
             </div>
         </div>
         <script>
-            var socket = io.connect("http://localhost:3000");
+            var socket = io.connect("http://localhost:4000");
 
             socket.on('connect', function (data) {
                 socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
@@ -103,8 +102,12 @@
                 if(NumberOfBoxesLeft == 0) {
                     if(chance == "Your Chance") {
                         alert("Opponent Wins!");
+                        document.body.innerHTML += '<form id="dynForm" action="/pile" method="POST"><input type="hidden" name="result" value="I lose"></form>';
+				        document.getElementById("dynForm").submit();
                     } else {
                         alert("You Win!");
+                        document.body.innerHTML += '<form id="dynForm" action="/pile" method="POST"><input type="hidden" name="result" value="I won"></form>';
+				        document.getElementById("dynForm").submit();
                     }
                 }
             }
