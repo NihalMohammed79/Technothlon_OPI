@@ -1,0 +1,156 @@
+<html>
+<head>
+    <title>flash</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+	<style>
+		.play-button-outer {
+		  margin: 10% auto;
+		  width: 10em;
+		  height: 10em;
+		  background-color: rgba(0, 0, 0, .25);
+		  cursor: pointer;
+		  border-radius: 25px;
+		}
+
+		.play-button {
+		  margin: 0 auto;
+		  top: 25%;
+		  position: relative;  
+		  width: 0;
+		  height: 0;
+		  border-style: solid;
+		  border-width: 2.5em 0 2.5em 5em;
+		  border-color: transparent transparent transparent #000;
+
+		  opacity: .75; 
+		}
+
+		.play-button-outer:hover {
+		  background-color: rgba(0, 0, 0, .5);
+		}
+
+		.play-button-outer:hover .play-button {
+		  opacity: 1;
+		}
+	</style>
+</head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Technothlon</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+                        <ul style="text-align: center; width: 250px;" class="dropdown-menu">
+                            <li>Level Name: The 25 Floor Building</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Hint 1: 5 marks</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Hint 2: 5 marks</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Skip: 15 marks</li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                <li><a href="/profile">View Profile</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="width: 200px;">
+                    <div style="text-align: center;" id="hintbox">
+                        <label for="hint">Type 'hint' in the box below to get a hint</label>
+                        <input style="width: 150px;" type="text" name="hint" id="hint">
+                        <button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
+                    </div>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="width: 200px;">
+                        <form style="text-align: center;" action="/skip" method="POST">
+                            <label for="hint">Type 'skip' in the box below to skip this level</label>
+                            <input style="width: 150px;" type="text" name="skip" id="skip">
+                            <button style="margin-top: 5px;" type="submit">Submit</button>
+                        </form>
+                    </ul>
+                </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+        <div class="play-button-outer">
+		  <div class="play-button" onclick="play()"></div>
+		</div>
+		<div>
+			<form style="text-align: center;" action="/flash" method="POST">
+                <label for="answer">The answer is:</label>
+                <input type="text" id="answer" name="answer">
+                <div style="text-align: center;">
+                    <button id="btn" type="button" class="btn btn-success btn-lg">Submit</button>
+                </div>
+			</form>
+		</div>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script>
+            var socket = io.connect("http://localhost:4000");
+            var hintinput = document.getElementById("hint");
+            var hintbutton = document.getElementById("hintbutton");
+            var hintbox = document.getElementById("hintbox");
+             var id = "<%= user.socketid %>";
+             function hintfunction(){
+                if(hintinput.value == "hint") {
+                    console.log(socket.id);
+                        socket.emit("hint", {
+                        id: id,
+                        toid: socket.id
+                    });
+                }
+            };
+            socket.on("hintres", function(data){
+                console.log(data.hint);
+                hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
+            });
+            var sequence=[1,1,1,1,1,5,1,5,1,5,1,1];
+            var delaytim=[1,1,1,5,1,5,1,1,5,1,1,5];
+
+            function white() {
+                document.body.style.background ="#FFFFFF";
+            }
+
+            function red() {
+                document.body.style.background ="#FF0000";
+            }
+
+            var timeouts = [];
+            function play(){
+                var count=delaytim[0];
+                var factor=220;
+                for (var j=0; j<timeouts.length; j++) {
+                    clearTimeout(timeouts[j]);
+                }
+                for(var i=0;i<sequence.length;i++){
+                    timeouts.push(setTimeout(red,count*factor));
+                    count+=sequence[i];
+                    timeouts.push(setTimeout(white,count*factor));
+                    count+=delaytim[i];
+                }
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Poll</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+  <style>
+      .grid-container {
+        display: inline-grid;
+        grid-template-columns: auto auto auto auto auto auto;
+        background-color: #2F4F4F;
+        grid-gap: 10px;
+        padding: 10px;
+        }
+
+        .grid-item {
+        background-color: #d9b3ff;
+        border: 1px solid #000000;
+        padding: 40px;
+        font-size: 30px;
+        text-align: center;
+        }
+        .grid-item img{
+            height: 100px;
+            width: 100px;
+        }
+        .black-circle{
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: black
+        }
+        .white-circle{
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: white
+        }
+  </style>
+  
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Technothlon</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+                    <ul style="text-align: center; width: 250px;" class="dropdown-menu">
+                        <li>Level Name: The 25 Floor Building</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 1: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 2: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Skip: 15 marks</li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="/profile">View Profile</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                <div style="text-align: center;" id="hintbox">
+                    <label for="hint">Type 'hint' in the box below to get a hint</label>
+                    <input style="width: 150px;" type="text" name="hint" id="hint">
+                    <button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
+                </div>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                    <form style="text-align: center;" action="/skip" method="POST">
+                        <label for="hint">Type 'skip' in the box below to skip this level</label>
+                        <input style="width: 150px;" type="text" name="skip" id="skip">
+                        <button style="margin-top: 5px;" type="submit">Submit</button>
+                    </form>
+                </ul>
+            </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+	<div class="container">
+		<div class="question text-primary text-center">
+			<h3>You are currently running for reelection, but the polls aren't exactly in your favor. Each square in this grid is a county. Counties with a black dot are voting for you, while counties with a white dot are voting for your opponent. Can Mathlandia be divided (along the gridlines) into five contiguous states of equal area such that a majority of the states have more black dots than white dots?</h3>
+		</div>
+
+		<div class="grid-container" id="area-grid" align="center">
+			
+		</div>
+
+		<div id="button-list" class="btn-group">
+		</div>
+		<div style="width:350px;" align="center">
+			<button onclick="check_answer()" type="button" class="btn btn-success btn-lg pull-right">Submit</button>
+		</div>
+		<script type="text/javascript" src="poll.js"></script>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>\
+  <script>
+        var socket = io.connect("http://localhost:4000");
+        var hintinput = document.getElementById("hint");
+        var hintbutton = document.getElementById("hintbutton");
+        var hintbox = document.getElementById("hintbox");
+        var id = "<%= user.socketid %>";
+        function hintfunction(){
+            if(hintinput.value == "hint") {
+                console.log(socket.id);
+                    socket.emit("hint", {
+                    id: id,
+                    toid: socket.id
+                });
+            }
+        };
+        socket.on("hintres", function(data){
+            console.log(data.hint);
+            hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
+        });
+        var clicks=0;
+        var black_array=[2,4,12,14,15,16,23,25,27,28,29,30];
+        var color_array=["#E74C3C","#5DADE2","#52BE80","#F4D03F","#EB984E","D9B3FF"]
+        var background_color="D9B3FF";
+        var current_color="#D9B3FF";
+        var hexDigits = new Array
+                ("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"); 
+
+        //Function to convert rgb color to hex format
+        function rgb2hex(rgb) {
+        rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+        }
+
+        function hex(x) {
+        return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+        }
+        function grid_click()
+        {	
+
+            console.log("square"+this.id.slice(3));
+            var clicked_cell=document.getElementById("square"+this.id.slice(3));
+            if(rgb2hex(clicked_cell.style.backgroundColor)!=("#"+background_color)) clicked_cell.style.background="#"+background_color;
+            else clicked_cell.style.background=current_color;
+            //console.log(rgb2hex(clicked_cell.style.backgroundColor));
+
+            
+        }
+        function button_click(){
+            current_color=color_array[Number(this.id.charAt(this.id.length-1))-1];
+        }
+        function check_answer(){
+            var region_numbers=[21,15,17,23,22];
+            var hexregion_array=[];
+            var region_array=[];
+            var answer_string="";
+            for(var i=0;i<5;i++){
+                var region=document.getElementById("square"+region_numbers[i]);
+                region_array.push(region);
+                hexregion_array.push(rgb2hex(region.style.backgroundColor));
+                if(rgb2hex(region.style.backgroundColor)==background_color){
+                    console.log("All squares not filled");
+                }
+            }
+            console.log(hexregion_array);
+            for(var i=1;i<=n;i++){
+                var check_region=document.getElementById("square"+i);
+                var check_region_color=rgb2hex(check_region.style.backgroundColor);
+                console.log("check"+check_region_color);
+                var index=hexregion_array.indexOf(check_region_color);
+                console.log("index"+index)
+                if(index==-1){
+                    console.log("Color not found in array");
+
+                }
+                else if(index==5){
+                    console.log("All colors are not filled");
+                } else{
+                    answer_string+=index+1
+                }
+            }
+            document.body.innerHTML += '<form id="dynForm" action="/poll" method="POST"><input type="hidden" name="answer" value="' + answer_string + '"></form>';
+            document.getElementById("dynForm").submit();
+        }
+        var buttons=document.getElementById('button-list');
+        for(var i=1;i<=5;i++){
+            var button =document.createElement('button');
+            button.id="button"+i;
+            button.innerHTML="Pick color";
+            button.onclick=button_click;
+            button.classList.add("btn");
+            button.classList.add("btn-lg");
+
+            button.style.background=color_array[i-1];
+            buttons.appendChild(button);
+            
+        }
+
+
+        var n=30;
+        var grid=document.getElementById("area-grid");
+        for(var iterator=1;iterator<=n;iterator++){
+
+
+            var newelement=document.createElement('div');
+            var dotelement=document.createElement('div');
+            dotelement.onclick=grid_click;
+            if(black_array.includes(iterator)){
+                dotelement.classList.add("black-circle");
+            }
+            else{
+                dotelement.classList.add("white-circle");
+            }
+            dotelement.id="dot"+iterator;
+
+            newelement.classList.add("grid-item");
+            newelement.id="square"+iterator;
+            newelement.style.background=current_color;
+            newelement.appendChild(dotelement);
+            grid.appendChild(newelement);
+
+        }
+  </script>
+</body>
+</html>

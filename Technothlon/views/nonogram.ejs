@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Nonogram</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <style>
+      .grid-container {
+          display: inline-grid;
+          grid-template-columns: auto auto auto auto auto auto;
+          background-color: #2F4F4F;
+          grid-gap: 10px;
+          padding: 10px;
+      }
+      
+      .grid-item {
+          background-color: #d9b3ff;
+          border: 1px solid #000000;
+          padding: 50px;
+          font-size: 30px;
+          text-align: center;
+      }
+  </style>
+  
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Technothlon</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+                    <ul style="text-align: center; width: 250px;" class="dropdown-menu">
+                        <li>Level Name: The 25 Floor Building</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 1: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 2: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Skip: 15 marks</li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="/profile">View Profile</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                <div style="text-align: center;" id="hintbox">
+                    <label for="hint">Type 'hint' in the box below to get a hint</label>
+                    <input style="width: 150px;" type="text" name="hint" id="hint">
+                    <button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
+                </div>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                    <form style="text-align: center;" action="/skip" method="POST">
+                        <label for="hint">Type 'skip' in the box below to skip this level</label>
+                        <input style="width: 150px;" type="text" name="skip" id="skip">
+                        <button style="margin-top: 5px;" type="submit">Submit</button>
+                    </form>
+                </ul>
+            </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+        <div class="question text-primary text-center">
+            <h3>Your aim in these puzzles is to colour the whole grid in to black and white squares. At the top of each column, and at the side of each row, you will notice a set of one or more numbers. These numbers tell you the runs of black squares in that row/column. So, if you see '10 1', that tells you that there will be a run of exactly 10 black squares, followed by one or more white square, followed by a single black square. There may be more white squares before/after this sequence</h3>
+        </div>
+
+        <div class="grid-container" id="area-grid" align="center">
+            
+        </div>
+
+        <div style="width:350px;" align="center">
+            <button onclick="check_answer()" type="button" class="btn btn-success btn-lg pull-right">Submit</button>
+        </div>
+        <script type="text/javascript" src="nonogram.js"></script>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        var socket = io.connect("http://localhost:4000");
+        var hintinput = document.getElementById("hint");
+        var hintbutton = document.getElementById("hintbutton");
+        var hintbox = document.getElementById("hintbox");
+        var id = "<%= user.socketid %>";
+        function hintfunction(){
+            if(hintinput.value == "hint") {
+                console.log(socket.id);
+                    socket.emit("hint", {
+                    id: id,
+                    toid: socket.id
+                });
+            }
+        };
+        socket.on("hintres", function(data){
+            console.log(data.hint);
+            hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
+        });
+        var clicks=0;
+        var background_color="D9B3FF";
+        var hexDigits = new Array
+                ("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"); 
+        var answer_string="";
+        var hints={
+            1:"<div style=\"font-size: 50px\" class=\"glyphicon glyphicon-fire\"></div>",
+            2:"3",
+            3:"3",
+            4:"2",
+            5:"2<br>1",
+            6:"2",
+            7:"4",
+            13:"4",
+            19:"2",
+            25:"2",
+            31:"1"
+        };
+
+        function rgb2hex(rgb) {
+        rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+        }
+
+        function hex(x) {
+        return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+        }
+
+        function button_click(){
+            console.log(this.id);
+            var region=document.getElementById(this.id);
+            if(rgb2hex(region.style.backgroundColor)!=("#"+background_color)){
+                region.style.background="#"+background_color;
+                clicks++;
+            }
+            else region.style.background="#000000";
+
+        }
+
+        var n=36;
+        var grid=document.getElementById("area-grid");
+        for(var iterator=1;iterator<=n;iterator++){
+            var idvalue=0;
+            var newelement=document.createElement('div');
+            if(iterator<=Math.sqrt(n) || iterator%Math.sqrt(n)==1){
+                newelement.classList.add("grid-item");
+                newelement.id="info"+iterator;
+                newelement.style.background="#EB4E9F";
+                newelement.innerHTML=hints[iterator];
+                grid.appendChild(newelement);
+            }
+            else{
+                idvalue=iterator-(Math.sqrt(n)+1);
+                idvalue-=Math.floor(idvalue/Math.sqrt(n));
+                newelement.classList.add("grid-item");
+                newelement.id="square"+idvalue;
+                newelement.style.background="#D9B3FF";
+                newelement.onclick=button_click
+                grid.appendChild(newelement);
+            }
+        }
+
+        function check_answer(){
+            var new_n=(Math.sqrt(n)-1)*(Math.sqrt(n)-1);
+            for(var i=1;i<=new_n;i++){
+                var check_region=document.getElementById("square"+i);
+                var check_region_color=rgb2hex(check_region.style.backgroundColor);
+                console.log("check"+check_region_color);
+                if(check_region_color=="#000000") answer_string+=1;
+                else answer_string+=0;
+            }
+            document.body.innerHTML += '<form id="dynForm" action="/nonogram1" method="POST"><input type="hidden" name="answer" value="' + answer_string + '"></form>';
+            document.getElementById("dynForm").submit();
+        }
+    </script>
+</body>
+</html>  

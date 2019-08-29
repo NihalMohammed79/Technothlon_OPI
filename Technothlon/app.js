@@ -45,6 +45,16 @@ var server = app.listen(4000, function(){
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
+var hints = [ 
+	{
+		hint1: "You are right!",
+		hint2: "This level is bad"
+	},
+	{
+		hint1: "This level can be skipped",
+		hint2: "bakjfbof"
+	}
+];
 var clients =[];
     io.sockets.on('connection', function (socket) {
         socket.on('storeClientInfo', function (data) {
@@ -52,13 +62,56 @@ var clients =[];
             clientInfo.customId     = data.customId;
             clientInfo.clientId     = socket.id;
 			clients.push(clientInfo);
-			console.log(clients);
+			for(var i = 0; i < clients.length; i++) {
+				User.find({socketid: clients[i].customId}, function(err, user){
+					if(err) {
+						console.log(err);
+					} else {
+						if(user[0].socketid<= 19) { 
+							socket.join(user[0].socketid.toString());
+						} else {
+							socket.join((user[0].socketid-19).toString());
+						}
+					}
+				});
+			}
+		});
+		socket.on('hint', function(data) {
+			User.find({socketid: data.id}, function(err, user){
+				if(err) {
+					console.log(err);
+				} else {
+					var level = user[0].currentLevel;
+					if(user[0].hint1 == false) {
+						var hint = hints[level-1].hint1;
+						io.to(data.toid).emit('hintres', {hint : hint});
+						user[0].hint1 = true;
+						user[0].score -= 5;
+					} else if(user[0].hint1 == true && user[0].hint2 == false) {
+						var hint = hints[level-1].hint2;
+						io.to(data.toid).emit('hintres', {hint : hint});
+						user[0].hint2 = true;
+						user[0].score -= 5;
+					} else {
+						io.to(data.toid).emit('hintres', {hint : "No More Hints!"});
+					}
+					user[0].save();
+				}
+			});
 		});
 		socket.on("selection1", function(data){
-			socket.broadcast.emit("opponentSelection1", data);
+			if(data.id < 20) {
+				socket.broadcast.to(data.id.toString()).emit("opponentSelection1", data);
+			} else {
+				socket.broadcast.to((data.id - 19).toString()).emit("opponentSelection1", data);
+			}
 		});
 		socket.on("selection2", function(data){
-			socket.broadcast.emit("opponentSelection2", data);
+			if(data.id < 20) {
+				socket.broadcast.to(data.id.toString()).emit("opponentSelection2", data);
+			} else {
+				socket.broadcast.to((data.id - 19).toString()).emit("opponentSelection2", data);
+			}
 		});
 		socket.on("order", function(data){
 			io.sockets.emit("order", data);
@@ -95,7 +148,9 @@ var clients =[];
         });
     });
 
-var levelNames = ['doors', 'pattern', 'flash', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
+var levelNames = ['flash', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
+var skipdeds = [10, 10, 20, 13, 15, 20, 15, 15, 16, 17, 12, 10, 12];
+var noofusers = 1;
 // ==================
 // ROUTES FOR LEVELS
 // ==================
@@ -107,33 +162,34 @@ app.get("/level", isLoggedIn, function(req, res){
 	var user = req.user;
 	var level = user.currentLevel;
 	if(level <= levelNames.length)
-		res.sendFile(__dirname + "/public/" + levelNames[level - 1] +".html");
+		res.render(levelNames[level-1] + ".ejs", {user: user});
 	else {
 		console.log(user);
 		res.send("GAME OVER");
 	}
 });
 
-app.get('/layout',isLoggedIn,function(req,res) {
+app.get("/doors", isLoggedIn, function(req, res){
 	var user = req.user;
-	res.render('layout.ejs',{user: user});
+	res.render("doors.ejs", {user: user});
 });
 
-app.get("/skip", function(req, res){
+app.get("/profile", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("profile.ejs", {user: user});
+});
+
+app.post("/skip", function(req, res){
 	var user = req.user;
 	var skip = req.body.skip;
-	if(skip == "skip"){ 
-		user.score -=5;
+	var level = user.currentLevel;
+	if(skip == "skip"){
+		user.score -= skipdeds[level - 1];
 		user.currentLevel += 1;
 	}
 	user.save();
 	res.redirect("/level");
 });
-
-app.get('/hint',function(req,res) {
-	var user = req.user;
-	res.render('')
-})
 
 app.get("/building", isLoggedIn, function(req, res){
 	var user = req.user;
@@ -495,7 +551,15 @@ app.get("/register", function(req, res){
 });
 
 app.post("/register", function(req, res){
-	var newUser = new User({username: req.body.username, hint1: false, hint2: false, currentLevel: 1, score: 0,attempts: 0});
+	if(noofusers % 3 == 0) {
+		var newId = "Brandon";
+	} else if(noofusers % 3 == 1) {
+		var newId = "Makeda";
+	} else {
+		var newId = "Campbell";
+	}
+	var newUser = new User({username: req.body.username, hint1: false, hint2: false, currentLevel: 1, score: 0, attempts:0, socketid: noofusers, newid: newId});
+	noofusers++; 
 	User.register(newUser, req.body.password, function(err, user){
 		if(err){
 			console.log(err);

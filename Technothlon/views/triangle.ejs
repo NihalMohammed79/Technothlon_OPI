@@ -82,10 +82,9 @@
             });
             var id = "<%= user.socketid %>";
             var myNumber = 1;
-            var clicks = 0;
             var chance = "Your Chance";
-            var pl1Score = 0;
-            var pl2Score = 0;
+            var yourScore = 0;
+            var opponentScore = 0;
             function myfunction(clicked_id) {
                 if(chance == "Your Chance") {
                     var clickedButton = document.getElementById(clicked_id);
@@ -93,20 +92,15 @@
 
                     } else {
                         clickedButton.innerHTML = myNumber;
-                        if(id%2 == 1) {
                             clickedButton.classList.remove("btn-default");
                             clickedButton.classList.add("btn-success");
-                        } else {
-                            clickedButton.classList.remove("btn-default");
-                            clickedButton.classList.add("btn-danger");
-                        }
                         socket.emit("selection2", {
                             selection: clicked_id,
                             opponentNumber : myNumber
                         });
                         myNumber++;
                         clicks++;
-                        if((clicks == 10)&&(id == '2')) {
+                        if(document.getElementsByClassName("btn-default").length == 1) {
                             var leftOver = document.getElementsByClassName("btn-default")[0];
                             var leftOverLeft = document.getElementById(leftOver.id - 1);
                             var leftOverRight = document.getElementById(leftOver.id + 1);
@@ -116,44 +110,44 @@
                             var leftOverBottomLeft = document.getElementById(leftOver.id + 10);
                             if(leftOverLeft) {
                                 if(leftOverLeft.classList.contains("btn-success")) {
-                                    pl1Score += leftOverLeft.innerHTML;
+                                    yourScore += leftOverLeft.innerHTML;
                                 } else {
-                                    pl2Score += leftOverLeft.innerHTML;
+                                    opponentScore += leftOverLeft.innerHTML;
                                 }
                             }
                             if(leftOverRight) {
                                 if(leftOverRight.classList.contains("btn-success")) {
-                                    pl1Score += leftOverLeft.innerHTML;
+                                    yourScore += leftOverLeft.innerHTML;
                                 } else {
-                                    pl2Score += leftOverLeft.innerHTML;
+                                    opponentScore += leftOverLeft.innerHTML;
                                 }
                             }
                             if(leftOverTopRight) {
                                 if(leftOverTopRight.classList.contains("btn-success")) {
-                                    pl1Score += leftOverLeft.innerHTML;
+                                    yourScore += leftOverLeft.innerHTML;
                                 } else {
-                                    pl2Score += leftOverLeft.innerHTML;
+                                    opponentScore += leftOverLeft.innerHTML;
                                 }
                             }
                             if(leftOverTopLeft) {
                                 if(leftOverTopLeft.classList.contains("btn-success")) {
-                                    pl1Score += leftOverLeft.innerHTML;
+                                    yourScore += leftOverLeft.innerHTML;
                                 } else {
-                                    pl2Score += leftOverLeft.innerHTML;
+                                    opponentScore += leftOverLeft.innerHTML;
                                 }
                             }
                             if(leftOverBottomRight) {
                                 if(leftOverBottomRight.classList.contains("btn-success")) {
-                                    pl1Score += leftOverLeft.innerHTML;
+                                    yourScore += leftOverLeft.innerHTML;
                                 } else {
-                                    pl2Score += leftOverLeft.innerHTML;
+                                    opponentScore += leftOverLeft.innerHTML;
                                 }
                             }
                             if(leftOverBottomLeft) {
                                 if(leftOverBottomLeft.classList.contains("btn-success")) {
-                                    pl1Score += leftOverLeft.innerHTML;
+                                    yourScore += leftOverLeft.innerHTML;
                                 } else {
-                                    pl2Score += leftOverLeft.innerHTML;
+                                    opponentScore += leftOverLeft.innerHTML;
                                 }
                             }
                             check();
@@ -179,7 +173,7 @@
             });
             function check() {
                 if(id == "1") {
-                    if(pl1Score > pl2Score) {
+                    if(yourScore > opponentScore) {
                         alert("You Win!");
                         document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I won"></form>';
 				        document.getElementById("dynForm").submit();
@@ -189,7 +183,7 @@
 				        document.getElementById("dynForm").submit();
                     }
                 } else {
-                    if(pl1Score > pl2Score) {
+                    if(yourScore > opponentScore) {
                         alert("Opponent Wins");
                         document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I lost"></form>';
 				        document.getElementById("dynForm").submit();
