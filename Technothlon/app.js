@@ -95,7 +95,7 @@ var clients =[];
         });
     });
 
-var levelNames = ['layout','doors', 'pattern', 'flash', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
+var levelNames = ['doors', 'pattern', 'flash', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
 // ==================
 // ROUTES FOR LEVELS
 // ==================
@@ -114,6 +114,11 @@ app.get("/level", isLoggedIn, function(req, res){
 	}
 });
 
+app.get('/layout',isLoggedIn,function(req,res) {
+	var user = req.user;
+	res.render('layout.ejs',{user: user});
+});
+
 app.get("/skip", function(req, res){
 	var user = req.user;
 	var skip = req.body.skip;
@@ -124,6 +129,11 @@ app.get("/skip", function(req, res){
 	user.save();
 	res.redirect("/level");
 });
+
+app.get('/hint',function(req,res) {
+	var user = req.user;
+	res.render('')
+})
 
 app.get("/building", isLoggedIn, function(req, res){
 	var user = req.user;
@@ -524,5 +534,5 @@ function isLoggedIn(req, res, next){
 // Route For * And Listener
 // ==================
 app.get("*", function(req, res){
-	res.send("This Page Does Not Exist You Fool!");
+	res.send("This Page Does Not Exist!");
 });
