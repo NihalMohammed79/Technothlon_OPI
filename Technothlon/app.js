@@ -52,7 +52,7 @@ var hints = [
 	},
 	{
 		hint1: "This level can be skipped",
-		hint2: "bakjfbof"
+		hint2: "Im telling You To Skip this level!"
 	}
 ];
 var clients =[];
@@ -67,10 +67,60 @@ var clients =[];
 					if(err) {
 						console.log(err);
 					} else {
-						if(user[0].socketid<= 19) { 
-							socket.join(user[0].socketid.toString());
-						} else {
-							socket.join((user[0].socketid-19).toString());
+						if(data.level == "building") {
+							if(user[0].socketid<= 19) { 
+								socket.join(user[0].socketid.toString());
+							} else {
+								socket.join((user[0].socketid-19).toString());
+							}
+						}
+						if(data.level == "triangle") {
+							if(user[0].socketid<= 19) { 
+								socket.join(user[0].socketid.toString());
+							} else if(user[0].socketid == 20){
+								socket.join((19).toString());
+							} else {
+								socket.join((user[0].socketid - 20).toString());
+							}
+						}
+						if(data.level == "cards") {
+							if(user[0].socketid<= 19) { 
+								socket.join(user[0].socketid.toString());
+							} else if(user[0].socketid == 20){
+								socket.join((18).toString());
+							} else if(user[0].socketid == 21){
+								socket.join((19).toString());
+							} else {
+								socket.join((user[0].socketid - 21).toString());
+							}
+						}
+						if(data.level == "pile") {
+							if(user[0].socketid<= 19) { 
+								socket.join(user[0].socketid.toString());
+							} else if(user[0].socketid == 20){
+								socket.join((17).toString());
+							} else if(user[0].socketid == 21){
+								socket.join((18).toString());
+							} else if(user[0].socketid == 22){
+								socket.join((19).toString());
+							} else {
+								socket.join((user[0].socketid - 22).toString());
+							}
+						}
+						if(data.level == "half") {
+							if(user[0].socketid<= 19) { 
+								socket.join(user[0].socketid.toString());
+							} else if(user[0].socketid == 20){
+								socket.join((16).toString());
+							} else if(user[0].socketid == 21){
+								socket.join((17).toString());
+							} else if(user[0].socketid == 22){
+								socket.join((18).toString());
+							} else if(user[0].socketid == 23){
+								socket.join((19).toString());
+							} else {
+								socket.join((user[0].socketid - 22).toString());
+							}
 						}
 					}
 				});
@@ -109,18 +159,46 @@ var clients =[];
 		socket.on("selection2", function(data){
 			if(data.id < 20) {
 				socket.broadcast.to(data.id.toString()).emit("opponentSelection2", data);
+			} else if(data.id == 20){
+				socket.broadcast.to((19).toString()).emit("opponentSelection2", data);
 			} else {
-				socket.broadcast.to((data.id - 19).toString()).emit("opponentSelection2", data);
+				socket.broadcast.to((data.id - 20).toString()).emit("opponentSelection2", data);
 			}
 		});
 		socket.on("order", function(data){
-			io.sockets.emit("order", data);
+			if(data.id < 20) {
+				socket.broadcast.to((data.id).toString()).emit("order", data);
+			} else if(data.id == 20){
+				socket.broadcast.to((18).toString()).emit("order", data);
+			} else if(data.id == 21){
+				socket.broadcast.to((19).toString()).emit("order", data);
+			} else {
+				socket.broadcast.to((data.id - 21).toString()).emit("order", data);
+			}
 		});
 		socket.on("selection3", function(data){
-			socket.broadcast.emit("selection3", data);
+			if(data.id < 20) {
+				socket.broadcast.to((data.id).toString()).emit("selection3", data);
+			} else if(data.id == 20){
+				socket.broadcast.to((18).toString()).emit("selection3", data);
+			} else if(data.id == 21){
+				socket.broadcast.to((19).toString()).emit("selection3", data);
+			} else {
+				socket.broadcast.to((data.id - 21).toString()).emit("selection3", data);
+			}
 		});
 		socket.on("pilenumber", function(data){
-			socket.broadcast.emit("pilenumber", data);
+			if(data.id < 20) {
+				socket.broadcast.to(data.id.toString()).emit("pilenumber", data);
+			} else if(data.id == 20){
+				socket.broadcast.to((17).toString()).emit("pilenumber", data);
+			} else if(data.id == 21){
+				socket.broadcast.to((18).toString()).emit("pilenumber", data);
+			} else if(data.id == 22){
+				socket.broadcast.to((19).toString()).emit("pilenumber", data);
+			} else {
+				socket.broadcast.to((data.id - 22).toString()).emit("selection3", data);
+			}
 		});
 		socket.on("chat", function(data){
 			io.sockets.emit("chat", data);
@@ -135,7 +213,21 @@ var clients =[];
 			socket.broadcast.emit("typing1", data);
 		});
 		socket.on("number", function(data){
-			socket.broadcast.emit("number", data);
+			if(data.id < 20) {
+				socket.broadcast.to(data.id.toString()).emit("number", data);
+			} else if(data.id == 20){
+				socket.broadcast.to((15).toString()).emit("number", data);
+			} else if(data.id == 21){
+				socket.broadcast.to((16).toString()).emit("number", data);
+			} else if(data.id == 22){
+				socket.broadcast.to((17).toString()).emit("number", data);
+			} else if(data.id == 23){
+				socket.broadcast.to((18).toString()).emit("number", data);
+			} else if(data.id == 24){
+				socket.broadcast.to((19).toString()).emit("number", data);
+			} else {
+				socket.broadcast.to((data.id - 24).toString()).emit("number", data);
+			}
 		});
         socket.on('disconnect', function (data) {
             for( var i=0, len=clients.length; i<len; ++i ){
@@ -532,6 +624,18 @@ app.post("/detective", function(req, res){
 });
 
 app.post("/half", function(req, res){
+	var user = req.user;
+	var result = req.body.result;
+	if(result == "I won") {
+		user.score += 5;
+	} else {
+		user.score -= 5;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/triangle", function(req, res){
 	var user = req.user;
 	var result = req.body.result;
 	if(result == "I won") {

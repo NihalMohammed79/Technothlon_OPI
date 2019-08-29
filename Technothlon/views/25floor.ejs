@@ -63,7 +63,7 @@
         var socket = io.connect("http://localhost:4000");
 
         socket.on('connect', function (data) {
-            socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
+            socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "building"});
         });
         var id = "<%= user.socketid %>";
         console.log(id);

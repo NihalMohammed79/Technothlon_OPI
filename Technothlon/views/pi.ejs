@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Technothlon</title>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<style type="text/css">
+		img {
+         display: block;
+         margin-left: auto;
+         margin-right: auto;
+         width: 50%;
+          }
+
+        .btn{
+            margin-left: auto;
+            margin-right: auto;
+            width: 10%;
+        }
+
+		h1,h4{
+			margin-top: 20px;
+			margin-bottom: 20px;
+			text-align: center;
+			color: white;
+		}
+		body{
+			background-color: rgb(9, 48, 115);
+            padding-bottom: 20px;
+		}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Technothlon</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+                    <ul style="text-align: center; width: 250px;" class="dropdown-menu">
+                        <li>Level Name: The 25 Floor Building</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 1: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 2: 5 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Skip: 15 marks</li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="/profile">View Profile</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                <div style="text-align: center;" id="hintbox">
+                    <label for="hint">Type 'hint' in the box below to get a hint</label>
+                    <input style="width: 150px;" type="text" name="hint" id="hint">
+                    <button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
+                </div>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+                <ul class="dropdown-menu" style="width: 200px;">
+                    <form style="text-align: center;" action="/skip" method="POST">
+                        <label for="hint">Type 'skip' in the box below to skip this level</label>
+                        <input style="width: 150px;" type="text" name="skip" id="skip">
+                        <button style="margin-top: 5px;" type="submit">Submit</button>
+                    </form>
+                </ul>
+            </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+	<div class="container">
+	  <h1>What does the image below represent?</h1>
+      <img src="https://i.stack.imgur.com/O9a9n.jpg">
+    	<h4>Type your answer:</h4>
+      <form style="text-align: center;" action="/pi" method="POST">
+        <div>
+          <input type="text" name="answer" style="font-size:20pt; margin-bottom: 10px;">
+        </div>
+        <button class="btn btn-success lg">Submit</button>
+      </form>
+    </div>
+    <script>
+        var socket = io.connect("http://localhost:4000");
+        var hintinput = document.getElementById("hint");
+        var hintbutton = document.getElementById("hintbutton");
+        var hintbox = document.getElementById("hintbox");
+        var id = "<%= user.socketid %>";
+        function hintfunction(){
+            if(hintinput.value == "hint") {
+                console.log(socket.id);
+                    socket.emit("hint", {
+                    id: id,
+                    toid: socket.id
+                });
+            }
+        };
+        socket.on("hintres", function(data){
+            console.log(data.hint);
+            hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

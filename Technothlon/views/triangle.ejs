@@ -78,7 +78,7 @@
             var socket = io.connect("http://localhost:4000");
 
             socket.on('connect', function (data) {
-                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" });
+                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "triangle"});
             });
             var id = "<%= user.socketid %>";
             var myNumber = 1;
@@ -96,10 +96,10 @@
                             clickedButton.classList.add("btn-success");
                         socket.emit("selection2", {
                             selection: clicked_id,
-                            opponentNumber : myNumber
+                            opponentNumber : myNumber,
+                            id: id
                         });
                         myNumber++;
-                        clicks++;
                         if(document.getElementsByClassName("btn-default").length == 1) {
                             var leftOver = document.getElementsByClassName("btn-default")[0];
                             var leftOverLeft = document.getElementById(leftOver.id - 1);
@@ -161,15 +161,9 @@
                 var clicked_id = data.selection;
                 var clickedButton = document.getElementById(clicked_id);
                 console.log(clicked_id);
-                if(id%2 == 0){
-                    clickedButton.classList.remove("btn-default");
-                    clickedButton.classList.add("btn-success");
-                    clickedButton.innerHTML = data.opponentNumber;
-                } else {
                     clickedButton.classList.remove("btn-default");
                     clickedButton.classList.add("btn-danger");
                     clickedButton.innerHTML = data.opponentNumber;
-                }
             });
             function check() {
                 if(id == "1") {
