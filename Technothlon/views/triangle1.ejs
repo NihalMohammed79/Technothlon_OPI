@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <style>
+            body {
+                text-align: center;
+            }
+            .btn-circle.btn-xl {
+                width: 70px;
+                height: 70px;
+                padding: 10px 16px;
+                border-radius: 35px;
+                font-size: 24px;
+                line-height: 1.33;
+            }
+
+            .btn-circle {
+                width: 60px;
+                height: 60px;
+                padding: 6px 0px;
+                border: 1px solid red;
+                border-radius: 30px;
+                text-align: center;
+                line-height: 1.42857;
+            }
+        </style>
+        <script> 
+            //set minutes 
+            var mins = 5; 
+        
+            //calculate the seconds 
+            var secs = mins * 60; 
+        
+            //countdown function is evoked when page is loaded 
+            function countdown() { 
+                setTimeout('Decrement()', 60); 
+            } 
+        
+            //Decrement function decrement the value. 
+            function Decrement() { 
+                if (document.getElementById) { 
+                    minutes = document.getElementById("minutes"); 
+                    seconds = document.getElementById("seconds"); 
+        
+                    //if less than a minute remaining 
+                    //Display only seconds value. 
+                    if (seconds < 59) { 
+                        seconds.value = secs; 
+                    } 
+        
+                    //Display both minutes and seconds 
+                    //getminutes and getseconds is used to 
+                    //get minutes and seconds 
+                    else { 
+                        minutes.value = getminutes(); 
+                        seconds.value = getseconds(); 
+                    } 
+                    //when less than a minute remaining 
+                    //colour of the minutes and seconds 
+                    //changes to red 
+                    if (mins < 1) { 
+                        minutes.style.color = "red"; 
+                        seconds.style.color = "red"; 
+                    } 
+                    //if seconds becomes zero, 
+                    //then page alert time up 
+                    if (mins < 0) { 
+                        window.location = "/mugame2"; 
+                        minutes.value = 0; 
+                        seconds.value = 0; 
+                    } 
+                    //if seconds > 0 then seconds is decremented 
+                    else { 
+                        secs--; 
+                        setTimeout('Decrement()', 1000); 
+                    } 
+                } 
+            } 
+        
+            function getminutes() { 
+                //minutes is seconds divided by 60, rounded down 
+                mins = Math.floor(secs / 60); 
+                return mins; 
+            } 
+        
+            function getseconds() { 
+                //take minutes remaining (as seconds) away  
+                //from total seconds remaining 
+                return secs - Math.round(mins * 60); 
+            } 
+        </script>
+    </head>
+    <body onload="countdown();">
+        <div class="container">
+            <div> 
+                <span style="font-size: 20px;">Time Left : </span> 
+                <input id="minutes" type="text" style="width: 15px; 
+                        border: none; font-size: 20px;  
+                    font-weight: bold; color: black;"><font size="5"> : 
+                                </font>
+                <input id="seconds" type="text" style="width: 25px; 
+                                border: none; font-size: 20px; 
+                                font-weight: bold; color: black;"> 
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    The Game Of The Least Triangular Sum
+                </div>
+                <div class="panel-body">
+                    <p>You will be paired against another team.</p>
+                    <p>The chances will alternate between you and the opponent.</p>
+                    <p>On each click on one of the white circles it will turn green and a number will appear which keeps increasing until only one white circle remains.</p>  
+                    <p>Your score will be calculated as the sum of the numbers in the surrounding circles that are green.</p>
+                    <p>The team which has the least score wins.</p>
+                    <div id="one">
+                        <button id="11"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="two">
+                        <button id="21"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="22"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="three">
+                        <button id="31"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="32"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="33"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="four">
+                        <button id="41"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="42"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="43"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="44"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button> 
+                    </div>
+                    <div id="five">
+                        <button id="51"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="52"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="53"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="54"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="55"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="six">
+                        <button id="61"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="62"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="63"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="64"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="65"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="66"  type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

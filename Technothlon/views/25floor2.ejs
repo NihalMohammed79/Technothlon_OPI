@@ -60,7 +60,7 @@
       <p><button onclick="myFunction(this.id)" type="button" id="0" class="btn btn-outline-secondary">Floor 0</button></p>
     </div>
     <script>
-        var socket = io.connect("http://localhost:4000");
+        var socket = io.connect("http://10.150.37.17:4000/");
 
         socket.on('connect', function (data) {
             socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "building"});

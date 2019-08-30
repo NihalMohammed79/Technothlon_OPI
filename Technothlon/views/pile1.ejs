@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Technothlon</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script>
+        //set minutes 
+        var mins = 5; 
+        
+        //calculate the seconds 
+        var secs = mins * 60; 
+    
+        //countdown function is evoked when page is loaded 
+        function countdown() { 
+            setTimeout('Decrement()', 60); 
+        } 
+    
+        //Decrement function decrement the value. 
+        function Decrement() { 
+            if (document.getElementById) { 
+                minutes = document.getElementById("minutes"); 
+                seconds = document.getElementById("seconds"); 
+    
+                //if less than a minute remaining 
+                //Display only seconds value. 
+                if (seconds < 59) { 
+                    seconds.value = secs; 
+                } 
+    
+                //Display both minutes and seconds 
+                //getminutes and getseconds is used to 
+                //get minutes and seconds 
+                else { 
+                    minutes.value = getminutes(); 
+                    seconds.value = getseconds(); 
+                } 
+                //when less than a minute remaining 
+                //colour of the minutes and seconds 
+                //changes to red 
+                if (mins < 1) { 
+                    minutes.style.color = "red"; 
+                    seconds.style.color = "red"; 
+                } 
+                //if seconds becomes zero, 
+                //then page alert time up 
+                if (mins < 0) { 
+                    window.location = "/pile2"; 
+                    minutes.value = 0; 
+                    seconds.value = 0; 
+                } 
+                //if seconds > 0 then seconds is decremented 
+                else { 
+                    secs--; 
+                    setTimeout('Decrement()', 1000); 
+                } 
+            } 
+        } 
+    
+        function getminutes() { 
+            //minutes is seconds divided by 60, rounded down 
+            mins = Math.floor(secs / 60); 
+            return mins; 
+        } 
+    
+        function getseconds() { 
+            //take minutes remaining (as seconds) away  
+            //from total seconds remaining 
+            return secs - Math.round(mins * 60); 
+        } 
+    </script>
+</head>
+
+<body onload="countdown();">
+	<div class="container">
+        <div> 
+            <span style="font-size: 20px;">Time Left : </span> 
+            <input id="minutes" type="text" style="width: 15px; 
+                    border: none; font-size: 20px;  
+                font-weight: bold; color: black;"><font size="5"> : 
+                            </font> 
+            <input id="seconds" type="text" style="width: 25px; 
+                            border: none; font-size: 20px; 
+                            font-weight: bold; color: black;"> 
+        </div> 
+    <h1>The Game Of The Box Pile</h1>
+    <p>You will be paired against another team for this game.</p>
+	<p>Plan a strategy within 5 min to start the game</p>
+    <p>There are 452 boxes. On each play, any number of boxes, which is a power of 2 (including 1), can be removed from the pile.Obviously the number of chips to be removed cannot be higher than the number of chips on the current pile.The person, who removes the last chip is the winner.</p>
+    <p>After the end of time, you will be redirected to the game.</p>
+    </div>
+</body>
+</html>

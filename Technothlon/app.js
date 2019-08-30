@@ -41,18 +41,91 @@ passport.deserializeUser(User.deserializeUser());
 // =================
 // SETUP FOR SOCKET
 // =================
-var server = app.listen(4000, function(){
+var server = app.listen(4000,'10.150.37.17', function(){
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
 var hints = [ 
 	{
-		hint1: "You are right!",
-		hint2: "This level is bad"
+		hint1: "",
+		hint2: ""
 	},
 	{
-		hint1: "This level can be skipped",
-		hint2: "Im telling You To Skip this level!"
+		hint1: "Use mouse",
+		hint2: "Right Click"
+	},
+	{
+		hint1:"",
+		hint2:""
+	},
+	{
+		hint1:"",
+		hint2:""
+
+	},
+	{
+		hint1:"Try observing the pattern for small numbers",
+		hint2:""
+
+	},
+	{
+		hint1:"",
+		hint2:""
+
+	},
+	{
+		hint1:"Observe the pattern formed by the numbers",
+		hint2:"AF=16 Find the others"
+
+	},
+	{
+		hint1:"Notice that to win in a state you need a majority of 4 black dots and you need to win atleast 3 states to win the election.There are exactly 12 black dots meaning you need to make two states with all (6) wj=hite states",
+		hint2:"One of the regions will be {(1,1)(2,1)(3,1)(4,1)(4,2)(4,3)}[Taking bottom left as (1,1)]"
+
+	},
+	{
+		hint1:"Think in terms of co-ordinates.And remember, its all a game of odds and events",
+		hint2:""
+
+	},
+	{
+		hint1:"",
+		hint2:""
+
+	},
+	{
+		hint1:"",
+		hint2:""
+
+	},
+	{
+		hint1:"Notice that the sequence of flashes is made of short and long pulses which may be a code",
+		hint2:"The answer is hard"
+
+	},
+	{
+		hint1:"",
+		hint2:""
+
+	},
+	{
+		hint1:"",
+		hint2:""
+
+	},
+	{
+		hint1:"",
+		hint2:""
+
+	},
+	{
+		hint1:"",
+		hint2:""
+	},
+	{
+		hint1:"",
+		hint2:"count the widths of blue rectangles"
+
 	}
 ];
 var clients =[];
@@ -120,16 +193,6 @@ var clients =[];
 								socket.join((19).toString());
 							} else {
 								socket.join((user[0].socketid - 22).toString());
-							}
-						}
-						if(data.level == "odd") {
-							console.log(data, socket.id);
-							if(user[0].socketid %3 == 1) { 
-								socket.join(user[0].socketid.toString());
-							} else if(user[0].socketid %3 == 2){
-								socket.join((user[0].socketid - 1).toString());
-							} else {
-								socket.join((user[0].socketid - 2).toString());
 							}
 						}
 					}
@@ -214,19 +277,6 @@ var clients =[];
 				socket.broadcast.to((data.id - 23).toString()).emit("number", data);
 			}
 		});
-		socket.on("order", function(data){
-			console.log(data);
-			io.to((data.id-2).toString()).emit("order1", data);
-		})
-		socket.on("oddnumber", function(data){
-			if(data.id %3 == 1) {
-				socket.broadcast.to(data.id.toString()).emit("oddnumber", data);
-			} else if(data.id %3 == 2){
-				socket.broadcast.to((data.id - 1).toString()).emit("oddnumber", data);
-			} else {
-				socket.broadcast.to((data.id - 2).toString()).emit("oddnumber", data);
-			}
-		})
         socket.on('disconnect', function (data) {
             for( var i=0, len=clients.length; i<len; ++i ){
                 var c = clients[i];
@@ -238,8 +288,8 @@ var clients =[];
         });
     });
 
-var levelNames = ['35', 'md', 'bridges', 'doors', 'square', 'nonogram2', 'poll','nonogram', 'light','invisible','alphabet','crack','people','digits','logic34', 'pi'];
-var skipdeds = [10, 10, 20, 13, 15, 20, 15, 15, 16, 17, 12, 10, 12];
+var levelNames = ['bridges','right', 'crack', 'nonogram', 'people', 'doors', 'alphabet', 'poll', 'light', '35', 'nonogram2', 'flash', 'logic34', 'square', 'invisible', 'md', 'pi'];
+var skipdeds = [10, 10, 20, 13, 15, 20, 15, 15, 16, 17, 12, 10, 12, 15, 12, 10, 12, 13, 7, 8, 10, 15, 12, 16, 17, 19];
 var noofusers = 1;
 // ==================
 // ROUTES FOR LEVELS
@@ -281,24 +331,44 @@ app.get("/building1", isLoggedIn, function(req, res){
 	res.render("25floor1.ejs", {user: user});
 });
 
+app.get("/pebbles", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("pebble.ejs", {user: user});
+});
+
 app.get("/building2", isLoggedIn, function(req, res){
 	var user = req.user;
 	res.render("25floor2.ejs", {user: user});
 });
 
-app.get("/triangle", isLoggedIn, function(req, res){
+app.get("/triangle1", isLoggedIn, function(req, res){
 	var user = req.user;
-	res.render("triangle.ejs", {user: user});
+	res.render("triangle1.ejs", {user: user});
 });
 
-app.get("/mugame",isLoggedIn, function(req, res){
+app.get("/triangle2", isLoggedIn, function(req, res){
 	var user = req.user;
-	res.render('mugame.ejs', {user:user});
+	res.render("triangle2.ejs", {user: user});
 });
 
-app.get("/pile", isLoggedIn, function(req, res){
+app.get("/mugame1",isLoggedIn, function(req, res){
 	var user = req.user;
-	res.render("pile.ejs", {user: user});
+	res.render('mugame1.ejs', {user:user});
+});
+
+app.get("/mugame2",isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render('mugame2.ejs', {user:user});
+});
+
+app.get("/pile1", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("pile1.ejs", {user: user});
+});
+
+app.get("/pile2", isLoggedIn, function(req, res){
+	var user = req.user;
+	res.render("pile2.ejs", {user: user});
 });
 
 app.get("/half1", isLoggedIn, function(req, res){
@@ -309,11 +379,6 @@ app.get("/half1", isLoggedIn, function(req, res){
 app.get("/half2", isLoggedIn, function(req, res){
 	var user = req.user;
 	res.render("half2.ejs", {user: user});
-});
-
-app.get("/odd1", isLoggedIn, function(req, res){
-	var user = req.user;
-	res.render("odd1.ejs", {user: user});
 });
 
 app.get('/getPass',function(req,res) {
@@ -359,7 +424,7 @@ app.post("/light", function(req, res){
 app.post("/logic34", function(req, res){
 	var clickCount = req.body.counter;
 	var user = req.user;
-	var newScore = 625/clicks;
+	var newScore = 625/clickCount;
 	user.currentLevel += 1;
 	user.score += newScore;
 	user.hint1 = false;
@@ -568,6 +633,23 @@ app.post("/bridges", function(req, res){
 app.post("/md", function(req, res){
 	var user = req.user;
 	var score = req.body.user;
+	if(score == 6) {
+		user.score += 35;
+	} else if(score == 7) {
+		user.score += 30;
+	} else if(score == 8) {
+		user.score += 25;
+	} else if(score == 9) {
+		user.score += 20;
+	} else if(score == 10) {
+		user.score += 15;
+	} else if(score == 11) {
+		user.score += 10;
+	} else if(score == 12) {
+		user.score += 5;
+	} else {
+		user.score += 0;
+	}
 	user.hint1 = false;
 	user.hint2 = false;
 	user.currentLevel += 1;
@@ -582,6 +664,30 @@ app.post("/35", function(req, res){
 	user.hint2 = false;
 	user.currentLevel += 1;
 	user.score += 5;
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/start", function(req, res){
+	var user = req.user;
+	var result = req.body.result;
+	if(result == "clicked") {
+		user.currentLevel += 1;
+		user.score += 5;
+		user.save();
+		res.redirect("/level");
+	}
+});
+
+app.post("/right", function(req, res){
+	var user = req.user;
+	var x = req.body.x;
+	if(x == "HELLO") {
+		user.currentLevel += 1;
+		user.score += 5;
+	} else {
+		user.score -= 5;
+	}
 	user.save();
 	res.redirect("/level");
 });

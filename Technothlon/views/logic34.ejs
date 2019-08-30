@@ -179,9 +179,8 @@
                 <div onclick="myfunction(this.id)" id="98" class="col-md-1 btn-success"></div>
                 <div onclick="myfunction(this.id)" id="99" class="col-md-1 btn-danger"></div>
             </div>
-            <button id="butto" class="btn btn-success">Submit</button>
+            <button id="butto" class="btn btn-default">Submit</button>
         </div>
-        <script src="logic34.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script>
@@ -267,11 +266,10 @@ function myfunction(clicked_id) {
         }
     }
 }
-
 document.getElementById("butto").addEventListener("click", function(){
     var btndanger = document.querySelectorAll(".btn-success");
     if(btndanger.length == 81){
-        document.body.innerHTML += '<form id="dynForm" action="/logic34" method="post"><input type="hidden" name="counter" value="'+ counter +'"></form>';
+        document.body.innerHTML += '<form id="dynForm" action="/logic34" method="POST"><input type="hidden" name="counter" value="'+ counter +'"></form>';
         document.getElementById("dynForm").submit();
     } else {
         alert("Complete The Game!!");

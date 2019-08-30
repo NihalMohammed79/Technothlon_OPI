@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <style>
+            body {
+                text-align: center;
+            }
+            .btn-circle.btn-xl {
+                width: 70px;
+                height: 70px;
+                padding: 10px 16px;
+                border-radius: 35px;
+                font-size: 24px;
+                line-height: 1.33;
+            }
+
+            .btn-circle {
+                width: 60px;
+                height: 60px;
+                padding: 6px 0px;
+                border: 1px solid red;
+                border-radius: 30px;
+                text-align: center;
+                line-height: 1.42857;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    The Game Of The Least Triangular Sum
+                </div>
+                <div class="panel-body">
+                    <p>You will be paired against another team.</p>
+                    <p>The chances will alternate between you and the opponent.</p>
+                    <p>On each click on one of the white circles it will turn green and a number will appear which keeps increasing until only one white circle remains.</p>  
+                    <p>Your score will be calculated as the sum of the numbers in the surrounding circles that are green.</p>
+                    <p>The team which has the least score wins.</p>
+                    <div id="one">
+                        <button id="11" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="two">
+                        <button id="21" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="22" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="three">
+                        <button id="31" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="32" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="33" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="four">
+                        <button id="41" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="42" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="43" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="44" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button> 
+                    </div>
+                    <div id="five">
+                        <button id="51" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="52" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="53" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="54" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="55" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <div id="six">
+                        <button id="61" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="62" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="63" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="64" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="65" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                        <button id="66" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
+                    </div>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <script>
+            var socket = io.connect("http://10.150.37.17:4000/");
+
+            socket.on('connect', function (data) {
+                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "triangle"});
+            });
+            var id = "<%= user.socketid %>";
+            var myNumber = 1;
+            if(Number(id) >= 20) {
+                var chance = "Your Chance";
+            } else {
+                var chance = " Opponent Chance";
+            }
+            var yourScore = 0;
+            var opponentScore = 0;
+            function myfunction(clicked_id) {
+                if(chance == "Your Chance") {
+                    var clickedButton = document.getElementById(clicked_id);
+                    if(clickedButton.classList.contains("btn-success")||clickedButton.classList.contains("btn-danger")) {
+
+                    } else {
+                        clickedButton.innerHTML = myNumber;
+                            clickedButton.classList.remove("btn-default");
+                            clickedButton.classList.add("btn-success");
+                        socket.emit("selection2", {
+                            selection: clicked_id,
+                            opponentNumber : myNumber,
+                            id: id
+                        });
+                        myNumber++;
+                    }
+                    chance = "Opponent Chance"; 
+                }
+                if(document.getElementsByClassName("btn-default").length == 1) {
+                    var leftOver = document.getElementsByClassName("btn-default")[0];
+                    var leftOverLeft = document.getElementById(leftOver.id - 1);
+                    var leftOverRight = document.getElementById(leftOver.id + 1);
+                    var leftOverTopRight = document.getElementById(leftOver.id - 10);
+                    var leftOverTopLeft = document.getElementById(leftOver.id - 11);
+                    var leftOverBottomRight = document.getElementById(leftOver.id + 11);
+                    var leftOverBottomLeft = document.getElementById(leftOver.id + 10);
+                    if(leftOverLeft) {
+                        if(leftOverLeft.classList.contains("btn-success")) {
+                            yourScore += leftOverLeft.innerHTML;
+                        } else {
+                            opponentScore += leftOverLeft.innerHTML;
+                        }
+                    }
+                    if(leftOverRight) {
+                        if(leftOverRight.classList.contains("btn-success")) {
+                            yourScore += leftOverRight.innerHTML;
+                        } else {
+                            opponentScore += leftOverRight.innerHTML;
+                        }
+                    }
+                    if(leftOverTopRight) {
+                        if(leftOverTopRight.classList.contains("btn-success")) {
+                            yourScore += leftOverTopRight.innerHTML;
+                        } else {
+                            opponentScore += leftOverTopRight.innerHTML;
+                        }
+                    }
+                    if(leftOverTopLeft) {
+                        if(leftOverTopLeft.classList.contains("btn-success")) {
+                            yourScore += leftOverTopLeft.innerHTML;
+                        } else {
+                            opponentScore += leftOverTopLeft.innerHTML;
+                        }
+                    }
+                    if(leftOverBottomRight) {
+                        if(leftOverBottomRight.classList.contains("btn-success")) {
+                            yourScore += leftOverBottomRight.innerHTML;
+                        } else {
+                            opponentScore += leftOverBottomRight.innerHTML;
+                        }
+                    }
+                    if(leftOverBottomLeft) {
+                        if(leftOverBottomLeft.classList.contains("btn-success")) {
+                            yourScore += leftOverBottomLeft.innerHTML;
+                        } else {
+                            opponentScore += leftOverBottomLeft.innerHTML;
+                        }
+                    }
+                    check();
+                }
+            }
+            socket.on("opponentSelection2", function(data){
+                chance = "Your Chance";
+                var clicked_id = data.selection;
+                var clickedButton = document.getElementById(clicked_id);
+                console.log(clicked_id);
+                    clickedButton.classList.remove("btn-default");
+                    clickedButton.classList.add("btn-danger");
+                    clickedButton.innerHTML = data.opponentNumber;
+            });
+            function check() {
+                if(yourScore > opponentScore) {
+                    alert("You Win!");
+                    document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I won"></form>';
+                    document.getElementById("dynForm").submit();
+                } else {
+                    alert("Opponent Wins");
+                    document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+                    document.getElementById("dynForm").submit();
+                }
+            }
+        </script>
+    </body>
+</html>
