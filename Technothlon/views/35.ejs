@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>River Crossing Puzzle Level 35</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <style>
+    .btn-space {
+        margin: 5px;
+    }
+    .btn:hover {
+        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+    .box-container {
+        display: inline-grid;
+        grid-template-columns: auto auto auto auto auto auto auto auto auto;
+        grid-gap: 5px;
+        background-color: white;
+        padding: 10px;
+        margin-left: auto;
+    }
+    .innerBox {
+        background-color: #ffff66;
+        padding: 10px;
+        border: 1px solid black ;
+        padding: 42px;
+        border-radius: 20%;
+        opacity : 0.6;
+    }
+    .innerBox:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            opacity: 1 ; 
+    }
+    .text{
+        font-size: 40px;
+    }
+    #submit {
+        margin-left :50%;
+    }
+    .vanish{
+        visibility : hidden;
+    }
+  </style>
+</head>
+<body>
+	<div class="container">
+   		<div class="text-center text-dark bg-succcess"><h1>Your task is to clear the board filled with number from 0 to B, by matching and connectinng 2 same numbers in the same row or column, After the connection is made, everything inside the selection will be cleared.</h1>
+   		</div>
+   		<div class="box-container" align="center"></div>
+      <button type="button" onclick ="submit()" id="submit" class="btn btn-space btn-lg btn-success" >SUBMIT</button>
+
+  </div>
+  <script type="text/javascript">
+    var n=9;
+numbers = [1,1,2,3,2,4,4,4,6,2,2,4,5,4,7,8,4,6,5,5,1,5,1,2,4,9,6,5,3,1,5,3,6,3,'A',5,1,5,'B',4,8,3,2,1,1,6,3,5,5,4,'A',3,5,9,5,7,7,8,3,4,2,'B',6,3,8,'B',3,5,3,2,'A',4,2,8,8,2,1,2,1,4,5];
+selected_corners = [];
+
+function click(){
+	if(this.classList.contains("temp")){
+	if(this.classList.contains("selected")){
+		   this.style.opacity = 0.6;
+		   this.classList.remove("selected");
+		   selected_corners = [];
+	}else {
+	this.style.opacity = 1;
+	this.classList.add("selected");
+	selected_corners.push(Number(this.id.slice(3)));
+	if(selected_corners.length == 2) vanish(); 
+	}	
+				}
+			}						  
+
+function vanish(){
+	if(document.getElementById("Box" + selected_corners[0]).textContent == document.getElementById("Box" + selected_corners[1]).textContent){	
+		 var min = Math.min.apply(Math, selected_corners);  console.log(min);
+         var max = Math.max.apply(Math, selected_corners);  console.log(max);
+            if((max-min)%n !=0  &&  (max-min)<=(n-(min%n)) ){ for(var i= min; i<= max; i++) {
+                    var b=document.getElementById("Box"+ i);
+                    b.style.background = "grey"; 
+                    b.classList.remove("temp");
+                    b.classList.add("vanish");
+                }
+                selected_corners=[];										    				 													    
+                }else if((max-min)%n == 0) {for(var i= min; i<= max; i+=n){
+                            var b=document.getElementById("Box"+ i);
+                            b.style.background = "grey";
+                            b.classList.remove("temp");  
+                            b.classList.add("vanish");  }         				 		
+                selected_corners=[];				            				 													    
+                }
+                    
+                else{
+                    alert("Select only 2 boxes in a line");
+                    for(var i=0; i<selected_corners.length; i++)  	document.getElementById("Box"+selected_corners[i]).style.opacity = 0.6;
+                    selected_corners=[];
+
+                }
+        }else{
+                for(var i=0; i<selected_corners.length; i++)  	document.getElementById("Box"+selected_corners[i]).style.opacity = 0.6;
+                selected_corners=[];
+        }		
+}
+
+function submit(){
+        document.body.innerHTML += '<form id="dynForm" action="/35" method="post"><input type="hidden" name="result" value="' + $(".box-container .temp").length + '"></form>';
+		document.getElementById("dynForm").submit();
+}
+
+var box = document.querySelector(".box-container");
+for (var i = 1; i<=n*n; i++){
+	var newBox = document.createElement("div");
+	var textBox = document.createElement("p");
+	textBox.classList.add("text");
+	newBox.appendChild(textBox);
+	textBox.innerHTML= "<b>"+numbers[i-1] + "</b>";
+	newBox.onclick = click;
+	newBox.classList.add("innerBox");
+	newBox.classList.add("temp");
+	newBox.id = "Box"+ i;
+	box.appendChild(newBox);
+
+}
+  </script>
+</body>          

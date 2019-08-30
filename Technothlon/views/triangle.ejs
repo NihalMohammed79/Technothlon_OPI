@@ -32,10 +32,14 @@
         <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Hey Look! Those Buttons are circular!!
+                    The Game Of The Least Triangular Sum
                 </div>
                 <div class="panel-body">
-                    <h4>Normal Circle Buttons</h4>
+                    <p>You will be paired against another team.</p>
+                    <p>The chances will alternate between you and the opponent.</p>
+                    <p>On each click on one of the white circles it will turn green and a number will appear which keeps increasing until only one white circle remains.</p>  
+                    <p>Your score will be calculated as the sum of the numbers in the surrounding circles that are green.</p>
+                    <p>The team which has the least score wins.</p>
                     <div id="one">
                         <button id="11" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
                     </div>
@@ -82,7 +86,11 @@
             });
             var id = "<%= user.socketid %>";
             var myNumber = 1;
-            var chance = "Your Chance";
+            if(Number(id) >= 20) {
+                var chance = "Your Chance";
+            } else {
+                var chance = " Opponent Chance";
+            }
             var yourScore = 0;
             var opponentScore = 0;
             function myfunction(clicked_id) {
@@ -153,7 +161,7 @@
                             check();
                         }
                     }
-                    chance = "Opponents Chance"; 
+                    chance = "Opponent Chance"; 
                 }
             }
             socket.on("opponentSelection2", function(data){

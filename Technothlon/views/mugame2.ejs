@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Technothlon</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <style>
+            .row {
+                max-width: 900px;
+            }
+            .col-md-1 {
+                height: 75px;
+                border: 2px solid red;
+                padding-top: 5px;
+                font-size: 40px;
+            }
+            .container {
+                padding-bottom: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>MO Game</h1>
+            <p> You and an Opponent start by alternately writing letters into a 9×9 grid. In every move, the player picks an empty square and then writes initial letter (M or U) into it.</p>
+            <p><span id="player"></span></p>
+            <ul>
+                <li>The game ends once all squares have been filled.</li>
+                <li>When the game has ended, N(M) is the number of rows and columns that contain more Ms than Os, while N(O) is the number of rows and columns that contain more Os than Ms.</li>
+                <li>When the game has ended, Winner receives N(M)−N(O) Points from Loser.</li>
+            </ul>
+            <div class="row">
+                <div id="11" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="12" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="13" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="14" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="15" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="16" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="17" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="18" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="19" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="21" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="22" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="23" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="24" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="25" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="26" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="27" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="28" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="29" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="31" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="32" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="33" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="34" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="35" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="36" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="37" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="38" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="39" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="41" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="42" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="43" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="44" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="45" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="46" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="47" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="48" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="49" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="51" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="52" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="53" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="54" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="55" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="56" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="57" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="58" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="59" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="61" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="62" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="63" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="64" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="65" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="66" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="67" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="68" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="69" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="71" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="72" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="73" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="74" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="75" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="76" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="77" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="78" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="79" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="81" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="82" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="83" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="84" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="85" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="86" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="87" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="88" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="89" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+            <div class="row">
+                <div id="91" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="92" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="93" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="94" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="95" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="96" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="97" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="98" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+                <div id="99" onclick="myfunction(this.id)" class="btn btn-default col-md-1"></div>
+            </div>
+        </div>
+        <script>
+            var socket = io.connect("http://localhost:4000");
+
+            socket.on('connect', function (data) {
+                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "mugame"});
+            });
+            var id = "<%= user.socketid %>";
+            if(Number(id)< 20) {
+                var chance = "Your Chance";
+                document.getElementById("player").innerHTML = "You Go First";
+            } else {
+                var chance = "Opponent Chance";
+                document.getElementById("player").innerHTML = "Your Opponent Goes First";
+            }
+            function myfunction(clicked_id) {
+                if(chance == "Your Chance"){
+                    socket.emit("selection3", {
+                        selection: clicked_id,
+                        id: id
+                    });
+                    var clicked = document.getElementById(clicked_id);
+                    if(clicked.classList.contains("btn-success")) {
+
+                    } else {
+                        clicked.innerHTML = "M";
+                        clicked.classList.remove("btn-default");
+                        clicked.classList.add("btn-success");
+                    }
+                    chance = "Opponent Chance";
+                    if(document.getElementsByClassName("btn-default").length == 0)
+                    check();
+                }
+            }
+            socket.on("selection3", function(data){
+                var clicked_id = data.selection;
+                var clciked = document.getElementById(clciked_id);
+                if(clicked.classList.contains("btn-danger")) {
+
+                } else {
+                    clicked.innerHTML = "O";
+                    clicked.classList.remove("btn-default");
+                    clicked.classList.add("btn-danger");
+                }
+                chance = "Your Chance";
+                if(document.getElementsByClassName("btn-default").length == 0)
+                check();
+            });
+            function check() {
+                var myrows = 0;
+                var opponentrows = 0;
+                var mycolumns = 0;
+                var opponentcolumns = 0;
+                var mynumber = 0;
+                var opponentnumber = 0
+                for(var i = 1; i <= 9; i++) {
+                    for(var j = 1; j <= 9; j++) {
+                        var elementid = i.toString() + j.toString();
+                        if(document.getElementById(elementid).classList.contains("btn-success")) {
+                            mynumber++;
+                        } else {
+                            opponentnumber++;
+                        }
+                    }
+                    if(mynumber > opponentnumber) {
+                        myrows++;
+                    } else {
+                        opponentrows++;
+                    }
+                }
+                for(var i = 1; i <= 9; i++) {
+                    for(var j = 1; j <= 9; j++) {
+                        var elementid = j.toString() + i.toString();
+                        if(document.getElementById(elementid).classList.contains("btn-success")) {
+                            mynumber++;
+                        } else {
+                            opponentnumber++;
+                        }
+                    }
+                    if(mynumber > opponentnumber) {
+                        mycolumns++;
+                    } else {
+                        opponentcolumns++;
+                    }
+                }
+                if((mycolumns+myrows)> (opponentcolumns+opponentrows)) {
+                    alert("You win!");
+                    document.body.innerHTML += '<form id="dynForm" action="/mugame" method="POST"><input type="hidden" name="result" value="' + (myrows+mycolumns-opponentcolumns-opponentrows) + '"></form>';
+				    document.getElementById("dynForm").submit();
+                } else {
+                    alert("Opponent Wins!");
+                    document.body.innerHTML += '<form id="dynForm" action="/mugame" method="POSt"><input type="hidden" name="result" value="'+ (myrows+mycolumns-opponentcolumns-opponentrows) +'"></form>';
+				    document.getElementById("dynForm").submit();
+                }
+            }
+        </script>
+    </body>
+</html>

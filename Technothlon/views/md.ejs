@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mondarin_bootstrap</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <style>
+      body {
+        height: 100vh;
+        color: black;
+        font: 1.3rem Inconsolata, monospace;
+        text-shadow: 0 0 5px #C8C8C8;
+        }
+
+        ::selection {
+        background: #0080FF;
+        text-shadow: none;
+        }
+
+        .instruction {
+            display: none;
+            text-align: center;
+            margin-left: 12%;
+        }
+
+        .buttons {
+            align-items: center;
+            align-content: center;
+            text-align: center;
+            margin-left: 17%;
+
+        }
+
+        .btn-space {
+            margin: 5px;
+        }
+            .btn:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            }
+
+        .box-container {
+            display: inline-grid;
+            grid-template-columns: auto auto auto auto auto auto auto auto;
+            grid-gap: 5px;
+            background-color: #331a00;
+            padding: 10px;
+            margin-left: 17%;
+        }
+
+        .innerBox {
+            background-color: #ffff66;
+            padding: 10px;
+            border: 1px solid black ;
+            padding: 42px;
+            border-radius: 20%;
+        }
+        .innerBox:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            }
+
+        .answer {
+            margin-top: 15px;
+            margin-bottom:  15px;
+            color: white;
+        }
+  </style>
+</head>
+
+<body>
+	<div class="container">
+   		<div class="text-center text-dark bg-succcess"><h1>You are given a 8x8 square grid.Divide this grid into any number of rectangles such that the difference between the area of the largest and the smallest rectangle is minimum!</h1>
+   		</div>
+
+   		<div class="instruction"> <h2> <b> "Select each corner(2 OR 4) of rectangle you want to select" </b></h2></div>
+
+   		<div class="box-container" align="center"></div>
+
+        <div class="answer text-success" style="color: black;"> <h3> Your answer is <span id="largest"></span> - <span id="smallest"></span> = <span id = "ans"></span>  </h3> </div>
+        
+        <div class= "buttons">
+         <button onclick="selectNewRectangle()" id="selectNewRectangle" type="button" class="btn btn-space btn-lg btn-danger">Select New Rectangle</button>
+         <button type="button" onclick="check()" class="btn btn-space btn-lg btn-success">See My Answer</button>
+         <button type="button" onclick ="location.reload()" class="btn btn-space btn-lg btn-success">RESET</button>
+         <button type="button" onclick ="submit()" id="submit" class="btn btn-space btn-lg btn-success" disabled>SUBMIT</button>
+        </div>
+ 	</div>
+     <script type="text/javascript">
+        var colors = ["#00ff00" , "#ff0000" , "#0000ff", "#666666", "#ffffff" , "#00ffff", "#cc00cc", "#cc0066", "#333300", "#ffff1a" ] ; 
+        var c = 0;
+        var n= 8;
+        var current_color = colors[c];
+        var selected_corners = [];
+        var newButton= document.getElementById("selectNewRectangle")
+        var instruction = document.querySelector(".instruction");
+        var scores = [];
+        var dimensions1 = [];
+        var dimensions2 = [];
+        var x= 0;
+        var z= 0;
+        var y= 0;
+
+        function click(){
+            selected_corners.push(Number(this.id.slice(3)));
+            this.style.background = current_color;
+            }
+
+        function selectNewRectangle(){
+                
+                if(newButton.textContent == "Select New Rectangle"){
+                newButton.textContent = "Selected";
+                instruction.style.display = "inline-block";
+                }
+                else if(newButton.textContent == "Selected") {
+                    if(selected_corners.length==4){
+                        var min = Math.min.apply(Math, selected_corners);  console.log(min);
+                        var max = Math.max.apply(Math, selected_corners);  console.log(max);
+                        var diff = (max-min)%n;                             console.log(diff);
+                        var quotient = Math.floor((max-min)/8);
+
+                        if(selected_corners.includes(min+diff) && selected_corners.includes(max-diff)){
+                            for(var i=0; i<=n*quotient ; i+=n){
+                                for(var j=0; j<=diff; j++){
+                                var b=document.getElementById("Box"+(min+i+j));
+                                b.style.background = current_color;
+                                b.classList.add(c);   
+                                b.classList.remove("temp");    				   
+                                }         			
+                            }    
+                            scores.push((diff+1)*(quotient+1));	
+                            dimensions1.push(diff+1);
+                            dimensions2.push(quotient+1);     			
+                            current_color = colors[++c];
+                        }else{
+                            alert("Wrong Dimensions are selected. SELECT appropriate boxes for rectangle");
+                            for(var i=0; i<4; i++)  	document.getElementById("Box"+selected_corners[i]).style.background = "#ffff66";     								
+                        }
+                                selected_corners=[];
+                                newButton.textContent = "Select New Rectangle";
+                    } 
+                    else if(selected_corners.length==1){
+                            var b=document.getElementById("Box"+ selected_corners[0]);
+                            b.style.background = current_color;
+                            b.classList.add(c);  
+                            b.classList.remove("temp"); 
+                            current_color = colors[++c];
+                            selected_corners=[];
+                            newButton.textContent = "Select New Rectangle";
+                            scores.push(1);	
+                            dimensions1.push(1);
+                            dimensions2.push(1); 
+
+                    }
+                    else if(selected_corners.length==2){
+                            var min = Math.min.apply(Math, selected_corners);  console.log(min);
+                            var max = Math.max.apply(Math, selected_corners);  console.log(max);
+                                if((max-min)%n !=0  &&  (max-min)<(n-(min%n)) ){ for(var i= min; i<= max; i++) {
+                                        var b=document.getElementById("Box"+ i);
+                                        b.style.background = current_color;
+                                        b.classList.add(c); 
+                                        b.classList.remove("temp"); 
+                                        console.log(i); }
+                                        scores.push(max-min+1);									    		
+                                        current_color = colors[++c];
+                                        dimensions1.push(max-min);
+                                        dimensions2.push(1);
+                                        selected_corners=[];
+                                        newButton.textContent = "Select New Rectangle";											    				 													    
+                        }else if((max-min)%n == 0) {for(var i= min; i<= max; i+=n){
+                                        var b=document.getElementById("Box"+ i);
+                                        b.style.background = current_color;
+                                        b.classList.remove("temp"); 
+                                        b.classList.add(c);    }
+                                        scores.push((max-min)/n + 1);					    
+                                        current_color = colors[++c];
+                                        dimensions1.push(1);
+                                        dimensions2.push((max-min)%8+1);
+                                        selected_corners=[];
+                                        newButton.textContent = "Select New Rectangle";					            				 													    
+                        }
+                                
+                            else{
+                                alert("Select only 2 or 4 boxes with proper corner points!");
+                                for(var i=0; i<selected_corners.length; i++)  	document.getElementById("Box"+selected_corners[i]).style.background = "#ffff66";
+                                selected_corners=[];
+                                newButton.textContent = "Select New Rectangle";
+
+                            }        
+                            
+                    }
+                    else{
+                        alert("Select only 2 or 4 boxes with proper corner points!");
+                        for(var i=0; i<selected_corners.length; i++)  	document.getElementById("Box"+selected_corners[i]).style.background = "#ffff66";
+                                selected_corners=[];
+                                newButton.textContent = "Select New Rectangle";
+
+                    }
+                    }
+            }   
+
+        function dimension_check(){
+            for(var i= 0; i<dimensions1.length; i++){
+                for(var j = i+1 ; j<dimensions1.length; j++){
+                        if(dimensions1[i]==dimensions1[j]) if(dimensions2[i]==dimensions2[j]) x=1;
+                }
+            }
+
+            for(var i= 0; i<dimensions1.length; i++){
+                for(var j = i+1 ; j<dimensions1.length; j++){
+                        if(dimensions1[i]==dimensions2[j]) if(dimensions2[i]==dimensions1[j]) z=1;
+                }
+            }
+
+        }    
+        var score = 0;
+        function check(){
+            if($(".box-container .temp").length > 0){
+                alert("Select all grids first..!");
+            }else {
+                dimension_check();
+                if(x==0 && z==0){
+                var min_area = Math.min.apply(Math, scores);
+                var max_area = Math.max.apply(Math, scores);
+                score = max_area - min_area;
+                document.getElementById("largest").textContent = max_area;
+                document.getElementById("smallest").textContent =  min_area;
+                document.getElementById("ans").textContent = score;
+                document.getElementById("submit").disabled= false;
+                }else{
+                    alert("TWO RECTANGLES HAVE SAME DIMENSIONs!                   TRY AGAIN!!")
+                    location.reload();
+                    }
+                }
+            }
+
+        function submit(){
+            document.body.innerHTML += '<form id="dynForm" action="/md" method="POST"><input type="hidden" name="score" value="' + score + '"></form>';
+			document.getElementById("dynForm").submit();
+        }	
+
+        var box = document.querySelector(".box-container");
+        for (var i = 1; i<=n*n; i++){
+            var newBox = document.createElement("div");
+            newBox.onclick = click;
+            newBox.classList.add("innerBox");
+            newBox.classList.add("temp");
+            newBox.id = "Box"+ i;
+            box.appendChild(newBox);
+
+        }
+     </script>		
+ </body>

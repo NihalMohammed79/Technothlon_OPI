@@ -67,7 +67,7 @@
         });
         var id = "<%= user.socketid %>";
         console.log(id);
-        if((Number(id)%2) == 1) {
+        if(Number(id) < 20) {
             document.getElementById("25").classList.add("btn-danger");
             document.getElementById("24").classList.add("btn-success");
             document.getElementById("22").classList.add("btn-success");

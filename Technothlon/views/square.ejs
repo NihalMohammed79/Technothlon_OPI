@@ -103,7 +103,8 @@
 		<div class="question">
 			<h3>Remove the least possible number of dots from the figure so that it will be impossible to form a square with any remaining dots as vertices.
 			</h3>
-			<h5>[On removing only 10 dots you will complete this level and get 30 points. However, if you remove 11 dots or 12 dots, such that no squares form, and submit, you will get 20 and 10 points respectively, and will proceed to the next level.]			</h5>
+			<h5>[On removing only 10 dots you will complete this level. However, if you remove 11 dots, such that no squares form, and submit, you will get partial points and will procees to the next level.]
+			</h5>
 		</div>
 		<div class="grid-container" id="dots" align="center">			
 		</div>
@@ -130,52 +131,45 @@
             hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
         });
        var s=[1,1];
-for(i=0;i<23;i++){
-	s.push(1);
-}
-//console.log(status);
-var grid=document.getElementById("dots");
-for(var i=0;i<25;i++)
-{
-	var a=document.createElement('div');
-	var dot=document.createElement('div');
-	var b=document.createElement('button');
-	b.id=i;
-	
-	b.onclick=dot_click;
-	a.classList.add("grid-item");
-	b.classList.add("button");
-	b.classList.add("not_removed");
-	dot.appendChild(b);
-	a.appendChild(dot);
-	grid.appendChild(a);
-}
-function dot_click(){
-	//alert(this.id);
-	document.getElementById(this.id).classList.toggle("not_removed");
-	if(document.getElementById(this.id).classList.contains("not_removed")){
-		console.log("not removed");
-		s[this.id]=1;
-	}
-	else
-	{
-		console.log("removed");
-		s[this.id]=0;
-	}
-	//document.getElementById(this.id).classList.add("removed");
-}
-	//document.getElementById(idid).classList.add("removed");
+        for(i=0;i<23;i++){
+            s.push(1);
+        }
+        var grid=document.getElementById("dots");
+        for(var i=0;i<25;i++)
+        {
+            var a=document.createElement('div');
+            var dot=document.createElement('div');
+            var b=document.createElement('button');
+            b.id=i;
+            
+            b.onclick=dot_click;
+            a.classList.add("grid-item");
+            b.classList.add("button");
+            b.classList.add("not_removed");
+            dot.appendChild(b);
+            a.appendChild(dot);
+            grid.appendChild(a);
+        }
+        function dot_click(){
+            document.getElementById(this.id).classList.toggle("not_removed");
+            if(document.getElementById(this.id).classList.contains("not_removed")){
+                s[this.id]=1;
+            }
+            else
+            {
+                s[this.id]=0;
+            }
+        }
 
-function check(){
-	console.log(s);
-	var c=0;
-	for(var k=0;k<25;k++){
-		c+=s[k];
-	}	
-	if(c==15 || c==14 || c==13) {
-		var  fail=0;
-		while(1){
-			    //check for 1x1 squses
+        function check(){
+            var c=0;
+            for(var k=0;k<25;k++){
+                c+=s[k];
+            }	
+            if(c==15 || c==14){
+                var  fail=0;
+                while(1){
+                        //check for 1x1 squses
             if(s[0] && s[1] && s[5] && s[6])
                 { fail=1; break; }
             else if(s[1] && s[2] && s[6] && s[7])
@@ -291,36 +285,20 @@ function check(){
             else if(s[15] && s[1] && s[9] && s[23])
                 { fail=1; break; }
             else{
-                console.log("no of dots removed:");
-            	console.log(25-c);
-                if(c==15)
-                    alert("Correct. 10 dots removed- you get 30 points!");
-                else if(c==14)
-                    alert("Correct - 11 dots removed - you get 20 points!");
-                else if(c==13)
-                    alert("Correct - 12 dots removed - you get 10 points!");
-            	else
-                    console.log("no squares formed but more than 12 removed");
-                break;
+                document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="' + c + '"></form>';
+                document.getElementById("dynForm").submit();
+            }
+                }
+                if(fail==1){
+                    document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="Wrong"></form>';
+                    document.getElementById("dynForm").submit();
+                }
+            }	
+            else{
+                document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="Wrong"></form>';
+                document.getElementById("dynForm").submit();
             }
         }
-		console.log("fail");
-        console.log(fail);
-		if(fail==1){
-			alert("Wrong ans");
-            console.log("squares formed!");
-		}
-		
-
-	}	
-	else{
-		alert("wrong ");
-        console.log("squares condition not checked");
-        console.log("no of dots removed:");
-        console.log(25-c);
-        
-	}
-}
     </script>
 	</div>
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>

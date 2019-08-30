@@ -28,7 +28,7 @@
                 socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "half"});
             });
             var id = "<%= user.socketid %>";
-            if(id%2 == 1) {
+            if(iNumber(id)< 20) {
                 var chance = "Your Chance";
             } else {
                 var chance = "Opponent Chance";
