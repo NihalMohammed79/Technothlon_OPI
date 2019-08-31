@@ -49,105 +49,141 @@ var hints = [
 	{
 		// Start
 		hint1: "",
-		hint2: ""
+		hint2: "",
+		hint1ded: 0,
+		hint2ded: 0
 	},
 	{ 
 		// Hints for Bridges
 		hint1: "",
-		hint2: ""
+		hint2: "",
+		hint1ded: 0,
+		hint2ded: 0
 	},
 	{
 		// Hints for Crack
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 	},
 	{
 		// Hints for Nonogram
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 
 	},
 	{
 		// Hints For People In Circle
 		hint1:"Try observing the pattern for small numbers",
-		hint2:""
+		hint2:"",
+		hint1ded: 3,
+		hint2ded: 0
 
 	},
 	{
 		// Hints In Prison Doors
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 
 	},
 	{
 		// Hints In Stay In Line
 		hint1:"You can find the answer by observing objects in front of you",
-		hint2:"Observe the keyboard carefully"
+		hint2:"Observe the keyboard carefully",
+		hint1ded: 2,
+		hint2ded: 10
 
 	},
 	{
 		// Hints For What Comes Next(HA)
 		hint1:"Observe the pattern of the Alphabet Positions",
-		hint2:"AF=16 Find the others"
+		hint2:"AF=16 Find the others",
+		hint1ded: 7,
+		hint2ded: 5
 
 	},
 	{
 		// Hints for poll
 		hint1:"Notice that to win in a state you need a majority of 4 black dots and you need to win atleast 3 states to win the election.There are exactly 12 black dots meaning you need to make two states with all (6) white states",
-		hint2:"One of the regions will be {(1,1)(2,1)(3,1)(4,1)(4,2)(4,3)}[Taking bottom left as (1,1)]"
+		hint2:"One of the regions will be {(1,1)(2,1)(3,1)(4,1)(4,2)(4,3)}[Taking bottom left as (1,1)]",
+		hint1ded: 3,
+		hint2ded: 5
 
 	},
 	{
 		// Hints for Light Level
 		hint1:"Think in terms of co-ordinates.And remember, its all a game of odds and evens",
-		hint2:""
+		hint2:"",
+		hint1ded: 7,
+		hint2ded: 0
 
 	},
 	{
 		// Hints for Logic 35
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 
 	},
 	{
 		// Hints for Nonogram 2
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 
 	},
 	{
 		// Flash
 		hint1:"Notice that the sequence of flashes is made of short and long pulses which may be a code",
-		hint2:"The answer is hard"
+		hint2:"The answer is hard",
+		hint1ded: 10,
+		hint2ded: 10
 
 	},
 	{
 		// Logic 34
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 
 	},
 	{
 		// Square
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 
 	},
 	{
 		// Invisible
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 
 	},
 	{
 		// Pattern
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 	},
 	{
 		// Pi
 		hint1:"",
-		hint2:""
+		hint2:"",
+		hint1ded: 0,
+		hint2ded: 0
 	},
 	{
 		// Mondrian
@@ -238,7 +274,7 @@ var clients =[];
 							var hint = hints[level-1].hint1;
 							io.to(data.toid).emit('hintres', {hint : hint});
 							user[0].hint1 = true;
-							user[0].score -= 5;
+							user[0].score -= hints[level-1].hint1ded;
 						} else {
 							io.to(data.toid).emit('hintres', {hint : "No Hints!"});
 						}
@@ -247,7 +283,7 @@ var clients =[];
 							var hint = hints[level-1].hint2;
 							io.to(data.toid).emit('hintres', {hint : hint});
 							user[0].hint2 = true;
-							user[0].score -= 5;
+							user[0].score -= hints[level-1].hint2ded;
 						} else {
 							io.to(data.toid).emit('hintres', {hint : "No Hints!"});
 						}
@@ -325,7 +361,7 @@ var clients =[];
     });
 
 var levelNames = ['start','bridges', 'crack', 'nonogram', 'people', 'doors', 'abc', 'alphabet', 'poll', 'light', '35', 'nonogram2', 'flash', 'logic34', 'square', 'invisible','pattern', 'md', 'pi'];
-var skipdeds = [5, 10, 15, 10, 10, 10, 10, 7, 10, 10, 15, 10, 10, 0, 20, 10, 0];
+var skipdeds = [0, 5, 10, 15, 10, 10, 10, 10, 7, 10, 10, 15, 10, 10, 10, 0, 15, 10, 0];
 var noofusers = 1;
 // ==================
 // ROUTES FOR LEVELS
