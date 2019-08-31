@@ -41,7 +41,7 @@ passport.deserializeUser(User.deserializeUser());
 // =================
 // SETUP FOR SOCKET
 // =================
-var server = app.listen(4000, '10.150.38.192', function(){
+var server = app.listen(4000, function(){
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
