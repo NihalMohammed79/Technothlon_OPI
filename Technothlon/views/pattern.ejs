@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta property="og:image" content="https://tympanix.github.io/pattern-lock-js/mockup.jpg" />
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <title>Pattern Lock</title>
     <style media="screen">
         * {
@@ -51,7 +52,51 @@
         }
     </style>
 
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        svg.patternlock g.lock-lines line {
+        stroke-width: 1.5;
+        stroke: black;
+        opacity: 0.5;
+    }
+
+    svg.patternlock g.lock-dots circle {
+        stroke: transparent;
+        fill: black;
+        stroke-width: 13.5;
+    }
+
+    svg.patternlock g.lock-actives circle {
+        fill: black;
+        opacity: .2;
+        animation: lock-activate-dot .15s 0s ease 1;
+        transform-origin: center;
+    }
+
+    svg.patternlock g.lock-lines line {
+        stroke-width: 1.5;
+        stroke-linecap: round;
+    }
+
+    svg.patternlock.success g.lock-actives circle {
+        fill: green;
+    }
+
+    svg.patternlock.error g.lock-actives circle {
+        fill: red;
+    }
+
+    @keyframes lock-activate-dot {
+        0% {
+            transform: scale(0);
+        }
+        75% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1.0);
+        }
+    }
+    </style>
     <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
     <script src="socketio220.js"></script>
 </head>
@@ -75,11 +120,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
                     <ul style="text-align: center; width: 250px;" class="dropdown-menu">
-                        <li>Level Name: Nonogram 2</li>
+                        <li>Level Name: Pattern</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 1: 5 marks</li>
+                        <li>Maximum Marks: 30 marks</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 2: 8 marks</li>
+                        <li>Deduction On Hint 1: 0 marks</li>
+                        <li role="separator" class="divider"></li>
+                        <li>Deduction On Hint 2: 0 marks</li>
                         <li role="separator" class="divider"></li>
                         <li>Deduction On Skip: 15 marks</li>
                         <li role="separator" class="divider"></li>
@@ -92,7 +139,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
                 <ul class="dropdown-menu" style="width: 200px;">
                 <div style="text-align: center;" id="hintbox">
-                    <label for="hint">Type 'hint' in the box below to get a hint</label>
+                    <label for="hint" style="padding: 5px;">Type 'hint' in the box below to get a hint</label>
                     <input style="width: 150px;" type="text" name="hint" id="hint">
                     <button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
                 </div>
@@ -102,7 +149,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
                 <ul class="dropdown-menu" style="width: 200px;">
                     <form style="text-align: center;" action="/skip" method="POST">
-                        <label for="hint">Type 'skip' in the box below to skip this level</label>
+                        <label for="hint" style="padding: 5px;">Type 'skip' in the box below to skip this level</label>
                         <input style="width: 150px;" type="text" name="skip" id="skip">
                         <button style="margin-top: 5px;" type="submit">Submit</button>
                     </form>
@@ -531,7 +578,6 @@
 
             if(q[1]==q[4]&&q[2]==q[3]&&q[5]==q[7]&&q[6]==q[8]&&l[0]==l[1] && l[2]==l[3] && l[4]==l[5]&& l[6]==l[10]&& l[7]==l[11]&& l[12]==l[15]&& l[13]==l[14]&& l[16]==l[19]&& l[17]==l[18])
             {	los++;
-                console.log("vertical");
             } 
             //check horizontal symmetry 456:
             if(q[7]==q[6]&&q[5]==q[8]&&q[1]==q[3]&&q[2]==q[4]&&l[6]==l[7] && l[8]==l[9] && l[10]==l[11] && l[0]==l[4] && l[1]==l[5] && l[12]==l[17] && l[13]==l[16] && l[14]==l[19] && l[15]==l[18])
@@ -553,6 +599,8 @@
         }
         });
     </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>
