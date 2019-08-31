@@ -45,7 +45,12 @@ var server = app.listen(4000,'10.3.2.78', function(){
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
-var hints = [ 
+var hints = [
+	{
+		// Start
+		hint1: "",
+		hint2: ""
+	},
 	{ 
 		// Hints for Bridges
 		hint1: "",
@@ -327,6 +332,8 @@ app.get("/", function(req, res){
 app.get("/level", isLoggedIn, function(req, res){
 	var user = req.user;
 	var level = user.currentLevel;
+	user.numberofattempts++;
+	user.save();
 	if(level <= levelNames.length)
 		res.render(levelNames[level-1] + ".ejs", {user: user});
 	else {
@@ -425,6 +432,7 @@ app.post("/invisible", function(req, res){
 		user.score += 5;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
 	}
@@ -440,6 +448,7 @@ app.post("/light", function(req, res){
 		user.score += 20;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 10;
 	}
@@ -455,6 +464,7 @@ app.post("/logic34", function(req, res){
 	user.score += newScore;
 	user.hint1 = false;
 	user.hint2 = false;
+	user.noofattempts = -1;
 	user.save();
 	res.redirect("/level");
 });
@@ -467,6 +477,7 @@ app.post("/alphabet", function(req, res){
 		user.score += 15;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
 	}
@@ -484,6 +495,7 @@ app.post("/crack", function(req, res){
 		user.score += 10;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
 	}
@@ -499,6 +511,7 @@ app.post("/people", function(req, res){
 		user.score += 15;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
 	}
@@ -514,6 +527,7 @@ app.post("/digits", function(req, res){
 		user.score += 5;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
 	}
@@ -529,6 +543,7 @@ app.post("/pi", function(req, res){
 		user.score += 50;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 1;
 	}
@@ -544,6 +559,7 @@ app.post("/nonogram1", function(req, res){
 		user.score += 10;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 6;
 	}
@@ -559,6 +575,7 @@ app.post("/nonogram2", function(req, res){
 		user.score += 25;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 10;
 	}
@@ -574,6 +591,7 @@ app.post("/poll", function(req, res){
 		user.score += 15;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 7;
 	}
@@ -590,16 +608,19 @@ app.post("/square", function(req, res){
 		user.score += 30;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else if(c == 14) {
 		user.currentLevel += 1;
 		user.score += 20;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else if(c==13) {
 		user.currentLevel += 1;
 		user.score += 10;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 10;
 	}
@@ -615,6 +636,7 @@ app.post("/flash", function(req, res){
 		user.score += 25;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 2;
 	}
@@ -636,6 +658,7 @@ app.post("/doors", function(req, res){
 			user.score += 10;
 			user.hint1 = false;
 			user.hint2 = false;
+			user.noofattempts = -1;
 		}
 	} else {
 		user.score -= 5;
@@ -652,6 +675,7 @@ app.post("/bridges", function(req, res){
 		user.hint1 = false;
 		user.hint2 = false;
 		user.currentLevel += 1;
+		user.noofattempts = -1;
 	} else {
 		user.currentLevel += 1;
 		user.score -= 5;
@@ -667,20 +691,28 @@ app.post("/md", function(req, res){
 	var score = req.body.user;
 	if(score == 6) {
 		user.score += 35;
+		user.noofattempts = -1;
 	} else if(score == 7) {
 		user.score += 30;
+		user.noofattempts = -1;
 	} else if(score == 8) {
 		user.score += 25;
+		user.noofattempts = -1;
 	} else if(score == 9) {
 		user.score += 20;
+		user.noofattempts = -1;
 	} else if(score == 10) {
 		user.score += 15;
+		user.noofattempts = -1;
 	} else if(score == 11) {
 		user.score += 10;
+		user.noofattempts = -1;
 	} else if(score == 12) {
 		user.score += 5;
+		user.noofattempts = -1;
 	} else {
 		user.score += 0;
+		user.noofattempts = -1;
 	}
 	user.hint1 = false;
 	user.hint2 = false;
@@ -697,6 +729,7 @@ app.post("/35", function(req, res){
 		user.hint2 = false;
 		user.currentLevel += 1;
 		user.score += 5;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
 	}
@@ -711,6 +744,7 @@ app.post("/start", function(req, res){
 		user.currentLevel += 1;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 		user.score += 5;
 		user.save();
 		res.redirect("/level");
@@ -725,6 +759,7 @@ app.post("/right", function(req, res){
 		user.score += 5;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
 	}
@@ -740,6 +775,7 @@ app.post("/pattern", function(req, res){
 		user.score += 30;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	}
 	user.save();
 	res.redirect("/level");
@@ -752,9 +788,7 @@ app.post("/building", function(req, res){
 	var user = req.user;
 	var result = req.body.result;
 	if(result == "I won") {
-		user.score += 5;
-	} else {
-		user.score -= 5;
+		user.score += 20;
 	}
 	user.save();
 	res.redirect("/level");
@@ -764,9 +798,7 @@ app.post("/pile", function(req, res){
 	var user = req.user;
 	var result = req.body.result;
 	if(result == "I won") {
-		user.score += 5;
-	} else {
-		user.score -= 5;
+		user.score += 20;
 	}
 	user.save();
 	res.redirect("/level");
@@ -776,9 +808,7 @@ app.post("/half", function(req, res){
 	var user = req.user;
 	var result = req.body.result;
 	if(result == "I won") {
-		user.score += 5;
-	} else {
-		user.score -= 5;
+		user.score += 20;
 	}
 	user.save();
 	res.redirect("/level");
@@ -788,18 +818,8 @@ app.post("/triangle", function(req, res){
 	var user = req.user;
 	var result = req.body.result;
 	if(result == "I won") {
-		user.score += 5;
-	} else {
-		user.score -= 5;
+		user.score += 20;
 	}
-	user.save();
-	res.redirect("/level");
-});
-
-app.post("/mugame" , function(req, res){
-	var user = req.user;
-	var result = req.body.result;
-	user.score += Number(result);
 	user.save();
 	res.redirect("/level");
 });
@@ -819,7 +839,7 @@ app.post("/register", function(req, res){
 	} else {
 		var newId = "Campbell";
 	}
-	var newUser = new User({username: req.body.username, hint1: false, hint2: false, currentLevel: 1, score: 0, attempts:0, socketid: noofusers, newid: newId});
+	var newUser = new User({username: req.body.username, noofattempts: -1, hint1: false, hint2: false, currentLevel: 1, score: 0, attempts:0, socketid: noofusers, newid: newId});
 	noofusers++; 
 	User.register(newUser, req.body.password, function(err, user){
 		if(err){
