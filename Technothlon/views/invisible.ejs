@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Technothlon</title>
-		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="bootstrap340.css">
 		<style type="text/css">
 			label {
 				text-align: center;
@@ -25,7 +25,7 @@
 				background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
 			}
         </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <script src="socketio220.js"></script>
 
 	</head>
 	<body>
@@ -116,8 +116,8 @@
 			<li>The Blend smoker has a neighbor who drinks water.</li>
 		</ul>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="jquery341.js"></script>
+    <script src="bootstrap340.js"></script>
     <script>
             var socket = io.connect("http://10.150.38.192:4000/");
             var hintinput = document.getElementById("hint");
