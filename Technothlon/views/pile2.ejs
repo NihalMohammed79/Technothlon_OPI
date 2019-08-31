@@ -28,7 +28,7 @@
             </div>
         </div>
         <script>
-            var socket = io.connect("http://10.150.37.17:4000/");
+            var socket = io.connect("http://10.150.38.192:4000/");
 
             socket.on('connect', function (data) {
                 socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" , level: "pile"});

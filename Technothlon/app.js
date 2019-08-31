@@ -41,7 +41,7 @@ passport.deserializeUser(User.deserializeUser());
 // =================
 // SETUP FOR SOCKET
 // =================
-var server = app.listen(4000,'10.3.2.78', function(){
+var server = app.listen(4000, '10.150.38.192', function(){
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
@@ -333,6 +333,9 @@ app.get("/level", isLoggedIn, function(req, res){
 	var user = req.user;
 	var level = user.currentLevel;
 	user.numberofattempts++;
+	if(user.numberofattempts > 0) {
+		user.score -= 5;
+	}
 	user.save();
 	if(level <= levelNames.length)
 		res.render(levelNames[level-1] + ".ejs", {user: user});

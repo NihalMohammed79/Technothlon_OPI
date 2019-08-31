@@ -9,6 +9,7 @@ var UserSchema = new mongoose.Schema({
 	hint1: Boolean,
 	hint2: Boolean,
 	socketid: Number,
+	noofattempts: Number,
 	newid: String,
 }, {timestamps: true});
 
