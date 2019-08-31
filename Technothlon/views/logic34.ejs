@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Technothlon</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="bootstrap340.css">
         <style>
             .row {
                 max-width: 780px;
@@ -15,7 +15,7 @@
                 padding-bottom: 20px;
             }
             </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <script src="socketio220.js"></script>
 
     </head>
     <body>
@@ -182,8 +182,8 @@
             </div>
             <button style="margin-top: 10px;" id="butto" class="btn btn-default">Submit</button>
         </div>
-        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="jquery341.js"></script>
+        <script src="bootstrap340.js"></script>
         <script>
  var socket = io.connect("http://10.150.38.192:4000/");
             var hintinput = document.getElementById("hint");
