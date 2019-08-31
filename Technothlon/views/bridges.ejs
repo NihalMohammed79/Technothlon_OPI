@@ -5,106 +5,112 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
  	
 </head>
-<body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Technothlon</a>
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
-                    <ul style="text-align: center; width: 250px;" class="dropdown-menu">
-                        <li>Level Name: Bridges</li>
-                        <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 1: 0 marks</li>
-                        <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 2: 0 marks</li>
-                        <li role="separator" class="divider"></li>
-                        <li>Deduction On Skip: 5 marks</li>
-                        <li role="separator" class="divider"></li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-            <li><a href="/profile">View Profile</a></li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
-                <ul class="dropdown-menu" style="width: 200px;">
-                <div style="text-align: center;" id="hintbox">
-                    <label for="hint">Type 'hint' in the box below to get a hint</label>
-                    <input style="width: 150px;" type="text" name="hint" id="hint">
-                    <button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
-                </div>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
-                <ul class="dropdown-menu" style="width: 200px;">
-                    <form style="text-align: center;" action="/skip" method="POST">
-                        <label for="hint">Type 'skip' in the box below to skip this level</label>
-                        <input style="width: 150px;" type="text" name="skip" id="skip">
-                        <button style="margin-top: 5px;" type="submit">Submit</button>
-                    </form>
-                </ul>
-            </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
+<body style="padding-bottom: 20px;">
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Technothlon</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+					<ul style="text-align: center; width: 250px;" class="dropdown-menu">
+						<li>Level Name: The Bridges Puzzle</li>
+						<li role="separator" class="divider"></li>
+						<li>Maximum Marks: 5 marks</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Hint 1: 0 marks</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Hint 2: 0 marks</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Skip: 5 marks</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Wrong Answer: 5 marks</li>
+						<li role="separator" class="divider"></li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+			<li><a href="/profile">View Profile</a></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+				<ul class="dropdown-menu" style="width: 200px;">
+				<div style="text-align: center;" id="hintbox">
+					<label for="hint">Type 'hint' in the box below to get a hint</label>
+					<input style="width: 150px;" type="text" name="hint" id="hint">
+					<button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
+				</div>
+				</ul>
+			</li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+				<ul class="dropdown-menu" style="width: 200px;">
+					<form style="text-align: center;" action="/skip" method="POST">
+						<label for="hint">Type 'skip' in the box below to skip this level</label>
+						<input style="width: 150px;" type="text" name="skip" id="skip">
+						<button style="margin-top: 5px;" type="submit">Submit</button>
+					</form>
+				</ul>
+			</li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
 	<div class="container" align="center">
 		<div class="Jumbotron">
-		  <h3>Connect every island,such that any island can be reached from any other. Each island contains a number that shows you how many brides leave that island.Up to two bridges can connect islands together. Bridges can only go horizontally or vertically and may not cross each other.</h3>
-		  <h3>IMPORTANT: You cannot connect two islands with bridges if they have any other island between them.</h3>
+  		<h3>Connect every island,such that any island can be reached from any other. Each island contains a number that shows you how many bridges leave that island.Up to two bridges can connect islands together. Bridges can only go horizontally or vertically and may not cross each other or other islands.</h3>
      </div>
 		<canvas id="canvas" width="560" height="560" style="border:0px solid #000000"></canvas>
 		<div>
-		<button onclick="submit()">submit</button>
+			<button onclick="reset()">RESET</button>
+		</div>
+		<div>
+		<button onclick="submit()">SUBMIT</button>
 			
 		</div>
 	</div>
-    <script type="text/javascript">	
-            var socket = io.connect("http://10.150.38.192:4000/");
-            var hintinput = document.getElementById("hint");
-            var hintbutton = document.getElementById("hintbutton");
-            var hintbox = document.getElementById("hintbox");
-            var id = "<%= user.socketid %>";
-            function hintfunction(){
-                if(hintinput.value == "hint") {
-                    console.log(socket.id);
-                        socket.emit("hint", {
-                        id: id,
-                        toid: socket.id
-                    });
-                }
-            };
-            socket.on("hintres", function(data){
-                console.log(data.hint);
-                hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
-            });
+	<script type="text/javascript">
+	var socket = io.connect("http://10.150.38.192:4000/");
+		var hintinput = document.getElementById("hint");
+		var hintbutton = document.getElementById("hintbutton");
+		var hintbox = document.getElementById("hintbox");
+		var id = "<%= user.socketid %>";
+		function hintfunction(){
+			if(hintinput.value == "hint") {
+					socket.emit("hint", {
+					id: id,
+					toid: socket.id
+				});
+			}
+		};
+		socket.on("hintres", function(data){
+			console.log(data.hint);
+			hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
+		});
 			var s=new Array();
 			for(var m=0;m<14;m++){
 					var tmp=new Array();
+
 				for(var n=0;n<14;n++){
 					tmp.push(0);
 				
 				}
 					s.push(tmp);
 			}
+
+//HIDE ANSWER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			s[0][1]=s[1][0]=2;
 			s[1][2]=s[2][1]=2;
 			s[5][6]=s[6][5]=1;
@@ -118,15 +124,17 @@
 			s[1][4]=s[4][1]=2;
 			s[6][13]=s[13][6]=2;
 			s[2][10]=s[10][2]=2;
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			var c=document.getElementById("canvas");
 			var ctx=c.getContext("2d");
 			ctx.beginPath();
 			ctx.font="60px Georgia";
-			ctx.fillText("4",20,60);
-		 	ctx.fill();
+			//ctx.fillText("4",20,60);
+		 	//ctx.fill();
 			var xx=[0,4,6,1,4,1,5,2,4,1,6,0,2,5];
 			var yy=[0,0,0,1,2,3,3,4,4,5,5,6,6,6];
 			var txt=[4,6,4,1,2,4,3,2,1,2,2,3,3,3];
+			var last_move=-1;
 			for(var i=0;i<14;i++){
 				ctx.rect(xx[i]*80,yy[i]*80,80,80);
 				ctx.fillText(txt[i],xx[i]*80+20,yy[i]*80+60);
@@ -160,6 +168,8 @@
 					    	console.log(xx[r],yy[r],txt[r]);
 					        click(r);
 					    }
+					 
+						
 					}
 			       
 			}, false);
@@ -167,22 +177,52 @@
 			var lines=new Array();
 			for(var m=0;m<14;m++){
 					var tmp=new Array();
+
 				for(var n=0;n<14;n++){
 					tmp.push(0);
 				
 				}
 					lines.push(tmp);
 			}
+			
+			function reset(){
+				var c=document.getElementById("canvas");
+			    var ctx=c.getContext("2d");
+				
+				ctx.fillStyle="#ffffff";
+				ctx.fillRect(0,0,560,560);
+				ctx.beginPath();
+				ctx.font="60px Georgia";
+				ctx.fillStyle="#000000"; 	
+				for(var i=0;i<14;i++){
+					ctx.rect(xx[i]*80,yy[i]*80,80,80);
+					ctx.fillText(txt[i],xx[i]*80+20,yy[i]*80+60);
+					ctx.stroke();
+				}
+				for(var e=0;e<14;e++)
+				{
+					for(var f=0;f<14;f++)
+						lines[e][f]=0;
+				}
+				ctx.stroke();				
+			}
 			function click(r){
 				if(selected==-1 ){
 					selected=r;
+			//		console.log("check2");
 				}
 				else{
+			//		console.log("chk3");
 					if(selected!=r){
+			//			console.log("chk4");
+						//horizontal line
 						if(yy[r]==yy[selected]){
+							//console.log(yy[r],yy[selected]);
+							//console.log("chk5");
 							if(lines[r][selected]==0){
 								console.log("lines[r][selected]=0");
 								ctx.beginPath();
+							//	console.log("asdfghjkl");
 								ctx.moveTo(xx[r<selected?r:selected]*80+80,yy[r]*80+30);
 								ctx.lineTo(xx[r>selected?r:selected]*80,yy[r]*80+30);
 								ctx.stroke();
@@ -193,6 +233,7 @@
 							else if(lines[r][selected]==1){
 								console.log("1 line drawn");
 								ctx.beginPath();
+							//	console.log("asdfghjkl");
 								ctx.moveTo(xx[r<selected?r:selected]*80+80,yy[r]*80+50);
 								ctx.lineTo(xx[r>selected?r:selected]*80,yy[r]*80+50);
 								ctx.stroke();
@@ -203,9 +244,15 @@
 							else{	
 								alert("You cannot create more than two bridges between two elements!");
 								selected=-1
+
+							//selected=-1;
 							}
 						}
+
+						//vertical lines
+
 						if(xx[r]==xx[selected]){
+							//console.log(yy[r],yy[selected]);
 							console.log("chk5");
 							if(lines[r][selected]==0){
 								console.log("chk6");
@@ -229,23 +276,35 @@
 								lines[selected][r]=2;
 								selected=-1;
 							}
+
 							else{	
 								alert("You cannot create more than two bridges between two elements!");
-								selected=-1;
+								selected=-1
+
+							//selected=-1;
 							}
-						}
-					}
+							//selected=-1;
 				}
+
+						selected =-1;
+					}
+					selected=-1;
+				}
+
 			}
 			function submit(){
-				if(JSON.stringify(lines)==JSON.stringify(s)) {
-				document.body.innerHTML += '<form id="dynForm" action="/bridges" method="POST"><input type="hidden" name="result" value="I won"></form>';
-				document.getElementById("dynForm").submit();
-			} else {
-				document.body.innerHTML += '<form id="dynForm" action="/bridges" method="POST"><input type="hidden" name="result" value="I lost"></form>';
-				document.getElementById("dynForm").submit();
-			}
-		}	
+				console.log(lines);
+				if(JSON.stringify(lines)==JSON.stringify(s)){
+					document.body.innerHTML += '<form id="dynForm" action="/bridges" method="POST"><input type="hidden" name="result" value="I won"></form>';
+					document.getElementById("dynForm").submit(); 
+				}
+				else {
+					document.body.innerHTML += '<form id="dynForm" action="/bridges" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+					document.getElementById("dynForm").submit(); 
+				}
+			}		
 			</script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 </html>
