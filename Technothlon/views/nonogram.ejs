@@ -26,7 +26,7 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
 
   </head>
-  <body>
+  <body style="padding-bottom: 20px">
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -47,11 +47,15 @@
                         <ul style="text-align: center; width: 250px;" class="dropdown-menu">
                             <li>Level Name: Nonogram 1</li>
                             <li role="separator" class="divider"></li>
+                            <li>Maximum Marks: 10 marks</li>
+                            <li role="separator" class="divider"></li>
                             <li>Deduction On Hint 1: 0 marks</li>
                             <li role="separator" class="divider"></li>
                             <li>Deduction On Hint 2: 0 marks</li>
                             <li role="separator" class="divider"></li>
                             <li>Deduction On Skip: 15 marks</li>
+                            <li role="separator" class="divider"></li>
+                            <li>Deduction On Wrong Answer: 6 marks</li>
                             <li role="separator" class="divider"></li>
                         </ul>
                     </li>
@@ -84,19 +88,21 @@
         </nav>
       <div class="container">
           <div class="question text-primary text-center">
-              <h3>Your aim in this is to colour the whole grid in to black and white squares. At the top of each column, and at the side of each row, you will notice a set of one or more numbers. These numbers tell you the runs of black squares in that row/column. So, if you see '2 1', that tells you that there will be a run of exactly 1 black squares, followed by one or more white square, followed by a single black square. There may be more white squares before/after this sequence</h3>
+
+              <h3>In this level you have to turn some of the squares in the grid black. At the top of each column, and at the side of each row, you will notice a set of one or more numbers. These numbers tell you the runs of black squares in that row/column. So, if you see '2 1', that tells you that there will be a run of exactly 2 black squares, followed by one or more white squares, followed by a single black square. There may be more white squares before/after this sequence.</h3>
+
           </div>
   
           <div class="grid-container" id="area-grid" align="center">
               
           </div>
   
-          <div style="width:350px;" align="center">
-              <button onclick="check_answer()" type="button" class="btn btn-success btn-lg pull-right">Submit</button>
+          <div style="width:350px;" align="center;">
+              <button style="margin-top: 10px;" onclick="check_answer()" type="button" class="btn btn-success btn-lg pull-right">Submit</button>
           </div>
       </div>
-      <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-3.4.1.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     var socket = io.connect("http://10.150.38.192:4000/");
     var hintinput = document.getElementById("hint");

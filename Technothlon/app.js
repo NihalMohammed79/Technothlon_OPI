@@ -41,7 +41,11 @@ passport.deserializeUser(User.deserializeUser());
 // =================
 // SETUP FOR SOCKET
 // =================
+<<<<<<< HEAD
 var server = app.listen(4000, function(){
+=======
+var server = app.listen(4000,'10.150.38.192', function(){
+>>>>>>> f69fd60eb64c87c9e99a34e5e1d5aee18984e1eb
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
@@ -55,11 +59,6 @@ var hints = [
 		// Hints for Bridges
 		hint1: "",
 		hint2: ""
-	},
-	{
-		// Hints for Right
-		hint1: "Use mouse",
-		hint2: "Right Click"
 	},
 	{
 		// Hints for Crack
@@ -85,20 +84,26 @@ var hints = [
 
 	},
 	{
+		// Hints In Stay In Line
+		hint1:"You can find the answer by observing objects in front of you",
+		hint2:"Observe the keyboard carefully"
+
+	},
+	{
 		// Hints For What Comes Next(HA)
-		hint1:"Observe the pattern formed by the numbers",
+		hint1:"Observe the pattern of the Alphabet Positions",
 		hint2:"AF=16 Find the others"
 
 	},
 	{
 		// Hints for poll
-		hint1:"Notice that to win in a state you need a majority of 4 black dots and you need to win atleast 3 states to win the election.There are exactly 12 black dots meaning you need to make two states with all (6) wj=hite states",
+		hint1:"Notice that to win in a state you need a majority of 4 black dots and you need to win atleast 3 states to win the election.There are exactly 12 black dots meaning you need to make two states with all (6) white states",
 		hint2:"One of the regions will be {(1,1)(2,1)(3,1)(4,1)(4,2)(4,3)}[Taking bottom left as (1,1)]"
 
 	},
 	{
 		// Hints for Light Level
-		hint1:"Think in terms of co-ordinates.And remember, its all a game of odds and events",
+		hint1:"Think in terms of co-ordinates.And remember, its all a game of odds and evens",
 		hint2:""
 
 	},
@@ -233,18 +238,22 @@ var clients =[];
 				} else {
 					var level = user[0].currentLevel;
 					if(user[0].hint1 == false) {
-						if(hints[level-1].hint1 !="") {
+						if(hints[level-1].hint1 != "") {
 							var hint = hints[level-1].hint1;
 							io.to(data.toid).emit('hintres', {hint : hint});
 							user[0].hint1 = true;
 							user[0].score -= 5;
+						} else {
+							io.to(data.toid).emit('hintres', {hint : "No Hints!"});
 						}
 					} else if(user[0].hint1 == true && user[0].hint2 == false) {
-						if(hints[level-1].hint2 !="") {
+						if(hints[level-1].hint2 != "") {
 							var hint = hints[level-1].hint2;
 							io.to(data.toid).emit('hintres', {hint : hint});
 							user[0].hint2 = true;
 							user[0].score -= 5;
+						} else {
+							io.to(data.toid).emit('hintres', {hint : "No Hints!"});
 						}
 					} else {
 						io.to(data.toid).emit('hintres', {hint : "No Hints!"});
@@ -319,8 +328,8 @@ var clients =[];
         });
     });
 
-var levelNames = ['start','bridges','right', 'crack', 'nonogram', 'people', 'doors', 'alphabet', 'poll', 'light', '35', 'nonogram2', 'flash', 'logic34', 'square', 'invisible','pattern', 'md', 'pi'];
-var skipdeds = [5, 10, 10, 15, 10, 10, 10, 7, 10, 10, 15, 10, 10, 0, 20, 10, 0];
+var levelNames = ['start','bridges', 'crack', 'nonogram', 'people', 'doors', 'abc', 'alphabet', 'poll', 'light', '35', 'nonogram2', 'flash', 'logic34', 'square', 'invisible','pattern', 'md', 'pi'];
+var skipdeds = [5, 10, 15, 10, 10, 10, 10, 7, 10, 10, 15, 10, 10, 0, 20, 10, 0];
 var noofusers = 1;
 // ==================
 // ROUTES FOR LEVELS
@@ -332,8 +341,9 @@ app.get("/", function(req, res){
 app.get("/level", isLoggedIn, function(req, res){
 	var user = req.user;
 	var level = user.currentLevel;
-	user.numberofattempts++;
-	if(user.numberofattempts > 0) {
+	user.noofattempts++;
+	console.log(user.noofattempts);
+	if(user.noofattempts > 0) {
 		user.score -= 5;
 	}
 	user.save();
@@ -350,7 +360,7 @@ app.get("/profile", isLoggedIn, function(req, res){
 	res.render("profile.ejs", {user: user});
 });
 
-app.post("/skip", function(req, res){
+app.post("/skip", isLoggedIn, function(req, res){
 	var user = req.user;
 	var skip = req.body.skip;
 	var level = user.currentLevel;
@@ -754,22 +764,6 @@ app.post("/start", function(req, res){
 	}
 });
 
-app.post("/right", function(req, res){
-	var user = req.user;
-	var x = req.body.x;
-	if(x == "HELLO") {
-		user.currentLevel += 1;
-		user.score += 5;
-		user.hint1 = false;
-		user.hint2 = false;
-		user.noofattempts = -1;
-	} else {
-		user.score -= 5;
-	}
-	user.save();
-	res.redirect("/level");
-});
-
 app.post("/pattern", function(req, res){
 	var user = req.user;
 	var result = req.body.result;
@@ -779,6 +773,22 @@ app.post("/pattern", function(req, res){
 		user.hint1 = false;
 		user.hint2 = false;
 		user.noofattempts = -1;
+	}
+	user.save();
+	res.redirect("/level");
+});
+
+app.post("/abc", function(req, res){
+	var user = req.user;
+	var id = req.body.id;
+	if(id == "8") {
+		user.currentLevel += 1;
+		user.score += 15;
+		user.hint1 = false;
+		user.hint2 = false;
+		user.noofattempts = -1;
+	} else {
+		user.score -= 7;
 	}
 	user.save();
 	res.redirect("/level");

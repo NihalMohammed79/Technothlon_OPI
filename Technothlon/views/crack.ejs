@@ -51,11 +51,15 @@ input{
 					<ul style="text-align: center; width: 250px;" class="dropdown-menu">
 						<li>Level Name: Crack The Code</li>
 						<li role="separator" class="divider"></li>
+						<li>Maximum Marks: 10 marks</li>
+						<li role="separator" class="divider"></li>
 						<li>Deduction On Hint 1: 0 marks</li>
 						<li role="separator" class="divider"></li>
 						<li>Deduction On Hint 2: 0 marks</li>
 						<li role="separator" class="divider"></li>
 						<li>Deduction On Skip: 10 marks</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Wrong Answer: 5 marks</li>
 						<li role="separator" class="divider"></li>
 					</ul>
 				</li>
@@ -67,7 +71,7 @@ input{
 				<ul class="dropdown-menu" style="width: 200px;">
 				<div style="text-align: center;" id="hintbox">
 					<label for="hint">Type 'hint' in the box below to get a hint</label>
-					<input style="width: 150px; height: 30px;" type="text" name="hint" id="hint">
+					<input style="width: 150px; height: 30px; margin-top: 10px;" type="text" name="hint" id="hint">
 					<button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
 				</div>
 				</ul>
@@ -77,7 +81,7 @@ input{
 				<ul class="dropdown-menu" style="width: 200px;">
 					<form style="text-align: center;" action="/skip" method="POST">
 						<label for="hint">Type 'skip' in the box below to skip this level</label>
-						<input style="width: 150px; height: 30px;" type="text" name="skip" id="skip">
+						<input style="width: 150px; height: 30px; margin-top: 10px;" type="text" name="skip" id="skip">
 						<button style="margin-top: 5px;" type="submit">Submit</button>
 					</form>
 				</ul>
