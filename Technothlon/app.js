@@ -41,11 +41,7 @@ passport.deserializeUser(User.deserializeUser());
 // =================
 // SETUP FOR SOCKET
 // =================
-<<<<<<< HEAD
-var server = app.listen(4000, function(){
-=======
 var server = app.listen(4000,'10.150.38.192', function(){
->>>>>>> f69fd60eb64c87c9e99a34e5e1d5aee18984e1eb
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
@@ -440,7 +436,7 @@ app.get('/getPass',function(req,res) {
 app.post("/invisible", function(req, res){
 	var answer = req.body.answer;
 	var user = req.user;
-	if(answer.toLowerCase() == "german"){
+	if(answer.toLowerCase() == "alohomora"){
 		user.currentLevel += 1;
 		user.score += 5;
 		user.hint1 = false;
@@ -448,6 +444,7 @@ app.post("/invisible", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -464,6 +461,7 @@ app.post("/light", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 10;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -493,6 +491,7 @@ app.post("/alphabet", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -511,6 +510,7 @@ app.post("/crack", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -527,6 +527,7 @@ app.post("/people", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -543,6 +544,7 @@ app.post("/digits", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 5;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -559,6 +561,7 @@ app.post("/pi", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 1;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -575,6 +578,7 @@ app.post("/nonogram1", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 6;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -591,6 +595,7 @@ app.post("/nonogram2", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 10;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -607,6 +612,7 @@ app.post("/poll", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 7;
+		user.noofattempts = -1;
 	}
 	user.save();
  	res.redirect("/level");
@@ -636,6 +642,7 @@ app.post("/square", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 10;
+		user.noofattempts = -1;
 	}
 	user.save();
 	res.redirect("/level");
@@ -652,6 +659,7 @@ app.post("/flash", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 2;
+		user.noofattempts = -1;
 	}
 	user.save();
 	res.redirect("/level");
@@ -675,6 +683,7 @@ app.post("/doors", function(req, res){
 		}
 	} else {
 		user.score -= 5;
+		user.noofattempts = -1;
 	}
 	user.save();
 	res.redirect("/level");
@@ -694,6 +703,7 @@ app.post("/bridges", function(req, res){
 		user.score -= 5;
 		user.hint1 = false;
 		user.hint2 = false;
+		user.noofattempts = -1;
 	}
 	user.save();
 	res.redirect("/level");
@@ -744,7 +754,8 @@ app.post("/35", function(req, res){
 		user.score += 5;
 		user.noofattempts = -1;
 	} else {
-		user.score -= 5;
+		user.score -= 2;
+		user.noofattempts = -1;
 	}
 	user.save();
 	res.redirect("/level");
@@ -789,6 +800,7 @@ app.post("/abc", function(req, res){
 		user.noofattempts = -1;
 	} else {
 		user.score -= 7;
+		user.noofattempts = -1;
 	}
 	user.save();
 	res.redirect("/level");
