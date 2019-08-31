@@ -8,8 +8,8 @@ var UserSchema = new mongoose.Schema({
 	score: Number,
 	hint1: Boolean,
 	hint2: Boolean,
-	attempts: Number,
-	socketid: Number
+	socketid: Number,
+	newid: String,
 }, {timestamps: true});
 
 UserSchema.plugin(passportLocalMongoose);

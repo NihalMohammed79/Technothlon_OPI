@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta property="og:image" content="https://tympanix.github.io/pattern-lock-js/mockup.jpg" />
+    <title>Pattern Lock</title>
+    <style media="screen">
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        .container {
+            margin: auto;
+            height: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            height: 15vh;
+            line-height: 15vh;
+            text-align: center;
+            font-size: 6vh;
+
+        }
+
+        #lock {
+            width: 100%;
+            height: calc(100% - 15vh);
+            padding-bottom: 12vh;
+            min-height: 120px;
+        }
+
+        .stars {
+            margin: auto;
+            display: block;
+        }
+    </style>
+
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h2 align="center">Unlock the next level by entering a pattern which uses all 9 dots and has reflective symmetry.</h2>
+        <svg class="patternlock" id="lock" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g class="lock-actives"></g>
+            <g class="lock-lines"></g>
+            <g class="lock-dots">
+                <circle cx="20" cy="20" r="2"/>
+                <circle cx="50" cy="20" r="2"/>
+                <circle cx="80" cy="20" r="2"/>
+
+                <circle cx="20" cy="50" r="2"/>
+                <circle cx="50" cy="50" r="2"/>
+                <circle cx="80" cy="50" r="2"/>
+
+                <circle cx="20" cy="80" r="2"/>
+                <circle cx="50" cy="80" r="2"/>
+                <circle cx="80" cy="80" r="2"/>
+            </g>
+        </svg>
+    </div>
+
+
+    <script src="vendor.js"></script>
+
+    <script>
+        'use strict';
+
+        var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+        
+        function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+        
+        (function (factory) {
+            var global = Function('return this')() || (0, eval)('this');
+            if (typeof define === 'function' && define.amd) {
+                // AMD. Register as an anonymous module.
+                define(['jquery'], function ($) {
+                    return factory($, global);
+                });
+            } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+                // Node. Does not work with strict CommonJS, but
+                // only CommonJS-like environments that support module.exports,
+                // like Node.
+                module.exports = factory(require('jquery'), global);
+            } else {
+                // Browser globals (global is window)
+                global.PatternLock = factory(global.jQuery, global);
+            }
+        })(function ($, window) {
+            var _scrollKeys;
+        
+            var svgns = 'http://www.w3.org/2000/svg';
+            var moveEvent = 'touchmove mousemove';
+        
+            var scrollKeys = (_scrollKeys = {
+                37: true, // left
+                38: true, // up
+                39: true, // right
+                40: true, // down
+                32: true }, _defineProperty(_scrollKeys, '38', true), _defineProperty(_scrollKeys, 34, true), _defineProperty(_scrollKeys, 35, true), _defineProperty(_scrollKeys, 36, true), _scrollKeys);
+        
+            function vibrate() {
+                navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+                if (navigator.vibrate) {
+                    window.navigator.vibrate(25);
+                }
+            }
+        
+            function PatternLock(element, options) {
+                var svg = $(element);
+                var self = this;
+                var root = svg[0];
+                var dots = svg.find('.lock-dots circle');
+                var lines = svg.find('.lock-lines');
+                var actives = svg.find('.lock-actives');
+                var pt = root.createSVGPoint();
+                var code = [];
+                var currentline = void 0;
+                var currenthandler = void 0;
+        
+                options = Object.assign(PatternLock.defaults, options || {});
+        
+                svg.on('touchstart mousedown', function (e) {
+                    clear();
+                    e.preventDefault();
+                    disableScroll();
+                    svg.on(moveEvent, discoverDot);
+                    var endEvent = e.type == 'touchstart' ? 'touchend' : 'mouseup';
+                    $(document).one(endEvent, function (e) {
+                        end();
+                    });
+                });
+        
+                // Exported methods
+                Object.assign(this, {
+                    clear: clear,
+                    success: success,
+                    error: error,
+                    getPattern: getPattern
+                });
+        
+                function success() {
+                    svg.removeClass('error');
+                    svg.addClass('success');
+                }
+        
+                function error() {
+                    svg.removeClass('success');
+                    svg.addClass('error');
+                }
+        
+                function getPattern() {
+                    return parseInt(code.map(function (i) {
+                        return dots.index(i) + 1;
+                    }).join(''));
+                }
+        
+                function end() {
+                    enableScroll();
+                    stopTrack(currentline);
+                    currentline && currentline.remove();
+                    svg.off(moveEvent, discoverDot);
+                    var val = options.onPattern.call(self, getPattern());
+                    if (val === true) {
+                        success();
+                    } else if (val === false) {
+                        error();
+                    }
+                }
+        
+                function clear() {
+                    code = [];
+                    currentline = undefined;
+                    currenthandler = undefined;
+                    svg.removeClass('success error');
+                    lines.empty();
+                    actives.empty();
+                }
+        
+                function preventDefault(e) {
+                    e = e || window.event;
+                    if (e.preventDefault) e.preventDefault();
+                    e.returnValue = false;
+                }
+        
+                function preventDefaultForScrollKeys(e) {
+                    if (scrollKeys[e.keyCode]) {
+                        preventDefault(e);
+                        return false;
+                    }
+                }
+        
+                function disableScroll() {
+                    if (window.addEventListener) // older FF
+                        window.addEventListener('DOMMouseScroll', preventDefault, false);
+                    window.onwheel = preventDefault; // modern standard
+                    window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
+                    window.ontouchmove = preventDefault; // mobile
+                    document.onkeydown = preventDefaultForScrollKeys;
+                }
+        
+                function enableScroll() {
+                    if (window.removeEventListener) window.removeEventListener('DOMMouseScroll', preventDefault, false);
+                    window.onmousewheel = document.onmousewheel = null;
+                    window.onwheel = null;
+                    window.ontouchmove = null;
+                    document.onkeydown = null;
+                }
+        
+                function isUsed(target) {
+                    for (var i = 0; i < code.length; i++) {
+                        if (code[i] === target) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+        
+                function isAvailable(target) {
+                    for (var i = 0; i < dots.length; i++) {
+                        if (dots[i] === target) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+        
+                function updateLine(line) {
+                    return function (e) {
+                        e.preventDefault();
+                        if (currentline !== line) return;
+                        var pos = svgPosition(e.target, e);
+                        line.setAttribute('x2', pos.x);
+                        line.setAttribute('y2', pos.y);
+                        return false;
+                    };
+                }
+        
+                function discoverDot(e, target) {
+                    if (!target) {
+                        var _getMousePos = getMousePos(e),
+                            x = _getMousePos.x,
+                            y = _getMousePos.y;
+        
+                        target = document.elementFromPoint(x, y);
+                    }
+                    var cx = target.getAttribute('cx');
+                    var cy = target.getAttribute('cy');
+                    if (isAvailable(target) && !isUsed(target)) {
+                        stopTrack(currentline, target);
+                        currentline = beginTrack(target);
+                    }
+                }
+        
+                function stopTrack(line, target) {
+                    if (line === undefined) return;
+                    if (currenthandler) {
+                        svg.off('touchmove mousemove', currenthandler);
+                    }
+                    if (target === undefined) return;
+                    var x = target.getAttribute('cx');
+                    var y = target.getAttribute('cy');
+                    line.setAttribute('x2', x);
+                    line.setAttribute('y2', y);
+                }
+        
+                function beginTrack(target) {
+                    code.push(target);
+                    var x = target.getAttribute('cx');
+                    var y = target.getAttribute('cy');
+                    var line = createNewLine(x, y);
+                    var marker = createNewMarker(x, y);
+                    actives.append(marker);
+                    currenthandler = updateLine(line);
+                    svg.on('touchmove mousemove', currenthandler);
+                    lines.append(line);
+                    if (options.vibrate) vibrate();
+                    return line;
+                }
+        
+                function createNewMarker(x, y) {
+                    var marker = document.createElementNS(svgns, "circle");
+                    marker.setAttribute('cx', x);
+                    marker.setAttribute('cy', y);
+                    marker.setAttribute('r', 6);
+                    return marker;
+                }
+        
+                function createNewLine(x1, y1, x2, y2) {
+                    var line = document.createElementNS(svgns, "line");
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    if (x2 === undefined || y2 == undefined) {
+                        line.setAttribute('x2', x1);
+                        line.setAttribute('y2', y1);
+                    } else {
+                        line.setAttribute('x2', x2);
+                        line.setAttribute('y2', y2);
+                    }
+                    return line;
+                }
+        
+                function getMousePos(e) {
+                    return {
+                        x: e.clientX || e.originalEvent.touches[0].clientX,
+                        y: e.clientY || e.originalEvent.touches[0].clientY
+                    };
+                }
+        
+                function svgPosition(element, e) {
+                    var _getMousePos2 = getMousePos(e),
+                        x = _getMousePos2.x,
+                        y = _getMousePos2.y;
+        
+                    pt.x = x;pt.y = y;
+                    return pt.matrixTransform(element.getScreenCTM().inverse());
+                }
+            }
+        
+            PatternLock.defaults = {
+                onPattern: function onPattern() {},
+                vibrate: true
+            };
+        
+            return PatternLock;
+        });
+    </script>
+
+    <script type="text/javascript">
+    var e = document.getElementById('lock')
+    var p = new PatternLock(e, {
+        onPattern: function() {
+            this.success()
+        }
+    });
+    </script>
+    <script type="text/javascript">
+        var lock = new PatternLock("#lock", {
+        onPattern: function(pattern) {
+            // Context is the pattern lock instance
+            console.log(pattern);
+            var l=[];
+            for(var pi=0;pi<20;pi++)
+                l[pi]=0;
+            var q=[];
+            for(var j=0;j<9;j++)
+                q[j]=0;
+            p=pattern.toString();
+            if(p.includes("16")||p.includes("61"))
+                q[5]=1;
+            if(p.includes("49")||p.includes("94"))
+                q[6]=1;
+            if(p.includes("34")||p.includes("43"))
+                q[7]=1;
+            if(p.includes("67")||p.includes("76"))
+                q[8]=1;
+            if(p.includes("18")||p.includes("81"))
+                q[1]=1;
+            if(p.includes("29")||p.includes("92"))
+                q[2]=1;
+            if(p.includes("27")||p.includes("72"))
+                q[3]=1;
+            if(p.includes("38")||p.includes("83"))
+                q[4]=1;
+            if(p.includes("12")||(p.includes("21")))
+                l[0]=1;
+            if(p.includes("23")||(p.includes("32")))
+                l[1]=1;
+            if(p.includes("45")||(p.includes("54")))
+                l[2]=1;
+            if(p.includes("56")||(p.includes("65")))
+                l[3]=1;
+            if(p.includes("78")||(p.includes("87")))
+                l[4]=1;
+            if(p.includes("89")||(p.includes("98")))
+                l[5]=1;
+            if(p.includes("14")||(p.includes("41")))
+                l[6]=1;
+            if(p.includes("47")||(p.includes("74")))
+                l[7]=1;
+            if(p.includes("25")||(p.includes("52")))
+                l[8]=1;
+            if(p.includes("58")||(p.includes("85")))
+                l[9]=1;
+            if(p.includes("36")||(p.includes("63")))
+                l[10]=1;
+            if(p.includes("69")||(p.includes("96")))
+                l[11]=1;
+            if(p.includes("15")||(p.includes("51")))
+                l[12]=1;
+            if(p.includes("24")||(p.includes("42")))
+                l[13]=1;
+            if(p.includes("26")||(p.includes("62")))
+                l[14]=1;
+            if(p.includes("35")||(p.includes("53")))
+                l[15]=1;
+            if(p.includes("48")||(p.includes("84")))
+                l[16]=1;
+            if(p.includes("57")||(p.includes("75")))
+                l[17]=1;
+            if(p.includes("59")||(p.includes("95")))
+                l[18]=1;
+            if(p.includes("68")||(p.includes("86")))
+                l[19]=1;
+
+            if(p.includes("13")||(p.includes("31"))){
+                l[0]=1;
+                l[1]=1
+            }
+            if(p.includes("46")||(p.includes("64"))){
+                l[2]=1;
+                l[3]=1
+            }
+            if(p.includes("79")||(p.includes("97"))){
+                l[4]=1;
+                l[5]=1
+            }
+            if(p.includes("17")||(p.includes("71"))){
+                l[6]=1;
+                l[7]=1
+            }
+            if(p.includes("28")||(p.includes("82"))){
+                l[8]=1;
+                l[9]=1
+            }
+            if(p.includes("39")||(p.includes("93"))){
+                l[10]=1;
+                l[11]=1
+            }
+            if(p.includes("19")||(p.includes("91"))){
+                l[12]=1;
+                l[18]=1
+            }
+            if(p.includes("37")||(p.includes("73"))){
+                l[15]=1;
+                l[17]=1
+            }
+            var los=0; //lines of symmetry
+        //check vertical line of symmetry 258
+
+            if(q[1]==q[4]&&q[2]==q[3]&&q[5]==q[7]&&q[6]==q[8]&&l[0]==l[1] && l[2]==l[3] && l[4]==l[5]&& l[6]==l[10]&& l[7]==l[11]&& l[12]==l[15]&& l[13]==l[14]&& l[16]==l[19]&& l[17]==l[18])
+            {	los++;
+                console.log("vertical");
+            } 
+            //check horizontal symmetry 456:
+            if(q[7]==q[6]&&q[5]==q[8]&&q[1]==q[3]&&q[2]==q[4]&&l[6]==l[7] && l[8]==l[9] && l[10]==l[11] && l[0]==l[4] && l[1]==l[5] && l[12]==l[17] && l[13]==l[16] && l[14]==l[19] && l[15]==l[18])
+                los++;
+            //diagonal 159
+            if(q[6]==q[2]&&q[5]==q[1]&&q[7]==q[3]&&q[4]==q[8]&&l[6]==l[0]&&l[7]==l[1]&&l[4]==l[10]&&l[5]==l[11]&&l[2]==l[8]&&l[9]==l[3]&&l[16]==l[14]&&l[17]==l[15])
+                los++;
+            //diagonal 357
+            if(q[3]==q[8]&&q[7]==q[4]&&q[1]==q[6]&&q[2]==q[5]&&l[1]==l[10]&&l[0]==l[11]&&l[6]==l[5]&&l[7]==l[4]&&l[8]==l[3]&&l[2]==l[9]&&l[13]==l[19]&&l[12]==l[18])
+                los++;
+            		
+        if(p.length>8 && los>0) {
+            alert("Correct");
+            document.body.innerHTML += '<form id="dynForm" action="/pattern" method="POST"><input type="hidden" name="result" value="I won"></form>';
+			document.getElementById("dynForm").submit();
+        }
+        else
+            lock.clear();
+        }
+        });
+    </script>
+</body>
+
+</html>

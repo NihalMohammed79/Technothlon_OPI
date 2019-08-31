@@ -68,7 +68,8 @@
     </nav>
 	<div class="container" align="center">
 		<div class="Jumbotron">
-  		<h3>Connect every island,such that any island can be reached from any other. Each island contains a number that shows you how many brides leave that island.Up to two bridges can connect islands together. Bridges can only go horizontally or vertically and may not cross each other.</h3>
+		  <h3>Connect every island,such that any island can be reached from any other. Each island contains a number that shows you how many brides leave that island.Up to two bridges can connect islands together. Bridges can only go horizontally or vertically and may not cross each other.</h3>
+		  <h3>IMPORTANT: You cannot connect two islands with bridges if they have any other island between them.</h3>
      </div>
 		<canvas id="canvas" width="560" height="560" style="border:0px solid #000000"></canvas>
 		<div>
@@ -104,7 +105,6 @@
 				}
 					s.push(tmp);
 			}
-//HIDE ANSWER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			s[0][1]=s[1][0]=2;
 			s[1][2]=s[2][1]=2;
 			s[5][6]=s[6][5]=1;
@@ -118,7 +118,6 @@
 			s[1][4]=s[4][1]=2;
 			s[6][13]=s[13][6]=2;
 			s[2][10]=s[10][2]=2;
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			var c=document.getElementById("canvas");
 			var ctx=c.getContext("2d");
 			ctx.beginPath();
@@ -161,8 +160,6 @@
 					    	console.log(xx[r],yy[r],txt[r]);
 					        click(r);
 					    }
-					 
-						
 					}
 			       
 			}, false);
@@ -179,20 +176,13 @@
 			function click(r){
 				if(selected==-1 ){
 					selected=r;
-			//		console.log("check2");
 				}
 				else{
-			//		console.log("chk3");
 					if(selected!=r){
-			//			console.log("chk4");
-						//horizontal line
 						if(yy[r]==yy[selected]){
-							//console.log(yy[r],yy[selected]);
-							//console.log("chk5");
 							if(lines[r][selected]==0){
 								console.log("lines[r][selected]=0");
 								ctx.beginPath();
-							//	console.log("asdfghjkl");
 								ctx.moveTo(xx[r<selected?r:selected]*80+80,yy[r]*80+30);
 								ctx.lineTo(xx[r>selected?r:selected]*80,yy[r]*80+30);
 								ctx.stroke();
@@ -203,7 +193,6 @@
 							else if(lines[r][selected]==1){
 								console.log("1 line drawn");
 								ctx.beginPath();
-							//	console.log("asdfghjkl");
 								ctx.moveTo(xx[r<selected?r:selected]*80+80,yy[r]*80+50);
 								ctx.lineTo(xx[r>selected?r:selected]*80,yy[r]*80+50);
 								ctx.stroke();
@@ -216,9 +205,7 @@
 								selected=-1
 							}
 						}
-						//vertical lines
 						if(xx[r]==xx[selected]){
-							//console.log(yy[r],yy[selected]);
 							console.log("chk5");
 							if(lines[r][selected]==0){
 								console.log("chk6");
@@ -251,7 +238,6 @@
 				}
 			}
 			function submit(){
-				console.log(lines);
 				if(JSON.stringify(lines)==JSON.stringify(s)) {
 				document.body.innerHTML += '<form id="dynForm" action="/bridges" method="POST"><input type="hidden" name="result" value="I won"></form>';
 				document.getElementById("dynForm").submit();

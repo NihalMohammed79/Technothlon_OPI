@@ -4,10 +4,12 @@
 	<title>Squares</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
- 	 <style>
-          .grid-container {
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script> 
+    <style>
+        .grid-container {
             display: inline-grid;
             grid-template-columns: 100px 100px 100px 100px  100px;
             grid-template-rows: 100px 100px 100px  100px 100px;
@@ -40,7 +42,7 @@
             .not_removed {
                 background-color: black;
             }
-      </style>
+    </style>
  	 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -61,13 +63,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
                     <ul style="text-align: center; width: 250px;" class="dropdown-menu">
-                        <li>Level Name: The 25 Floor Building</li>
+                        <li>Level Name: Flash</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 1: 5 marks</li>
+                        <li>Deduction On Hint 1: 10 marks</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 2: 5 marks</li>
+                        <li>Deduction On Hint 2: 10 marks</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Skip: 15 marks</li>
+                        <li>Deduction On Skip: 10 marks</li>
                         <li role="separator" class="divider"></li>
                     </ul>
                 </li>
@@ -103,23 +105,22 @@
 		<div class="question">
 			<h3>Remove the least possible number of dots from the figure so that it will be impossible to form a square with any remaining dots as vertices.
 			</h3>
-			<h5>[On removing only 10 dots you will complete this level. However, if you remove 11 dots, such that no squares form, and submit, you will get partial points and will procees to the next level.]
+			<h5>[On removing only 10 dots you will complete this level and get 30 points. However, if you remove 11 dots or 12 dots, such that no squares form, and submit, you will get 20 and 10 points respectively, and will proceed to the next level.]
 			</h5>
 		</div>
 		<div class="grid-container" id="dots" align="center">			
 		</div>
-		<div style="width:350px;" align=center>
+		<div style="width:350px; text-align: center;">
 			<button onclick="check()" class="sub">Submit</button>
 		</div>
     <script type="text/javascript">
-        var socket = io.connect("http://localhost:4000");
+        var socket = io.connect("http://10.150.37.17:4000/");
         var hintinput = document.getElementById("hint");
         var hintbutton = document.getElementById("hintbutton");
         var hintbox = document.getElementById("hintbox");
-        var id = "<%= user.socketid %>";
-        function hintfunction(){
+            var id = "<%= user.socketid %>";
+            function hintfunction(){
             if(hintinput.value == "hint") {
-                console.log(socket.id);
                     socket.emit("hint", {
                     id: id,
                     toid: socket.id
@@ -127,10 +128,9 @@
             }
         };
         socket.on("hintres", function(data){
-            console.log(data.hint);
             hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
         });
-       var s=[1,1];
+        var s=[1,1];
         for(i=0;i<23;i++){
             s.push(1);
         }
@@ -141,7 +141,6 @@
             var dot=document.createElement('div');
             var b=document.createElement('button');
             b.id=i;
-            
             b.onclick=dot_click;
             a.classList.add("grid-item");
             b.classList.add("button");
@@ -153,155 +152,179 @@
         function dot_click(){
             document.getElementById(this.id).classList.toggle("not_removed");
             if(document.getElementById(this.id).classList.contains("not_removed")){
+                console.log("not removed");
                 s[this.id]=1;
             }
             else
             {
+                console.log("removed");
                 s[this.id]=0;
             }
         }
 
         function check(){
+            console.log(s);
             var c=0;
             for(var k=0;k<25;k++){
                 c+=s[k];
             }	
-            if(c==15 || c==14){
+            if(c==15 || c==14 || c==13) {
                 var  fail=0;
                 while(1){
                         //check for 1x1 squses
-            if(s[0] && s[1] && s[5] && s[6])
-                { fail=1; break; }
-            else if(s[1] && s[2] && s[6] && s[7])
-                { fail=1; break; }
-            else if(s[2] && s[3] && s[7] && s[8])
-                { fail=1; break; }
-            else if(s[3] && s[4] && s[8] && s[9])
-                { fail=1; break; }
-            else if(s[5] && s[6] && s[10] && s[11])
-                { fail=1; break; }
-            else if(s[6] && s[7] && s[11] && s[12])
-                { fail=1; break; }
-            else if(s[7] && s[8] && s[12] && s[13])
-                { fail=1; break; }
-            else if(s[8] && s[9] && s[13] && s[14])
-                { fail=1; break; }
-            else if(s[10] && s[11] && s[15] && s[16])
-                { fail=1; break; }
-            else if(s[11] && s[12] && s[16] && s[17])
-                { fail=1; break; }
-            else if(s[12] && s[13] && s[17] && s[18])
-                { fail=1; break; }
-            else if(s[13] && s[14] && s[18] && s[19])
-                { fail=1; break; }
-            else if(s[15] && s[16] && s[20] && s[21])
-                { fail=1; break; }
-            else if(s[16] && s[17] && s[21] && s[22])
-                { fail=1; break; }
-            else if(s[17] && s[18] && s[22] && s[23])
-                { fail=1; break; }
-            else if(s[18] && s[19] && s[23] && s[24])
-                { fail=1; break; }
+                    if(s[0] && s[1] && s[5] && s[6])
+                        { fail=1; break; }
+                    else if(s[1] && s[2] && s[6] && s[7])
+                        { fail=1; break; }
+                    else if(s[2] && s[3] && s[7] && s[8])
+                        { fail=1; break; }
+                    else if(s[3] && s[4] && s[8] && s[9])
+                        { fail=1; break; }
+                    else if(s[5] && s[6] && s[10] && s[11])
+                        { fail=1; break; }
+                    else if(s[6] && s[7] && s[11] && s[12])
+                        { fail=1; break; }
+                    else if(s[7] && s[8] && s[12] && s[13])
+                        { fail=1; break; }
+                    else if(s[8] && s[9] && s[13] && s[14])
+                        { fail=1; break; }
+                    else if(s[10] && s[11] && s[15] && s[16])
+                        { fail=1; break; }
+                    else if(s[11] && s[12] && s[16] && s[17])
+                        { fail=1; break; }
+                    else if(s[12] && s[13] && s[17] && s[18])
+                        { fail=1; break; }
+                    else if(s[13] && s[14] && s[18] && s[19])
+                        { fail=1; break; }
+                    else if(s[15] && s[16] && s[20] && s[21])
+                        { fail=1; break; }
+                    else if(s[16] && s[17] && s[21] && s[22])
+                        { fail=1; break; }
+                    else if(s[17] && s[18] && s[22] && s[23])
+                        { fail=1; break; }
+                    else if(s[18] && s[19] && s[23] && s[24])
+                        { fail=1; break; }
 
-            //check for 2x2 squses
-            else if(s[0] && s[2] && s[10] && s[12])
-                { fail=1; break; }
-            else if(s[1] && s[3] && s[11] && s[13])
-                { fail=1; break; }
-            else if(s[2] && s[4] && s[12] && s[14])
-                { fail=1; break; }
-            else if(s[5] && s[7] && s[15] && s[17])
-                { fail=1; break; }
-            else if(s[6] && s[8] && s[16] && s[18])
-                { fail=1; break; }
-            else if(s[7] && s[9] && s[17] && s[19])
-                { fail=1; break; }
-            else if(s[10] && s[12] && s[20] && s[22])
-                { fail=1; break; }
-            else if(s[11] && s[13] && s[21] && s[23])
-                { fail=1; break; }
-            else if(s[12] && s[14] && s[22] && s[24])
-                { fail=1; break; }
+                    //check for 2x2 squses
+                    else if(s[0] && s[2] && s[10] && s[12])
+                        { fail=1; break; }
+                    else if(s[1] && s[3] && s[11] && s[13])
+                        { fail=1; break; }
+                    else if(s[2] && s[4] && s[12] && s[14])
+                        { fail=1; break; }
+                    else if(s[5] && s[7] && s[15] && s[17])
+                        { fail=1; break; }
+                    else if(s[6] && s[8] && s[16] && s[18])
+                        { fail=1; break; }
+                    else if(s[7] && s[9] && s[17] && s[19])
+                        { fail=1; break; }
+                    else if(s[10] && s[12] && s[20] && s[22])
+                        { fail=1; break; }
+                    else if(s[11] && s[13] && s[21] && s[23])
+                        { fail=1; break; }
+                    else if(s[12] && s[14] && s[22] && s[24])
+                        { fail=1; break; }
 
-            //check for 3x3 squses
-            else if(s[0] && s[3] && s[15] && s[18])
-                { fail=1; break; }
-            else if(s[1] && s[4] && s[16] && s[19])
-                { fail=1; break; }
-            else if(s[5] && s[8] && s[20] && s[23])
-                { fail=1; break; }
-            else if(s[6] && s[9] && s[21] && s[24])
-                { fail=1; break; }
+                    //check for 3x3 squses
+                    else if(s[0] && s[3] && s[15] && s[18])
+                        { fail=1; break; }
+                    else if(s[1] && s[4] && s[16] && s[19])
+                        { fail=1; break; }
+                    else if(s[5] && s[8] && s[20] && s[23])
+                        { fail=1; break; }
+                    else if(s[6] && s[9] && s[21] && s[24])
+                        { fail=1; break; }
 
-            //check for the 4x4 squse
-            else if(s[0] && s[4] && s[20] && s[24])
-                { fail=1; break; }
+                    //check for the 4x4 squse
+                    else if(s[0] && s[4] && s[20] && s[24])
+                        { fail=1; break; }
 
-            //check for 45deg 1x1 squses
-            else if(s[1] && s[5] && s[7] && s[11])
-                { fail=1; break; }
-            else if(s[2] && s[6] && s[8] && s[12])
-                { fail=1; break; }
-            else if(s[3] && s[7] && s[9] && s[13])
-                { fail=1; break; }
-            else if(s[6] && s[10] && s[12] && s[16])
-                { fail=1; break; }
-            else if(s[7] && s[11] && s[13] && s[17])
-                { fail=1; break; }
-            else if(s[8] && s[12] && s[14] && s[18])
-                { fail=1; break; }
-            else if(s[11] && s[15] && s[17] && s[21])
-                { fail=1; break; }
-            else if(s[12] && s[16] && s[18] && s[22])
-                { fail=1; break; }
-            else if(s[13] && s[17] && s[19] && s[23])
-                { fail=1; break; }
+                    //check for 45deg 1x1 squses
+                    else if(s[1] && s[5] && s[7] && s[11])
+                        { fail=1; break; }
+                    else if(s[2] && s[6] && s[8] && s[12])
+                        { fail=1; break; }
+                    else if(s[3] && s[7] && s[9] && s[13])
+                        { fail=1; break; }
+                    else if(s[6] && s[10] && s[12] && s[16])
+                        { fail=1; break; }
+                    else if(s[7] && s[11] && s[13] && s[17])
+                        { fail=1; break; }
+                    else if(s[8] && s[12] && s[14] && s[18])
+                        { fail=1; break; }
+                    else if(s[11] && s[15] && s[17] && s[21])
+                        { fail=1; break; }
+                    else if(s[12] && s[16] && s[18] && s[22])
+                        { fail=1; break; }
+                    else if(s[13] && s[17] && s[19] && s[23])
+                        { fail=1; break; }
 
-            //check for the 45deg 2x2 squse
-            else if(s[2] && s[10] && s[14] && s[22])
-                { fail=1; break; }
+                    //check for the 45deg 2x2 squse
+                    else if(s[2] && s[10] && s[14] && s[22])
+                        { fail=1; break; }
 
-            //check for 30ish deg 1x1 squses
-            else if(s[5] && s[2] && s[16] && s[13])
-                { fail=1; break; }
-            else if(s[6] && s[3] && s[17] && s[14])
-                { fail=1; break; }
-            else if(s[10] && s[7] && s[21] && s[18])
-                { fail=1; break; }
-            else if(s[11] && s[8] && s[22] && s[19])
-                { fail=1; break; }
-            else if(s[1] && s[10] && s[17] && s[8])
-                { fail=1; break; }
-            else if(s[2] && s[11] && s[18] && s[9])
-                { fail=1; break; }
-            else if(s[6] && s[15] && s[22] && s[13])
-                { fail=1; break; }
-            else if(s[7] && s[16] && s[23] && s[14])
-                { fail=1; break; }
+                    //check for 30ish deg 1x1 squses
+                    else if(s[5] && s[2] && s[16] && s[13])
+                        { fail=1; break; }
+                    else if(s[6] && s[3] && s[17] && s[14])
+                        { fail=1; break; }
+                    else if(s[10] && s[7] && s[21] && s[18])
+                        { fail=1; break; }
+                    else if(s[11] && s[8] && s[22] && s[19])
+                        { fail=1; break; }
+                    else if(s[1] && s[10] && s[17] && s[8])
+                        { fail=1; break; }
+                    else if(s[2] && s[11] && s[18] && s[9])
+                        { fail=1; break; }
+                    else if(s[6] && s[15] && s[22] && s[13])
+                        { fail=1; break; }
+                    else if(s[7] && s[16] && s[23] && s[14])
+                        { fail=1; break; }
 
-            //check for slanted 3x3 squses
-            else if(s[5] && s[3] && s[21] && s[19])
-                { fail=1; break; }
-            else if(s[15] && s[1] && s[9] && s[23])
-                { fail=1; break; }
-            else{
-                document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="' + c + '"></form>';
-                document.getElementById("dynForm").submit();
-            }
+                    //check for slanted 3x3 squses
+                    else if(s[5] && s[3] && s[21] && s[19])
+                        { fail=1; break; }
+                    else if(s[15] && s[1] && s[9] && s[23])
+                        { fail=1; break; }
+                    else{
+                        console.log("no of dots removed:");
+                        console.log(25-c);
+                        if(c==15)
+                            alert("Correct. 10 dots removed- you get 30 points!");
+                        else if(c==14)
+                            alert("Correct - 11 dots removed - you get 20 points!");
+                        else if(c==13)
+                            alert("Correct - 12 dots removed - you get 10 points!");
+                        else{
+                            c=-1;
+                            console.log("no squares formed but more than 12 removed");
+                        }
+                        document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="' + c + '"></form>';
+				        document.getElementById("dynForm").submit();
+                        break;
+                    }
                 }
+                console.log("fail");
+                console.log(fail);
                 if(fail==1){
-                    document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="Wrong"></form>';
-                    document.getElementById("dynForm").submit();
+                    alert("Wrong ans");
+                    document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="x" value="Squares Formed"></form>';
+				    document.getElementById("dynForm").submit();
+                    console.log("squares formed!");
                 }
             }	
             else{
-                document.body.innerHTML += '<form id="dynForm" action="/square" method="post"><input type="hidden" name="c" value="Wrong"></form>';
-                document.getElementById("dynForm").submit();
+                alert("wrong ");
+                c=-1;
+                console.log("Squares Condition Not Checked");
+                console.log("no of dots removed:");
+                console.log(25-c);
+                
             }
         }
     </script>
+
 	</div>
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </body>
 </html>

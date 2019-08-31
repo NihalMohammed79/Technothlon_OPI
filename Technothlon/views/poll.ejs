@@ -60,13 +60,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
                     <ul style="text-align: center; width: 250px;" class="dropdown-menu">
-                        <li>Level Name: The 25 Floor Building</li>
+                        <li>Level Name: Poll</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 1: 5 marks</li>
+                        <li>Deduction On Hint 1: 3 marks</li>
                         <li role="separator" class="divider"></li>
                         <li>Deduction On Hint 2: 5 marks</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Skip: 15 marks</li>
+                        <li>Deduction On Skip: 7 marks</li>
                         <li role="separator" class="divider"></li>
                     </ul>
                 </li>
@@ -113,9 +113,9 @@
 		</div>
   </div>
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>\
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script>
-        var socket = io.connect("http://localhost:4000");
+        var socket = io.connect("http://10.150.37.17:4000/");
         var hintinput = document.getElementById("hint");
         var hintbutton = document.getElementById("hintbutton");
         var hintbox = document.getElementById("hintbox");
@@ -227,13 +227,11 @@
                 dotelement.classList.add("white-circle");
             }
             dotelement.id="dot"+iterator;
-
             newelement.classList.add("grid-item");
             newelement.id="square"+iterator;
             newelement.style.background=current_color;
             newelement.appendChild(dotelement);
             grid.appendChild(newelement);
-
         }
   </script>
 </body>

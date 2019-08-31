@@ -32,65 +32,66 @@ input{
    
 </head>
 <body>
-		<nav class="navbar navbar-default">
-				<div class="container-fluid">
-				<!-- Brand and toggle get grouped for better mobile display -->
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="#">Technothlon</a>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Technothlon</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
+					<ul style="text-align: center; width: 250px;" class="dropdown-menu">
+						<li>Level Name: Crack The Code</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Hint 1: 0 marks</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Hint 2: 0 marks</li>
+						<li role="separator" class="divider"></li>
+						<li>Deduction On Skip: 10 marks</li>
+						<li role="separator" class="divider"></li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+			<li><a href="/profile">View Profile</a></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
+				<ul class="dropdown-menu" style="width: 200px;">
+				<div style="text-align: center;" id="hintbox">
+					<label for="hint">Type 'hint' in the box below to get a hint</label>
+					<input style="width: 150px; height: 30px;" type="text" name="hint" id="hint">
+					<button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
 				</div>
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
-							<ul style="text-align: center; width: 250px;" class="dropdown-menu">
-								<li>Level Name: The 25 Floor Building</li>
-								<li role="separator" class="divider"></li>
-								<li>Deduction On Hint 1: 5 marks</li>
-								<li role="separator" class="divider"></li>
-								<li>Deduction On Hint 2: 5 marks</li>
-								<li role="separator" class="divider"></li>
-								<li>Deduction On Skip: 15 marks</li>
-								<li role="separator" class="divider"></li>
-							</ul>
-						</li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-					<li><a href="/profile">View Profile</a></li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hint <span class="caret"></span></a>
-						<ul class="dropdown-menu" style="width: 200px;">
-						<div style="text-align: center;" id="hintbox">
-							<label for="hint">Type 'hint' in the box below to get a hint</label>
-							<input style="width: 150px;" type="text" name="hint" id="hint">
-							<button style="margin-top: 5px;" id="hintbutton" onclick="hintfunction()" type="submit">Submit</button>
-						</div>
-						</ul>
-					</li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
-						<ul class="dropdown-menu" style="width: 200px;">
-							<form style="text-align: center;" action="/skip" method="POST">
-								<label for="hint">Type 'skip' in the box below to skip this level</label>
-								<input style="width: 150px;" type="text" name="skip" id="skip">
-								<button style="margin-top: 5px;" type="submit">Submit</button>
-							</form>
-						</ul>
-					</li>
-					</ul>
-				</div><!-- /.navbar-collapse -->
-				</div><!-- /.container-fluid -->
-			</nav>
+				</ul>
+			</li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Skip <span class="caret"></span></a>
+				<ul class="dropdown-menu" style="width: 200px;">
+					<form style="text-align: center;" action="/skip" method="POST">
+						<label for="hint">Type 'skip' in the box below to skip this level</label>
+						<input style="width: 150px; height: 30px;" type="text" name="skip" id="skip">
+						<button style="margin-top: 5px;" type="submit">Submit</button>
+					</form>
+				</ul>
+			</li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
 	<div class="container">
 		<div class="jumbotron">
 		<h1><strong>WILL YOU CRACK THE CODE???</strong></h1>
-	    </div>
+		</div>
+		<h3>Each Statement here is a Clue. Find the code from the clues and the correct code is to be entered in the three empty boxes.</h3>
 	  <h1>1)One number is correct and well placed.</h1>
 	  <div class="row">
 	  	<div class="col-lg-4"><img src="/images/c6.JPEG" class="img-thumbnail"></div>

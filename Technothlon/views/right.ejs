@@ -2,6 +2,7 @@
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
 <style>
     .vmenu{border:1px solid #aaa;position:absolute;background:#fff;    display:none;font-size:0.75em;}
     .vmenu .first_li span{width:100px;display:block;padding:5px 10px;cursor:pointer}
@@ -14,6 +15,24 @@
     }
 </style>
 <script type="text/javascript">
+var socket = io.connect("http://10.150.37.17:4000");
+    var hintinput = document.getElementById("hint");
+    var hintbutton = document.getElementById("hintbutton");
+    var hintbox = document.getElementById("hintbox");
+    var id = "<%= user.socketid %>";
+    function hintfunction(){
+        if(hintinput.value == "hint") {
+            console.log(socket.id);
+                socket.emit("hint", {
+                id: id,
+                toid: socket.id
+            });
+        }
+    };
+    socket.on("hintres", function(data){
+        console.log(data.hint);
+        hintbox.innerHTML += '<li>Hint: '+ data.hint + '</li><li role="separator" class="divider"></li>';
+    });
     $(document).ready(function(){
         $('#rightclickarea').bind('contextmenu',function(e){
         var $cmenu = $(this).next();
@@ -71,13 +90,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Level Stats <span class="caret"></span></a>
                     <ul style="text-align: center; width: 250px;" class="dropdown-menu">
-                        <li>Level Name: The 25 Floor Building</li>
+                        <li>Level Name: The Right Level</li>
                         <li role="separator" class="divider"></li>
                         <li>Deduction On Hint 1: 5 marks</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Hint 2: 5 marks</li>
+                        <li>Deduction On Hint 2: 0 marks</li>
                         <li role="separator" class="divider"></li>
-                        <li>Deduction On Skip: 15 marks</li>
+                        <li>Deduction On Skip: 10 marks</li>
                         <li role="separator" class="divider"></li>
                     </ul>
                 </li>

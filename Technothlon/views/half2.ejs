@@ -22,13 +22,13 @@
             </div>
         </div>
         <script>
-            var socket = io.connect("http://localhost:4000");
+            var socket = io.connect("http://10.150.37.17:4000/");
 
             socket.on('connect', function (data) {
                 socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "half"});
             });
             var id = "<%= user.socketid %>";
-            if(iNumber(id)< 20) {
+            if(Number(id)< 20) {
                 var chance = "Your Chance";
             } else {
                 var chance = "Opponent Chance";
@@ -41,7 +41,8 @@
                 if(chance == "Your Chance") { 
                     number.innerHTML = Math.ceil(Number(number.innerHTML)/2);
                     socket.emit("number", {
-                        number: number.innerHTML
+                        number: number.innerHTML,
+                        id: id
                     });
                     chance = "Opponent Chance";
                     check();
@@ -51,13 +52,14 @@
                 if(chance == "Your Chance") { 
                     number.innerHTML = (Number(number.innerHTML)-1);
                     socket.emit("number", {
-                        number: number.innerHTML
+                        number: number.innerHTML,
+                        id: id
                     });
                     chance = "Opponent Chance";
                     check();
                 }
             });
-            socket.on("number", function(data){
+            socket.on("number1", function(data){
                 number.innerHTML = data.number;
                 chance = "Your Chance";
                 check();
