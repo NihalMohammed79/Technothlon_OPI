@@ -2,9 +2,9 @@
 <html>
     <head>
         <title>Technothlon</title>
-        <link rel="stylesheet" href="bootstrap431.css">
-        <script src="socketio220.js"></script>
-        <script src="fontawesomepile.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+        <script src="https://kit.fontawesome.com/5bd832650a.js"></script>
     </head>
     <body>
         <div class="container">
@@ -13,6 +13,7 @@
             <p>On each play, any number ofboxes, which is a power of 2 (including 1), can be removed from the pile.</p>
             <p>Obviously the number of chips to be removed cannot be higher than the number of chips on the current pile.</p>
             <p> The person, who removes the last chip is the winner. There are 452 chips on the pile.</p>
+            <h3 id="chance"></h3>
             <p>Number Of Boxes Left: <span id="boxesLeft">452</span></p>
             <div id="boxes">
             </div>
@@ -31,9 +32,10 @@
             var socket = io.connect("http://10.150.38.192:4000/");
 
             socket.on('connect', function (data) {
-                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>" , level: "pile"});
+                socket.emit('create3', {id:"<%= user.socketid %>"});
             });
             var myboxesleft = document.getElementById("myboxesleft");
+            var chanceshow = document.getElementById("chance");
             var opponentboxesleft = document.getElementById("opponentboxesleft");
             var myboxes = document.getElementById("myboxes");
             var opponentboxes = document.getElementById("opponentboxes");
@@ -44,8 +46,10 @@
             }
             if(Number(id) >= 20) {
                 var chance = "Your Chance";
+                chanceshow.innerHTML = "Your Chance";
             } else {
                 var chance = "Opponent Chance";
+                chanceshow.innerHTML = "Opponent Chance";
             }
             var boxesLeft = document.getElementById("boxesLeft");
             var NumberOfBoxesLeft = 452;
@@ -55,49 +59,58 @@
             var input = document.getElementById("myinput");
             button.addEventListener("click", function(){
                 if(chance == "Your Chance") {
-                    var inputValue = input.value;
-                    if(Number(inputValue) > NumberOfBoxesLeft) {
-                        alert("Enter a number less than the number of boxes left");
-                    } else if(power_of_2(Number(inputValue)) == "false") {
-                        alert("Enter a number as a power of two");
-                    } else {
-                        NumberOfMyBoxes += Number(inputValue);
-                        myboxesleft.innerHTML = NumberOfMyBoxes;
-                        NumberOfBoxesLeft -= Number(inputValue);
-                        boxesLeft.innerHTML = NumberOfBoxesLeft;
-                        socket.emit("pilenumber", {
-                            number: inputValue,
-                            id: id
-                        });
-                        var numberOfBoxes = document.getElementsByClassName("left-box").length;
-                        boxdiv.innerHTML = "";
-                        for(var i = 0; i < numberOfBoxes - Number(inputValue)/2; i++) {
-                            boxdiv.innerHTML += ' <i class="fas left-box fa-box"></i>';
+                        var inputValue = input.value;
+                        if (isNaN(Number(inputValue))) {
+                            alert("Enter a Number!");
+                        } else {
+                            if(Number(inputValue) > NumberOfBoxesLeft) {
+                            alert("Enter a number less than the number of boxes left");
+                        } else if(power_of_2(Number(inputValue)) == false) {
+                            alert("Enter a number as a power of two");
+                        } else {
+                            NumberOfMyBoxes += Number(inputValue);
+                            myboxesleft.innerHTML = NumberOfMyBoxes;
+                            NumberOfBoxesLeft -= Number(inputValue);
+                            boxesLeft.innerHTML = NumberOfBoxesLeft;
+                            socket.emit("pilenumber", {
+                                number: inputValue,
+                                id: id
+                            });
+                            var numberOfBoxes = document.getElementsByClassName("left-box").length;
+                            boxdiv.innerHTML = "";
+                            for(var i = 0; i < numberOfBoxes - Number(inputValue)/2; i++) {
+                                boxdiv.innerHTML += ' <i class="fas left-box fa-box"></i>';
+                            }
+                            for(var i = 0; i < Number(inputValue)/2; i++) {
+                                myboxes.innerHTML += ' <i class="fas fa-box"></i>'
+                            }
+                            chance = "Opponent Chance";
+                            chanceshow.innerHTML = "Opponent Chance";
                         }
-                        for(var i = 0; i < Number(inputValue)/2; i++) {
-                            myboxes.innerHTML += ' <i class="fas fa-box"></i>'
-                        }
+                        check();
                     }
-                    chance = "Opponent Chance";
-                    check();
                 }
+                    // it's something else
             });
             socket.on("pilenumber", function(data){
-                var inputValue = data.number;
-                NumberOfOpponentBoxes += Number(inputValue);
-                opponentboxesleft.innerHTML = NumberOfOpponentBoxes;
-                NumberOfBoxesLeft = NumberOfBoxesLeft - Number(inputValue);
-                boxesLeft.innerHTML = NumberOfBoxesLeft;
-                var numberOfBoxes = document.getElementsByClassName("left-box").length;
-                boxdiv.innerHTML = "";
-                for(var i = 0; i < numberOfBoxes - Number(inputValue)/2; i++) {
-                    boxdiv.innerHTML += ' <i class="fas left-box fa-box"></i>';
-                }
-                for(var i = 0; i < Number(inputValue)/2; i++) {
-                    opponentboxes.innerHTML += ' <i class="fas fa-box"></i>'
-                }
-                chance= "Your Chance";
-                check();
+                if(data.id != id) {
+                    var inputValue = data.number;
+                    NumberOfOpponentBoxes += Number(inputValue);
+                    opponentboxesleft.innerHTML = NumberOfOpponentBoxes;
+                    NumberOfBoxesLeft = NumberOfBoxesLeft - Number(inputValue);
+                    boxesLeft.innerHTML = NumberOfBoxesLeft;
+                    var numberOfBoxes = document.getElementsByClassName("left-box").length;
+                    boxdiv.innerHTML = "";
+                    for(var i = 0; i < numberOfBoxes - Number(inputValue)/2; i++) {
+                        boxdiv.innerHTML += ' <i class="fas left-box fa-box"></i>';
+                    }
+                    for(var i = 0; i < Number(inputValue)/2; i++) {
+                        opponentboxes.innerHTML += ' <i class="fas fa-box"></i>'
+                    }
+                    chance= "Your Chance";
+                    chanceshow.innerHTML = "Your Chance";
+                    check();
+                    }
             });
             function check() {
                 if(NumberOfBoxesLeft == 0) {
@@ -115,7 +128,6 @@
             function power_of_2(n) {
                 if (typeof n !== 'number') 
                     return 'Not a number'; 
-
                 return n && (n & (n - 1)) === 0;
             }
         </script>

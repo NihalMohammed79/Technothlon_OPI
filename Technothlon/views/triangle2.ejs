@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Technothlon</title>
-        <link rel="stylesheet" href="bootstrap340.css">
-        <script src="socketio220.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
         <style>
             body {
                 text-align: center;
@@ -40,6 +40,7 @@
                     <p>On each click on one of the white circles it will turn green and a number will appear which keeps increasing until only one white circle remains.</p>  
                     <p>Your score will be calculated as the sum of the numbers in the surrounding circles that are green.</p>
                     <p>The team which has the least score wins.</p>
+                    <h3 id="chance"></h3>
                     <div id="one">
                         <button id="11" onclick="myfunction(this.id)" type="button" class="btn btn-default btn-circle"><i class="fa fa-check"></i></button>
                     </div>
@@ -82,14 +83,17 @@
             var socket = io.connect("http://10.150.38.192:4000/");
 
             socket.on('connect', function (data) {
-                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "triangle"});
+                socket.emit('create2', { id:"<%= user.socketid %>"});
             });
             var id = "<%= user.socketid %>";
+            var chanceshow = document.getElementById("chance");
             var myNumber = 1;
             if(Number(id) >= 20) {
                 var chance = "Your Chance";
+                chanceshow.innerHTML = "Your Chance";
             } else {
                 var chance = " Opponent Chance";
+                chanceshow.innerHTML = "Opponent Chance";
             }
             var yourScore = 0;
             var opponentScore = 0;
@@ -108,8 +112,9 @@
                             id: id
                         });
                         myNumber++;
-                    }
-                    chance = "Opponent Chance"; 
+                        chance = "Opponent Chance";
+                        chanceshow.innerHTML = "Opponent Chance";
+                    } 
                 }
                 if(document.getElementsByClassName("btn-default").length == 1) {
                     var leftOver = document.getElementsByClassName("btn-default")[0];
@@ -161,26 +166,85 @@
                             opponentScore += leftOverBottomLeft.innerHTML;
                         }
                     }
-                    check();
+                    check1();
                 }
             }
             socket.on("opponentSelection2", function(data){
-                chance = "Your Chance";
-                var clicked_id = data.selection;
-                var clickedButton = document.getElementById(clicked_id);
-                console.log(clicked_id);
-                    clickedButton.classList.remove("btn-default");
-                    clickedButton.classList.add("btn-danger");
-                    clickedButton.innerHTML = data.opponentNumber;
+                if(data.id != id) {
+                    chance = "Your Chance";
+                    chanceshow.innerHTML = "Your Chance";
+                    var clicked_id = data.selection;
+                    var clickedButton = document.getElementById(clicked_id);
+                    console.log(clicked_id);
+                        clickedButton.classList.remove("btn-default");
+                        clickedButton.classList.add("btn-danger");
+                        clickedButton.innerHTML = data.opponentNumber;
+                        if(document.getElementsByClassName("btn-default").length == 1) {
+                    var leftOver = document.getElementsByClassName("btn-default")[0];
+                    var leftOverLeft = document.getElementById(leftOver.id - 1);
+                    var leftOverRight = document.getElementById(leftOver.id + 1);
+                    var leftOverTopRight = document.getElementById(leftOver.id - 10);
+                    var leftOverTopLeft = document.getElementById(leftOver.id - 11);
+                    var leftOverBottomRight = document.getElementById(leftOver.id + 11);
+                    var leftOverBottomLeft = document.getElementById(leftOver.id + 10);
+                    if(leftOverLeft) {
+                        if(leftOverLeft.classList.contains("btn-success")) {
+                            yourScore += leftOverLeft.innerHTML;
+                        } else {
+                            opponentScore += leftOverLeft.innerHTML;
+                        }
+                    }
+                    if(leftOverRight) {
+                        if(leftOverRight.classList.contains("btn-success")) {
+                            yourScore += leftOverRight.innerHTML;
+                        } else {
+                            opponentScore += leftOverRight.innerHTML;
+                        }
+                    }
+                    if(leftOverTopRight) {
+                        if(leftOverTopRight.classList.contains("btn-success")) {
+                            yourScore += leftOverTopRight.innerHTML;
+                        } else {
+                            opponentScore += leftOverTopRight.innerHTML;
+                        }
+                    }
+                    if(leftOverTopLeft) {
+                        if(leftOverTopLeft.classList.contains("btn-success")) {
+                            yourScore += leftOverTopLeft.innerHTML;
+                        } else {
+                            opponentScore += leftOverTopLeft.innerHTML;
+                        }
+                    }
+                    if(leftOverBottomRight) {
+                        if(leftOverBottomRight.classList.contains("btn-success")) {
+                            yourScore += leftOverBottomRight.innerHTML;
+                        } else {
+                            opponentScore += leftOverBottomRight.innerHTML;
+                        }
+                    }
+                    if(leftOverBottomLeft) {
+                        if(leftOverBottomLeft.classList.contains("btn-success")) {
+                            yourScore += leftOverBottomLeft.innerHTML;
+                        } else {
+                            opponentScore += leftOverBottomLeft.innerHTML;
+                        }
+                    }
+                    check1();
+                }
+                }
             });
-            function check() {
+            function check1() {
                 if(yourScore > opponentScore) {
-                    alert("You Win!");
-                    document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I won"></form>';
+                    alert("Opponent Wins!");
+                    document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+                    document.getElementById("dynForm").submit();
+                } else if(yourScore == opponentScore) {
+                    alert("Its a draw");
+                    document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="Draw"></form>';
                     document.getElementById("dynForm").submit();
                 } else {
-                    alert("Opponent Wins");
-                    document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+                    alert("You Win!");
+                    document.body.innerHTML += '<form id="dynForm" action="/triangle" method="POST"><input type="hidden" name="result" value="I won"></form>';
                     document.getElementById("dynForm").submit();
                 }
             }

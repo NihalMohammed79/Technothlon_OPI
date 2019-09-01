@@ -41,9 +41,7 @@ passport.deserializeUser(User.deserializeUser());
 // =================
 // SETUP FOR SOCKET
 // =================
-
-var server = app.listen(4000,'10.150.38.192', function(){
-
+var server = app.listen(4000,'0.0.0.0', function(){
 	console.log("The Musics Already Started!");
 });
 var io = socket(server);
@@ -195,74 +193,111 @@ var hints = [
 	}
 ];
 var clients =[];
-    io.sockets.on('connection', function (socket) {
+    io.on('connection', function (socket) {
         socket.on('storeClientInfo', function (data) {
             var clientInfo = new Object();
             clientInfo.customId     = data.customId;
             clientInfo.clientId     = socket.id;
 			clients.push(clientInfo);
-			for(var i = 0; i < clients.length; i++) {
-				User.find({socketid: clients[i].customId}, function(err, user){
-					if(err) {
-						console.log(err);
-					} else {
-						if(data.level == "building") {
-							if(user[0].socketid<= 19) { 
-								socket.join(user[0].socketid.toString());
-							} else {
-								socket.join((user[0].socketid-19).toString());
-							}
-						}
-						if(data.level == "triangle") {
-							if(user[0].socketid<= 19) { 
-								socket.join(user[0].socketid.toString());
-							} else if(user[0].socketid == 20){
-								socket.join((19).toString());
-							} else {
-								socket.join((user[0].socketid - 20).toString());
-							}
-						}
-						if(data.level == "mugame") {
-							if(user[0].socketid<= 19) { 
-								socket.join(user[0].socketid.toString());
-							} else if(user[0].socketid == 20){
-								socket.join((18).toString());
-							} else if(user[0].socketid == 21){
-								socket.join((19).toString());
-							} else {
-								socket.join((user[0].socketid - 21).toString());
-							}
-						}
-						if(data.level == "pile") {
-							if(user[0].socketid<= 19) { 
-								socket.join(user[0].socketid.toString());
-							} else if(user[0].socketid == 20){
-								socket.join((17).toString());
-							} else if(user[0].socketid == 21){
-								socket.join((18).toString());
-							} else if(user[0].socketid == 22){
-								socket.join((19).toString());
-							} else {
-								socket.join((user[0].socketid - 22).toString());
-							}
-						}
-						if(data.level == "half") {
-							if(user[0].socketid<= 19) { 
-								socket.join(user[0].socketid.toString());
-							} else if(user[0].socketid == 20){
-								socket.join((16).toString());
-							} else if(user[0].socketid == 21){
-								socket.join((17).toString());
-							} else if(user[0].socketid == 22){
-								socket.join((18).toString());
-							} else if(user[0].socketid == 23){
-								socket.join((19).toString());
-							} else {
-								socket.join((user[0].socketid - 23).toString());
-							}
-						}
-					}
-				});
+			console.log(clients);
+		});
+		socket.on("create1", function(data){
+			if(data.id < 20) {
+				socket.join(data.id.toString());
+			} else {
+				socket.join((Number(data.id)-19).toString());
+			}
+		});
+		socket.on("selection1", function(data){
+			if(data.id < 20) {
+				io.in(data.id.toString()).emit("opponentSelection1", data);
+			} else {
+				io.in((Number(data.id) - 19).toString()).emit("opponentSelection1", data);
+			}
+		});
+		socket.on("create2", function(data){
+			if(data.id < 20) {
+				socket.leave(data.id.toString());
+			} else {
+				socket.leave((Number(data.id)-19).toString());
+			}
+			if(data.id < 20) {
+				socket.join(data.id.toString());
+			} else if(data.id == 20) {
+				socket.join((19).toString());
+			} else {
+				socket.join((Number(data.id)-20).toString());
+			}
+		});
+		socket.on("selection2", function(data){
+			if(data.id < 20) {
+				io.in(data.id.toString()).emit("opponentSelection2", data);
+			} else if(data.id == 20){
+				io.in((19).toString()).emit("opponentSelection2", data);
+			} else {
+				io.in((Number(data.id) - 20).toString()).emit("opponentSelection2", data);
+			}
+		});
+		socket.on("create3", function(data){
+			if(data.id < 20) {
+				socket.leave(data.id.toString());
+			} else if(data.id == 20) {
+				socket.leave((19).toString());
+			} else {
+				socket.leave((Number(data.id)-20).toString());
+			} if(data.id < 20) {
+				socket.join(data.id.toString());
+			} else if(data.id == 20) {
+				socket.join((18).toString());
+			} else if(data.id == 21) {
+				socket.join((19).toString());
+			} else {
+				socket.join((Number(data.id)-21).toString());
+			}
+		});
+		socket.on("pilenumber", function(data){
+			if(data.id < 20) {
+				io.in(data.id.toString()).emit("pilenumber", data);
+			} else if(data.id == 20){
+				io.in((18).toString()).emit("pilenumber", data);
+			} else if(data.id == 21){
+				io.in((19).toString()).emit("pilenumber", data);
+			} else {
+				io.in((Number(data.id) - 21).toString()).emit("pilenumber", data);
+			}
+		});
+		socket.on("create4", function(data){
+			if(data.id < 20) {
+				socket.leave(data.id.toString());
+			} else if(data.id == 20) {
+				socket.leave((18).toString());
+			} else if(data.id == 21) {
+				socket.leave((19).toString());
+			} else {
+				socket.leave((Number(data.id)-21).toString());
+			} if(data.id < 20) {
+				socket.join(data.id.toString());
+			} else if(data.id == 20) {
+				socket.join((17).toString());
+			} else if(data.id == 21) {
+				socket.join((18).toString());
+			} else if(data.id == 22) {
+				socket.join((19).toString());
+			}  else {
+				socket.join((Number(data.id)-22).toString());
+			}
+		});
+		socket.on("number", function(data){
+			if(data.id < 20) {
+				io.in(data.id.toString()).emit("number1", data);
+			} else if(data.id == 20){
+				io.in((17).toString()).emit("number1", data);
+			} else if(data.id == 21){
+				io.in((18).toString()).emit("number1", data);
+			} else if(data.id == 22){
+				io.in((19).toString()).emit("number1", data);
+			} else {
+				io.in((Number(data.id)-22).toString()).emit("number1", data);
 			}
 		});
 		socket.on('hint', function(data) {
@@ -296,61 +331,6 @@ var clients =[];
 				}
 			});
 		});
-		socket.on("selection1", function(data){
-			if(data.id < 20) {
-				socket.broadcast.to(data.id.toString()).emit("opponentSelection1", data);
-			} else {
-				socket.broadcast.to((data.id - 19).toString()).emit("opponentSelection1", data);
-			}
-		});
-		socket.on("selection2", function(data){
-			if(data.id < 20) {
-				socket.broadcast.to(data.id.toString()).emit("opponentSelection2", data);
-			} else if(data.id == 20){
-				socket.broadcast.to((19).toString()).emit("opponentSelection2", data);
-			} else {
-				socket.broadcast.to((data.id - 20).toString()).emit("opponentSelection2", data);
-			}
-		});
-		socket.on("selection3", function(data){
-			if(data.id < 20) {
-				socket.broadcast.to((data.id).toString()).emit("selection3", data);
-			} else if(data.id == 20){
-				socket.broadcast.to((18).toString()).emit("selection3", data);
-			} else if(data.id == 21){
-				socket.broadcast.to((19).toString()).emit("selection3", data);
-			} else {
-				socket.broadcast.to((data.id - 21).toString()).emit("selection3", data);
-			}
-		});
-		socket.on("pilenumber", function(data){
-			if(data.id < 20) {
-				socket.broadcast.to(data.id.toString()).emit("pilenumber", data);
-			} else if(data.id == 20){
-				socket.broadcast.to((17).toString()).emit("pilenumber", data);
-			} else if(data.id == 21){
-				socket.broadcast.to((18).toString()).emit("pilenumber", data);
-			} else if(data.id == 22){
-				socket.broadcast.to((19).toString()).emit("pilenumber", data);
-			} else {
-				socket.broadcast.to((data.id - 22).toString()).emit("pilenumber", data);
-			}
-		});
-		socket.on("number", function(data){
-			if(data.id < 20) {
-				socket.broadcast.to(data.id.toString()).emit("number1", data);
-			} else if(data.id == 20){
-				socket.broadcast.to((16).toString()).emit("number1", data);
-			} else if(data.id == 21){
-				socket.broadcast.to((17).toString()).emit("number1", data);
-			} else if(data.id == 22){
-				socket.broadcast.to((18).toString()).emit("number1", data);
-			} else if(data.id == 23){
-				socket.broadcast.to((19).toString()).emit("number1", data);
-			} else {
-				socket.broadcast.to((data.id - 23).toString()).emit("number1", data);
-			}
-		});
         socket.on('disconnect', function (data) {
             for( var i=0, len=clients.length; i<len; ++i ){
                 var c = clients[i];
@@ -360,7 +340,11 @@ var clients =[];
                 }
 			}
         });
-    });
+	});
+function NumClientsInRoom(namespace, room) {
+	var clients = io.nsps[namespace].adapter.rooms[room].sockets;
+	return Object.keys(clients).length;
+}
 
 var levelNames = ['start','bridges', 'crack', 'nonogram', 'people', 'doors', 'abc', 'alphabet', 'poll', 'light', '35', 'nonogram2', 'flash', 'logic34', 'square', 'invisible','pattern', 'md', 'pi'];
 var skipdeds = [0, 5, 10, 15, 10, 10, 10, 10, 7, 10, 10, 15, 10, 10, 10, 0, 15, 10, 0];
@@ -554,7 +538,7 @@ app.post("/crack", function(req, res){
  	res.redirect("/level");
 });
 
-app.post("/people", function(req, res){
+app.post("/people", isLoggedIn, function(req, res){
 	var user = req.user;
 	var chosenPerson = req.body.chosenPerson;
 	if(chosenPerson == "person13") {
@@ -737,7 +721,6 @@ app.post("/bridges", function(req, res){
 		user.currentLevel += 1;
 		user.noofattempts = -1;
 	} else {
-		user.currentLevel += 1;
 		user.score -= 5;
 		user.hint1 = false;
 		user.hint2 = false;
@@ -854,7 +837,7 @@ app.post("/building", function(req, res){
 		user.score += 20;
 	}
 	user.save();
-	res.redirect("/level");
+	res.redirect("/triangle1");
 });
 
 app.post("/pile", function(req, res){
@@ -864,7 +847,7 @@ app.post("/pile", function(req, res){
 		user.score += 20;
 	}
 	user.save();
-	res.redirect("/level");
+	res.redirect("/half1");
 });
 
 app.post("/half", function(req, res){
@@ -874,7 +857,7 @@ app.post("/half", function(req, res){
 		user.score += 20;
 	}
 	user.save();
-	res.redirect("/level");
+	res.redirect("/");
 });
 
 app.post("/triangle", function(req, res){
@@ -882,9 +865,11 @@ app.post("/triangle", function(req, res){
 	var result = req.body.result;
 	if(result == "I won") {
 		user.score += 20;
+	} else if(result == "Draw") {
+		user.score += 10;
 	}
 	user.save();
-	res.redirect("/level");
+	res.redirect("/pile");
 });
 
 // ==================

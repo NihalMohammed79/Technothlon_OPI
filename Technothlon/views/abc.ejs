@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="bootstrap340.css">
-    <script src="socketio220.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <script>
     function myfunction(clicked_id) {
         var clicked = document.getElementById(clicked_id);
@@ -112,8 +112,8 @@
 <div style="text-align: center;">
     <button type="button" class="btn btn-success" style="margin-top: 10px;" onclick="submit();">Submit</button>
 </div>
-<script src="jquery341.js"></script>
-<script src="bootstrap340.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     var socket = io.connect("http://10.150.38.192:4000/");
     var hintinput = document.getElementById("hint");

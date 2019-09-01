@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Technothlon</title>
-        <link rel="stylesheet" href="bootstrap430.css">
-        <script src="socketio220.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     </head>
     <body>
         <div class="container">
@@ -15,6 +15,7 @@
                 <li>halve the number, and round it up to the next integer if a fraction is obtained</li>
             </ul>
             <p>As always you take turns to play.The first person to get to 1 wins.</p>
+            <h3 id="chance"></h3>
             <div style="font-size: 30px; text-align: center;" id="number">9172016</div>
             <div style="text-align: center;">
                 <button style="margin-top: 10px;" class="btn btn-secondary" id="half">Half The Number</button>
@@ -25,13 +26,16 @@
             var socket = io.connect("http://10.150.38.192:4000/");
 
             socket.on('connect', function (data) {
-                socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "half"});
+                socket.emit('create4', { id:"<%= user.socketid %>"});
             });
             var id = "<%= user.socketid %>";
+            var chanceshow = document.getElementById("chance");
             if(Number(id)< 20) {
                 var chance = "Your Chance";
+                chanceshow.innerHTML = "Your Chance";
             } else {
                 var chance = "Opponent Chance";
+                chanceshow.innerHTML = "Opponent Chance";
             }
             var number = document.getElementById("number");
             var half = document.getElementById("half");
@@ -56,13 +60,17 @@
                         id: id
                     });
                     chance = "Opponent Chance";
+                    chanceshow.innerHTML = "Opponent Chance";
                     check();
                 }
             });
             socket.on("number1", function(data){
-                number.innerHTML = data.number;
-                chance = "Your Chance";
-                check();
+                if(data.id != id) {
+                    number.innerHTML = data.number;
+                    chance = "Your Chance";
+                    chanceshow.innerHTML = "Your Chance";
+                    check();
+                }
             });
             function check() {
                 if(number.innerHTML == "1") {

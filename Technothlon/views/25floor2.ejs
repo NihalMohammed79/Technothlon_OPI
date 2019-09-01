@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Technothlon</title>
-    <link rel="stylesheet" href="bootstrap431.css">
-    <script src="socketio220.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <style>
       div {
         padding-top: 20px;
@@ -30,7 +30,7 @@
         Chances Alternate Between Teams and The Team Which Lowers The Level To Zero Is The Winner.
     </p>
     <div>
-        <p id="chance">Chance Of Player: 1</p>
+        <p id="chance"></p>
     </div>
         <p><button onclick="myFunction(this.id)" type="button" id="25" class="btn btn-outline-secondary">Floor 25</button></p>
         <p><button onclick="myFunction(this.id)" type="button" id="24" class="btn btn-outline-secondary">Floor 24</button></p>
@@ -63,9 +63,10 @@
         var socket = io.connect("http://10.150.38.192:4000/");
 
         socket.on('connect', function (data) {
-            socket.emit('storeClientInfo', { customId:"<%= user.socketid %>", level: "building"});
+            socket.emit('create1', {id:"<%= user.socketid %>"});
         });
         var id = "<%= user.socketid %>";
+        var chanceShow = document.getElementById("chance");
         console.log(id);
         if(Number(id) < 20) {
             document.getElementById("25").classList.add("btn-danger");
@@ -78,86 +79,101 @@
                 } else {
                     document.getElementById(i).disabled = true;
                 }
+                var chance = "My Chance";
+                chanceShow.innerHTML = "Your Chance";
             }
         } else {
             for(var i = 0; i <= 25; i++){
                 document.getElementById(i).disabled = true;
             }
+            var chance = "Opponent Chance";
+            chanceShow.innerHTML = "Opponent Chance";
         }
-        function myFunction(clicked_id){
-                socket.emit("selection1", {
-                    selection: clicked_id,
-                    id: id,
-                });
-                if(clicked_id == 0) {
-                    alert("Congratulations! You win");
-                    document.body.innerHTML += '<form id="dynForm" action="/building" method="POST"><input type="hidden" name="result" value="I won"></form>';
-                    document.getElementById("dynForm").submit();
-                    return;
-                }
-                for(var i = 0; i <= 25; i++){
-                    document.getElementById(i).disabled = true;
-                }
-        }
-        socket.on("opponentSelection1", function(data){
-                var clicked_id = data.selection;
-                for(var i = 0; i <= 25; i++){
-                    document.getElementById(i).disabled = false;
-                    document.getElementById(i).classList.remove("btn-danger");
-                    document.getElementById(i).classList.remove("btn-success");
-                }
-                if(clicked_id > 3){
-                    var btnDanger = document.getElementById(clicked_id);
-                    var btnDangerId = btnDanger.id;
-
-                    document.getElementById(clicked_id).classList.add("btn-danger");
-                    document.getElementById(Number(clicked_id)-1).disabled = false;
-                    document.getElementById(Number(clicked_id)-3).disabled = false;
-                    document.getElementById(Number(clicked_id)-4).disabled = false;
-                    document.getElementById(Number(clicked_id)-1).classList.add("btn-success");
-                    document.getElementById(Number(clicked_id)-3).classList.add("btn-success");
-                    document.getElementById(Number(clicked_id)-4).classList.add("btn-success");
-
-                    for(var i = 0; i <= 25; i++){
-                        if((document.getElementById(i).classList.contains("btn-success") == true)||(document.getElementById(i).classList.contains("btn-danger") == true)){
-
-                        } else {
-                            document.getElementById(i).disabled = true;
-                        }
-                    }
-                } else if(clicked_id == 3) {
-                    document.getElementById(clicked_id).classList.add("btn-danger");
-                    document.getElementById(Number(clicked_id)-1).disabled = false;
-                    document.getElementById(Number(clicked_id)-3).disabled = false;
-                    document.getElementById(Number(clicked_id)-1).classList.add("btn-success");
-                    document.getElementById(Number(clicked_id)-3).classList.add("btn-success");
-
-                    for(var i = 0; i <= 25; i++){
-                        if((document.getElementById(i).classList.contains("btn-success") == true)||(document.getElementById(i).classList.contains("btn-danger") == true)){
-
-                        } else {
-                            document.getElementById(i).disabled = true;
-                        }
-                    }
-                } else if(clicked_id == 2 || clicked_id == 1) {
-                    if(clicked_id == 2) {
-                        document.getElementById(clicked_id).classList.add("btn-danger");
-                        document.getElementById(clicked_id-1).classList.add("btn-success");
+            function myFunction(clicked_id){
+                if(chance  == "My Chance") {
+                    if(document.getElementById(clicked_id).classList.contains("btn-danger")){
+                        alert("You Must Click Only On Green Level!");
                     } else {
-                        document.getElementById(clicked_id).classList.add("btn-danger");
-                        document.getElementById(clicked_id-1).classList.add("btn-success");
-                    }
-                    for(var i = 0; i <= 25; i++){
-                        if(i > clicked_id){
+                        socket.emit("selection1", {
+                            selection: clicked_id,
+                            id: id,
+                        });
+                        if(clicked_id == 0) {
+                            alert("Congratulations! You win");
+                            document.body.innerHTML += '<form id="dynForm" action="/building" method="POST"><input type="hidden" name="result" value="I won"></form>';
+                            document.getElementById("dynForm").submit();
+                            return;
+                        }
+                        for(var i = 0; i <= 25; i++){
                             document.getElementById(i).disabled = true;
                         }
                     }
-                } else {
-                    alert("You Lose");
-                    document.body.innerHTML += '<form id="dynForm" action="/building" method="POST"><input type="hidden" name="result" value="I lost"></form>';
-                    document.getElementById("dynForm").submit();
+                    chance = "Opponent Chance";
+                    chanceShow.innerHTML = "Opponent Chance";
                 }
-        });
+            socket.on("opponentSelection1", function(data){
+                if(data.id != id) {
+                    var clicked_id = data.selection;
+                    for(var i = 0; i <= 25; i++){
+                        document.getElementById(i).disabled = false;
+                        document.getElementById(i).classList.remove("btn-danger");
+                        document.getElementById(i).classList.remove("btn-success");
+                    }
+                    if(clicked_id > 3){
+                        var btnDanger = document.getElementById(clicked_id);
+                        var btnDangerId = btnDanger.id;
+
+                        document.getElementById(clicked_id).classList.add("btn-danger");
+                        document.getElementById(Number(clicked_id)-1).disabled = false;
+                        document.getElementById(Number(clicked_id)-3).disabled = false;
+                        document.getElementById(Number(clicked_id)-4).disabled = false;
+                        document.getElementById(Number(clicked_id)-1).classList.add("btn-success");
+                        document.getElementById(Number(clicked_id)-3).classList.add("btn-success");
+                        document.getElementById(Number(clicked_id)-4).classList.add("btn-success");
+                        for(var i = 0; i <= 25; i++){
+                            if((document.getElementById(i).classList.contains("btn-success") == true)||(document.getElementById(i).classList.contains("btn-danger") == true)){
+
+                            } else {
+                                document.getElementById(i).disabled = true;
+                            }
+                        }
+                    } else if(clicked_id == 3) {
+                        document.getElementById(clicked_id).classList.add("btn-danger");
+                        document.getElementById(Number(clicked_id)-1).disabled = false;
+                        document.getElementById(Number(clicked_id)-3).disabled = false;
+                        document.getElementById(Number(clicked_id)-1).classList.add("btn-success");
+                        document.getElementById(Number(clicked_id)-3).classList.add("btn-success");
+
+                        for(var i = 0; i <= 25; i++){
+                            if((document.getElementById(i).classList.contains("btn-success") == true)||(document.getElementById(i).classList.contains("btn-danger") == true)){
+
+                            } else {
+                                document.getElementById(i).disabled = true;
+                            }
+                        }
+                    } else if(clicked_id == 2 || clicked_id == 1) {
+                        if(clicked_id == 2) {
+                            document.getElementById(clicked_id).classList.add("btn-danger");
+                            document.getElementById(clicked_id-1).classList.add("btn-success");
+                        } else {
+                            document.getElementById(clicked_id).classList.add("btn-danger");
+                            document.getElementById(clicked_id-1).classList.add("btn-success");
+                        }
+                        for(var i = 0; i <= 25; i++){
+                            if(i > clicked_id){
+                                document.getElementById(i).disabled = true;
+                            }
+                        }
+                    } else {
+                        alert("You Lose");
+                        document.body.innerHTML += '<form id="dynForm" action="/building" method="POST"><input type="hidden" name="result" value="I lost"></form>';
+                        document.getElementById("dynForm").submit();
+                    }
+                    chance = "My Chance";
+                    chanceShow.innerHTML = "Your Chance";
+                }
+            });
+        }
     </script>
   </body>
 </html>
