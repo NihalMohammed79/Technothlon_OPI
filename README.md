@@ -1,4 +1,4 @@
-# Thought Melodrama
+# Browsing Bad
 
 ## Install Node
 ## Install NPM
